@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.abq_film_tour;
+package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import edu.cnm.deepdive.abq_film_tour.R;
+import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -37,9 +39,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
   public void onMapReady(GoogleMap googleMap) {
     mMap = googleMap;
 
+    // Build FilmLocation entity for Hot Dog Place
+    FilmLocation hotDogPlace = new FilmLocation("\uD83C\uDF2D", 35.0879, -106.6614);
+
     // Add a marker in hot dogs and move the camera
-    LatLng dogHouse = new LatLng(35.0879, -106.6614);
-    mMap.addMarker(new MarkerOptions().position(dogHouse).title("Hot Dogs"));
-    mMap.moveCamera(CameraUpdateFactory.newLatLng(dogHouse));
+    LatLng dogHouseCoordinates = new LatLng(hotDogPlace.getLongCoordinate(), hotDogPlace.getLatCoordinate());
+    mMap.addMarker(new MarkerOptions().position(dogHouseCoordinates).title(hotDogPlace.getTitle()));
+    mMap.moveCamera(CameraUpdateFactory.newLatLng(dogHouseCoordinates));
   }
 }
