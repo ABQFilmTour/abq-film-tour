@@ -1,4 +1,8 @@
 <resources>
   <string name="app_name">abq-film-tour</string>
   <string name="title_activity_maps">Hot Dog Finder</string>
+  <string name="menu_all_near_me">All near me</string>
+  <string name="menu_film">Film</string>
+  <string name="menu_television">Television</string>
+  <string name="menu_submit">Submit</string>
 </resources>
