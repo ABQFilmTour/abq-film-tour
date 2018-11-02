@@ -53,7 +53,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Add a marker in hot dogs and move the camera
     LatLng dogHouseCoordinates = new LatLng(hotDogPlace.getLongCoordinate(), hotDogPlace.getLatCoordinate());
-    mMap.addMarker(new MarkerOptions().position(dogHouseCoordinates).title(hotDogPlace.getTitle()));
+    mMap.addMarker(new MarkerOptions().position(dogHouseCoordinates).title(hotDogPlace.getSiteName()));
     mMap.moveCamera(CameraUpdateFactory.newLatLng(dogHouseCoordinates));
   }
 }
