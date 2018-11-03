@@ -12,11 +12,11 @@ public class User {
   @PrimaryKey(autoGenerate = true)
   private long id;
 
-  private long login;
+  private String login;
 
-  private long coorLong;
+  private double coorLong;
 
-  private long coorLat;
+  private double coorLat;
 
   public long getId() {
     return id;
@@ -26,27 +26,27 @@ public class User {
     this.id = id;
   }
 
-  public long getLogin() {
+  public String getLogin() {
     return login;
   }
 
-  public void setLogin(long login) {
+  public void setLogin(String login) {
     this.login = login;
   }
 
-  public long getCoorLong() {
+  public double getCoorLong() {
     return coorLong;
   }
 
-  public void setCoorLong(long coorLong) {
+  public void setCoorLong(double coorLong) {
     this.coorLong = coorLong;
   }
 
-  public long getCoorLat() {
+  public double getCoorLat() {
     return coorLat;
   }
 
-  public void setCoorLat(long coorLat) {
+  public void setCoorLat(double coorLat) {
     this.coorLat = coorLat;
   }
 }
