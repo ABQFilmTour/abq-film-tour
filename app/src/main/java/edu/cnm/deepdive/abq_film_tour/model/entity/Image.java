@@ -20,7 +20,7 @@ public class Image {
   private long id;
 
   @ColumnInfo(name = "film_location_id")
-  private long film_location_id;
+  private long filmLocationId;
 
   @ColumnInfo(name = "user_id")
   private long user_id;
@@ -34,11 +34,11 @@ public class Image {
   }
 
   public long getFilm_location_id() {
-    return film_location_id;
+    return filmLocationId;
   }
 
-  public void setFilm_location_id(long film_location_id) {
-    this.film_location_id = film_location_id;
+  public void setFilm_location_id(long filmLocationId) {
+    this.filmLocationId = filmLocationId;
   }
 
   public long getUser_id() {
