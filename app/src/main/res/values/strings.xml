@@ -5,4 +5,7 @@
   <string name="menu_film">Film</string>
   <string name="menu_television">Television</string>
   <string name="menu_submit">Submit</string>
+
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
