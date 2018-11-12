@@ -4,6 +4,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+import java.util.Date;
+import javax.annotation.Nonnull;
 
 @Entity(
     foreignKeys = {
@@ -20,10 +23,11 @@ public class Image {
   private long id;
 
   @ColumnInfo(name = "film_location_id")
-  private long film_location_id;
+  private long filmLocationId;
+
 
   @ColumnInfo(name = "user_id")
-  private long user_id;
+  private long userId;
 
   public long getId() {
     return id;
@@ -34,19 +38,19 @@ public class Image {
   }
 
   public long getFilm_location_id() {
-    return film_location_id;
+    return filmLocationId;
   }
 
-  public void setFilm_location_id(long film_location_id) {
-    this.film_location_id = film_location_id;
+  public void setFilm_location_id(long filmLocationId) {
+    this.filmLocationId = filmLocationId;
   }
 
   public long getUser_id() {
-    return user_id;
+    return userId;
   }
 
-  public void setUser_id(long user_id) {
-    this.user_id = user_id;
+  public void setUser_id(long userId) {
+    this.userId = userId;
   }
 }
 

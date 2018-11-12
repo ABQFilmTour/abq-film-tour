@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.RecyclerView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/tv_recycler_view"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".TVDialogFragment"
+  app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+  >
+
+  <!-- TODO: Update blank fragment layout -->
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:text="@string/hello_blank_fragment"/>
+
+</android.support.v7.widget.RecyclerView>

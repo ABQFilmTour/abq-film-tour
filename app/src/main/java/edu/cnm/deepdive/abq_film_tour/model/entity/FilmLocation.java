@@ -8,7 +8,9 @@ import android.support.annotation.NonNull;
 
 @Entity(    foreignKeys =  {
     @ForeignKey(entity = User.class, parentColumns = "user_id",
-        childColumns = "user_id", onDelete = ForeignKey.CASCADE)
+        childColumns = "user_id", onDelete = ForeignKey.CASCADE),
+    @ForeignKey(entity = Production.class, parentColumns = "production_id",
+    childColumns = "production_id", onDelete = ForeignKey.CASCADE)
 })
 public class FilmLocation {
 
