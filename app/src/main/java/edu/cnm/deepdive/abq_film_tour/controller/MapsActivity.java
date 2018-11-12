@@ -1,14 +1,15 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
@@ -16,7 +17,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  private GoogleMap mMap;
+  private GoogleMap map;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +47,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   @Override
   public void onMapReady(GoogleMap googleMap) {
-    mMap = googleMap;
+    map = googleMap;
 
     // Build FilmLocation entity for Hot Dog Place
-    FilmLocation hotDogPlace = new FilmLocation("\uD83C\uDF2D", 35.0879, -106.6614);
+    FilmLocation hotDogPlace = new FilmLocation("The Dog House", 35.0879, -106.6614);
+    hotDogPlace.setOriginalDetails("Original details here \uD83C\uDF2D");
 
     // Add a marker in hot dogs and move the camera
     LatLng dogHouseCoordinates = new LatLng(hotDogPlace.getLongCoordinate(), hotDogPlace.getLatCoordinate());
-    mMap.addMarker(new MarkerOptions().position(dogHouseCoordinates).title(hotDogPlace.getSiteName()));
-    mMap.moveCamera(CameraUpdateFactory.newLatLng(dogHouseCoordinates));
+
+    map.addMarker(new MarkerOptions()
+        .position(dogHouseCoordinates)
+        .title(hotDogPlace.getSiteName())
+        .snippet(hotDogPlace.getOriginalDetails()));
+    map.moveCamera(CameraUpdateFactory.newLatLng(dogHouseCoordinates));
+    map.moveCamera(CameraUpdateFactory.zoomTo(15));
+
   }
 }
