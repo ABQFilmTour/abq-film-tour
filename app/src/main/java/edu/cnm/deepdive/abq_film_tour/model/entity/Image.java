@@ -4,6 +4,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+import java.util.Date;
+import javax.annotation.Nonnull;
 
 @Entity(
     foreignKeys = {
@@ -21,6 +24,7 @@ public class Image {
 
   @ColumnInfo(name = "film_location_id")
   private long filmLocationId;
+
 
   @ColumnInfo(name = "user_id")
   private long userId;
