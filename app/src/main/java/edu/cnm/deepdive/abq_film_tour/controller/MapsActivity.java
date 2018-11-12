@@ -1,10 +1,15 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
+import android.Manifest.permission;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,16 +53,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         handled = super.onOptionsItemSelected(item);
         break;
       case R.id.menu_all_near_me:
-        // TODO reposition camera to user location
+        //TODO change camera view to user location
+        /* code throws an exception, may be due to permissions
+        Location userLocation = fusedLocationProviderClient.getLastLocation().getResult();
+        LatLng userLocationCoordinates =
+            new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+        map.moveCamera(CameraUpdateFactory.newLatLng(userLocationCoordinates));
+        */
+        Toast.makeText(this, "Near me", Toast.LENGTH_SHORT).show();
         break;
       case R.id.menu_television:
         // TODO open dialog to select a series
+        Toast.makeText(this, "Television dialog", Toast.LENGTH_SHORT).show();
         break;
       case R.id.menu_film:
         // TODO open dialog to select a film
+        Toast.makeText(this, "Film dialog", Toast.LENGTH_SHORT).show();
         break;
       case R.id.menu_submit:
         // TODO open dialog to submit a location
+        Toast.makeText(this, "Submission dialog", Toast.LENGTH_SHORT).show();
         break;
     }
     return handled;
