@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +19,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   private GoogleMap map;
+  private static final float ZOOM_LEVEL = 15;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     super.onCreateOptionsMenu(menu);
     getMenuInflater().inflate(R.menu.options, menu);
     return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    boolean handled = true;
+    // TODO rig hand menu option for testing/future potential
+    switch (item.getItemId()) {
+      default:
+        handled = super.onOptionsItemSelected(item);
+        break;
+      case R.id.menu_all_near_me:
+        // TODO reposition camera to user location
+        break;
+      case R.id.menu_television:
+        // TODO open dialog to select a series
+        break;
+      case R.id.menu_film:
+        // TODO open dialog to select a film
+        break;
+      case R.id.menu_submit:
+        // TODO open dialog to submit a location
+        break;
+    }
+    return handled;
   }
 
 
@@ -61,7 +87,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         .title(hotDogPlace.getSiteName())
         .snippet(hotDogPlace.getOriginalDetails()));
     map.moveCamera(CameraUpdateFactory.newLatLng(dogHouseCoordinates));
-    map.moveCamera(CameraUpdateFactory.zoomTo(15));
+    map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
 
   }
 }
