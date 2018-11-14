@@ -4,9 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-import java.util.Date;
-import javax.annotation.Nonnull;
+import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
+import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 
 @Entity(
     foreignKeys = {

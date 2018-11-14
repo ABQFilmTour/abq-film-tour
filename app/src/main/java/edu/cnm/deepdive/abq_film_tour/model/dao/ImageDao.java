@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.abq_film_tour.model.entity.dao;
+package edu.cnm.deepdive.abq_film_tour.model.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -17,7 +17,7 @@ public interface ImageDao {
   @Query("SELECT * FROM Image WHERE film_location_id = :filmLocationId ORDER BY film_location_id")
   List<Image> selectByLocation(long filmLocationId);
 
-  @Query("SELECT *FROM UserComments WHERE user_id = :userId ORDER BY timestamp")
+  @Query("SELECT *FROM UserComment WHERE user_id = :userId ORDER BY timestamp")
   List<Image> selectByUser(long userId);
 
   @Delete

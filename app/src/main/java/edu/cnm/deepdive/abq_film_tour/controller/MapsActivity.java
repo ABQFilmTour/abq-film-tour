@@ -1,22 +1,17 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
-import android.Manifest.permission;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
@@ -53,6 +48,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         handled = super.onOptionsItemSelected(item);
         break;
       case R.id.menu_all_near_me:
+
         //TODO change camera view to user location
         /* code throws an exception, may be due to permissions
         Location userLocation = fusedLocationProviderClient.getLastLocation().getResult();

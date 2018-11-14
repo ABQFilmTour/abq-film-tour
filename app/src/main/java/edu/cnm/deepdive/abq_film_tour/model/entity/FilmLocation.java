@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
+import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 
 @Entity(    foreignKeys =  {
     @ForeignKey(entity = User.class, parentColumns = "user_id",
