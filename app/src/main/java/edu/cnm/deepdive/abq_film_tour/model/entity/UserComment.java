@@ -6,6 +6,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
+import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 import java.util.Date;
 
 @Entity(
@@ -18,7 +20,7 @@ import java.util.Date;
 
 
 )
-public class UserComments {
+public class UserComment {
 
 
   @ColumnInfo(name = "comments_id")

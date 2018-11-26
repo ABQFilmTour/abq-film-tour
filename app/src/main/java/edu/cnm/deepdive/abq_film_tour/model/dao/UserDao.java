@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.abq_film_tour.model.entity.dao;
+package edu.cnm.deepdive.abq_film_tour.model.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
