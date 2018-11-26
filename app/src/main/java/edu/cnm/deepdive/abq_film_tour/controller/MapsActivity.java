@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +10,11 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
@@ -117,12 +120,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Add a marker in hot dogs and move the camera
     LatLng dogHouseCoordinates = new LatLng(hotDogPlace.getLongCoordinate(), hotDogPlace.getLatCoordinate());
 
-    map.addMarker(new MarkerOptions()
+    Marker marker = map.addMarker(new MarkerOptions()
         .position(dogHouseCoordinates)
         .title(hotDogPlace.getSiteName())
         .snippet(hotDogPlace.getOriginalDetails()));
+    marker.setTag(hotDogPlace);
+    map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+      @Override
+      public void onInfoWindowClick(Marker marker) {
+        FilmLocation markerLocation = ((FilmLocation) marker.getTag());
+        Bundle extras = new Bundle();
+        extras.putString("exampleTag", markerLocation.getSiteName());
+        Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
+        startActivity(intent);
+      }
+    });
     map.moveCamera(CameraUpdateFactory.newLatLng(dogHouseCoordinates));
     map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
 
   }
+
 }
