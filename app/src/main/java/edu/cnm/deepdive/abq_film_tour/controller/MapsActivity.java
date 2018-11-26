@@ -1,32 +1,35 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
-import android.Manifest.permission;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  private GoogleMap map;
-  private FusedLocationProviderClient fusedLocationProviderClient;
+  private static final String TITLE_LIST_KEY="titlesList";
+  private static final String TITLE_SELECTION_KEY="titleSelection";
   private static final float ZOOM_LEVEL = 15;
+
+  private ArrayList<String> movieTitles;
+  private ArrayList<String> tvTitles;
+  private GoogleMap map;
+  private SelectionDialog selectionDialog;
+  private FusedLocationProviderClient fusedLocationProviderClient;
+  private Bundle arguments;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
+    createDummyLocations();
+  }
+
+  private void createDummyLocations() {
+    movieTitles = new ArrayList<>();
+    tvTitles = new ArrayList<>();
+    for (int i = 0; i < 100; i++) {
+      movieTitles.add("Movie Title " + i);
+      tvTitles.add("TV Title " + i);
+    }
   }
 
   @Override
@@ -63,12 +76,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, "Near me", Toast.LENGTH_SHORT).show();
         break;
       case R.id.menu_television:
-        // TODO open dialog to select a series
-        Toast.makeText(this, "Television dialog", Toast.LENGTH_SHORT).show();
+        selectionDialog = new SelectionDialog();
+        arguments = new Bundle();
+        arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
+        selectionDialog.setArguments(arguments);
+        selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.menu_film:
-        // TODO open dialog to select a film
-        Toast.makeText(this, "Film dialog", Toast.LENGTH_SHORT).show();
+        selectionDialog = new SelectionDialog();
+        arguments = new Bundle();
+        arguments.putStringArrayList(TITLE_LIST_KEY, movieTitles);
+        selectionDialog.setArguments(arguments);
+        selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.menu_submit:
         // TODO open dialog to submit a location
