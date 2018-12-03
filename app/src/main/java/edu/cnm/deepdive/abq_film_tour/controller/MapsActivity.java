@@ -21,6 +21,9 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Maps activity.
+ */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   private static final String TITLE_LIST_KEY="titlesList";

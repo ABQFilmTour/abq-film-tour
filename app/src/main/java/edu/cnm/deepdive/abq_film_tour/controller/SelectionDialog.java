@@ -3,6 +3,7 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.app.Dialog;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,20 +54,14 @@ public class SelectionDialog extends DialogFragment {
   }
 
 
-//  @Override
-//  public void onResume() {
-//    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-//    params.width = LayoutParams.MATCH_PARENT;
-//    params.height = LayoutParams.WRAP_CONTENT;
-//    //here I tried changing params
-//    getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams)params);
-//
-//    another way also doesn't work:
-//
-//    int width = getResources().getDimensionPixelSize(R.dimen.popup_width);
-//    int height = getResources().getDimensionPixelSize(R.dimen.popup_height);
-//    getDialog().getWindow().setLayout(width, height);
-//    super.onResume();
-//  }
+  @Override
+  public void onResume() {
+    //this sets the dialog dimensions to the whole screen
+    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+    params.width = LayoutParams.MATCH_PARENT;
+    params.height = LayoutParams.WRAP_CONTENT;
+    getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams)params);
+    super.onResume();
+  }
 }
 
