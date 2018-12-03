@@ -31,6 +31,8 @@ public class Production {
   @ColumnInfo(name="production_id")
   private long id;
 
+  //imdb key
+
   @NonNull
   public Date getTimestamp() {
     return timestamp;
