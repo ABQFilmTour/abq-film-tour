@@ -49,8 +49,8 @@ public class SelectionDialog extends DialogFragment {
         android.R.layout.simple_list_item_1, titles);
     selectionListView.setAdapter(adapter);
     //sets dialog fragment to transparent color
-    getDialog().getWindow().setBackgroundDrawable(d);
-    return view;
+   getDialog().getWindow().setBackgroundDrawable(d);
+   return view;
   }
 
 

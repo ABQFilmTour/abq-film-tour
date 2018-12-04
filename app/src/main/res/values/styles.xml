@@ -7,13 +7,10 @@
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
     <item name="android:textColor">@color/dialogTextColor</item>
+    <item name="android:itemBackground">@color/colorPrimaryDark</item>
 
   </style>
-
-  <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
-    <item name="android:windowIsTranslucent">true</item>
-    <item name="android:windowBackground">@android:color/transparent</item>
-
-  </style>
+  <style name="AppTheme."><item name="android:itemBackground">@color/colorTransparent</item></style>
+  
 
 </resources>
