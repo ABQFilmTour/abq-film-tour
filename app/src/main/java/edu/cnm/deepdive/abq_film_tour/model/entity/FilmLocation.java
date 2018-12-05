@@ -53,6 +53,12 @@ public class FilmLocation {
   @ColumnInfo(name = "original_details")
   private String originalDetails;
 
+  private Production production;
+
+  public FilmLocation() {
+
+  }
+
   public FilmLocation(String siteName, double longCoordinate, double latCoordinate) {
     this.siteName = siteName;
     this.longCoordinate = longCoordinate;
@@ -81,6 +87,14 @@ public class FilmLocation {
 
   public void setImdbid(String imdbid) {
     this.imdbid = imdbid;
+  }
+
+  public Production getProduction() {
+    return production;
+  }
+
+  public void setProduction(Production production) {
+    this.production = production;
   }
 
   public String getTitle() {

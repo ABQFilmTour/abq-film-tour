@@ -12,11 +12,11 @@ public class User {
   @PrimaryKey(autoGenerate = true)
   private long id;
 
-  private String login;
+  private String googleName;
 
-  private double coorLong;
+  private String googleId;
 
-  private double coorLat;
+  private String gmailAddress;
 
   public long getId() {
     return id;
@@ -26,27 +26,27 @@ public class User {
     this.id = id;
   }
 
-  public String getLogin() {
-    return login;
+  public String getGoogleName() {
+    return googleName;
   }
 
-  public void setLogin(String login) {
-    this.login = login;
+  public void setGoogleName(String googleName) {
+    this.googleName = googleName;
   }
 
-  public double getCoorLong() {
-    return coorLong;
+  public String getGoogleId() {
+    return googleId;
   }
 
-  public void setCoorLong(double coorLong) {
-    this.coorLong = coorLong;
+  public void setGoogleId(String googleId) {
+    this.googleId = googleId;
   }
 
-  public double getCoorLat() {
-    return coorLat;
+  public String getGmailAddress() {
+    return gmailAddress;
   }
 
-  public void setCoorLat(double coorLat) {
-    this.coorLat = coorLat;
+  public void setGmailAddress(String gmailAddress) {
+    this.gmailAddress = gmailAddress;
   }
 }
