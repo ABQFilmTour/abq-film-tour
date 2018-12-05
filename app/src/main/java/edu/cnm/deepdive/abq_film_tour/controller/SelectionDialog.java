@@ -5,30 +5,24 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import android.widget.Toast;
 import edu.cnm.deepdive.abq_film_tour.R;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 
 public class SelectionDialog extends DialogFragment {
@@ -51,12 +45,20 @@ public class SelectionDialog extends DialogFragment {
 
     Bundle arguments = this.getArguments();
     assert arguments != null;
-    ArrayList titles = (ArrayList) arguments.get(TITLE_LIST_KEY);
+    ArrayList<String> titles = (ArrayList) arguments.get(TITLE_LIST_KEY);
 
-    ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()),
+
+    ArrayAdapter<String> adapter = new ArrayAdapter<String>(Objects.requireNonNull(getActivity()),
         android.R.layout.simple_list_item_1, titles);
     selectionListView.setAdapter(adapter);
     selectionListView.setVisibility(View.VISIBLE);
+    selectionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        System.out.println(titles.get(position));
+        Toast.makeText(getContext(), titles.get(position), Toast.LENGTH_LONG).show();
+      }
+    });
 
 
   builder.setView(view);
