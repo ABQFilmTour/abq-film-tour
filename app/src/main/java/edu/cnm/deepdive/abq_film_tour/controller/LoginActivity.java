@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import edu.cnm.deepdive.abq_film_tour.SplashActivity;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import edu.cnm.deepdive.abq_film_tour.R;
 
@@ -24,6 +25,9 @@ public class LoginActivity extends AppCompatActivity {
     setContentView(R.layout.activity_login);
     final SignInButton signIn = findViewById(R.id.sign_in);
     signIn.setOnClickListener((view)-> signIn());
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().hide();
+    }
   }
 
   @Override
@@ -56,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
   }
 
   private void switchToMain() {
-    Intent intent = new Intent(this, MapsActivity.class);
+    Intent intent = new Intent(this, SplashActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
   }

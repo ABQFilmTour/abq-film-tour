@@ -3,17 +3,13 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.SELECTED_OPTIONS_MENU_ITEM_KEY;
 import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.TITLE_LIST_KEY;
 
-import android.app.AlertDialog.Builder;
-import android.app.Dialog;
+
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,11 +43,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+
+
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
     createDummyLocations();
+
+
   }
 
   private void createDummyLocations() {
@@ -81,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         handled = super.onOptionsItemSelected(item);
         break;
       case R.id.menu_all_near_me:
+        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "NEAR ME");
         //TODO change camera view to user location
         /* code throws an exception, may be due to permissions
         Location userLocation = fusedLocationProviderClient.getLastLocation().getResult();
@@ -107,6 +108,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.menu_submit:
+        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "SUBMIT");
         // TODO open dialog to submit a location
         Toast.makeText(this, "Submission dialog", Toast.LENGTH_SHORT).show();
         break;

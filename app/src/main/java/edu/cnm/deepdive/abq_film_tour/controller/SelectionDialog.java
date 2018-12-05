@@ -42,7 +42,7 @@ public class SelectionDialog extends DialogFragment {
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
   super.onCreateDialog(savedInstanceState);
     AlertDialog.Builder builder = new Builder(getActivity());
-//  builder.setTitle("MOVIE");
+
 
     View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_selection, null,false);
     Toolbar toolbar = view.findViewById(R.id.my_toolbar);
