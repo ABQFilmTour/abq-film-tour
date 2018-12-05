@@ -2,7 +2,7 @@
 <resources>
   <color name="colorPrimary">#000000</color>
   <color name="colorPrimaryDark">#000000</color>
-  <color name="colorTransparent">#59000000</color>
+  <color name="colorTranparent">#59000000</color>
   <color name="colorAccent">#FF4081</color>
   <color name="dialogTextColor">#FFFFFF</color>
 </resources>

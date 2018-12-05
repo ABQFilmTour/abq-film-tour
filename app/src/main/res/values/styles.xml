@@ -10,7 +10,9 @@
     <item name="android:itemBackground">@color/colorPrimaryDark</item>
 
   </style>
-  <style name="AppTheme."><item name="android:itemBackground">@color/colorTransparent</item></style>
-  
+
+  <style name="FragmentTheme" parent="AlertDialog.AppCompat.Light">
+    <item name="android:background">@color/colorTranparent</item>
+  </style>
 
 </resources>

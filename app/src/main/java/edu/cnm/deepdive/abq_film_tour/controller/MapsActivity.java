@@ -1,11 +1,19 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
+import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.SELECTED_OPTIONS_MENU_ITEM_KEY;
+import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.TITLE_LIST_KEY;
+
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,15 +27,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The type Maps activity.
  */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  private static final String TITLE_LIST_KEY="titlesList";
-  private static final String TITLE_SELECTION_KEY="titleSelection";
+
   private static final float ZOOM_LEVEL = 15;
 
   private ArrayList<String> movieTitles;
@@ -64,8 +70,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     return true;
   }
 
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+     String TITLE_SELECTED;
+    selectionDialog = new SelectionDialog();
     boolean handled = true;
     switch (item.getItemId()) {
       default:
@@ -84,6 +93,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
         arguments = new Bundle();
+        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "TV SHOW");
         arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
@@ -91,6 +101,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       case R.id.menu_film:
         selectionDialog = new SelectionDialog();
         arguments = new Bundle();
+        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "FILMS");
         arguments.putStringArrayList(TITLE_LIST_KEY, movieTitles);
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
