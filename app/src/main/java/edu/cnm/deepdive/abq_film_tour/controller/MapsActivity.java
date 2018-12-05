@@ -108,11 +108,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
-      case R.id.menu_submit:
-        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "SUBMIT");
-        // TODO open dialog to submit a location
-        Toast.makeText(this, "Submission dialog", Toast.LENGTH_SHORT).show();
-        break;
       case R.id.sign_out:
         signOut();
         break;
