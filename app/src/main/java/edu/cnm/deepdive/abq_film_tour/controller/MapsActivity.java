@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
+import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.util.ArrayList;
 
 /**
@@ -112,6 +113,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // TODO open dialog to submit a location
         Toast.makeText(this, "Submission dialog", Toast.LENGTH_SHORT).show();
         break;
+      case R.id.sign_out:
+        signOut();
+        break;
     }
     return handled;
   }
@@ -154,6 +158,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     map.moveCamera(CameraUpdateFactory.newLatLng(dogHouseCoordinates));
     map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
 
+  }
+
+  private void signOut() {
+    FilmTourApplication app = FilmTourApplication.getInstance();
+    app.getClient().signOut().addOnCompleteListener(this, (task) -> {
+      app.setAccount(null);
+      Intent intent = new Intent(this, LoginActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(intent);
+    });
   }
 
 }
