@@ -6,7 +6,6 @@ import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.TITLE_LI
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +21,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
+import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
+import edu.cnm.deepdive.abq_film_tour.model.entity.User;
+import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.util.ArrayList;
 
@@ -40,6 +42,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private FusedLocationProviderClient fusedLocationProviderClient;
   private Bundle arguments;
 
+  private FilmLocation exampleLocation;
+  private Production exampleProduction;
+  private User exampleUser;
+  private UserComment exampleComment;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -50,12 +57,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
-    createDummyLocations();
-
-
+    createDummyTitles();
+    createExampleData();
   }
 
-  private void createDummyLocations() {
+  private void createExampleData() {
+    exampleUser = new User();
+    exampleUser.setGoogleName("Walter White");
+    exampleUser.setGoogleId("12345");
+    exampleUser.setGmailAddress("walterwhite@gmail.com");
+
+    exampleProduction = new Production();
+    exampleProduction.setImdbID("tt0903747");
+    exampleProduction.setTitle("Breaking Bad");
+    exampleProduction.setType("series");
+    exampleProduction.setReleaseYear("2008-2013");
+    exampleProduction.setPlot("A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future.");
+
+    exampleLocation = new FilmLocation();
+    exampleLocation.setSiteName("The Dog House Drive In");
+    exampleLocation.setLongCoordinate(35.0879012653313);
+    exampleLocation.setLatCoordinate(-106.661403252821);
+    exampleLocation.setProduction(exampleProduction);
+    exampleLocation.setOriginalDetails("The Dog House - 1216 Central - ITC on Central from 11th to 14th St.");
+    exampleLocation.setAddress("1216 Central Avenue NW");
+    exampleLocation.setShootDate(1216857600000L);
+
+    exampleComment = new UserComment();
+    exampleComment.setFilmLocationId(exampleLocation.getId());
+    exampleComment.setContent("Shot on 07/23/2008 at 1216 Central Avenue NW. The Dog House - 1216 Central - ITC on Central from 11th to 14th St.");
+  }
+
+  private void createDummyTitles() {
     movieTitles = new ArrayList<>();
     tvTitles = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
@@ -128,18 +161,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   public void onMapReady(GoogleMap googleMap) {
     map = googleMap;
 
-    // Build FilmLocation entity for Hot Dog Place
-    FilmLocation hotDogPlace = new FilmLocation("The Dog House", 35.0879, -106.6614);
-    hotDogPlace.setOriginalDetails("Original details here \uD83C\uDF2D");
-
     // Add a marker in hot dogs and move the camera
-    LatLng dogHouseCoordinates = new LatLng(hotDogPlace.getLongCoordinate(), hotDogPlace.getLatCoordinate());
+    LatLng dogHouseCoordinates = new LatLng(exampleLocation.getLongCoordinate(), exampleLocation.getLatCoordinate());
 
     Marker marker = map.addMarker(new MarkerOptions()
         .position(dogHouseCoordinates)
-        .title(hotDogPlace.getSiteName())
-        .snippet(hotDogPlace.getOriginalDetails()));
-    marker.setTag(hotDogPlace);
+        .title(exampleLocation.getSiteName())
+        .snippet(exampleLocation.getOriginalDetails())); //TODO Snipper should be something else?
+    marker.setTag(exampleLocation);
     map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
       @Override
       public void onInfoWindowClick(Marker marker) {
