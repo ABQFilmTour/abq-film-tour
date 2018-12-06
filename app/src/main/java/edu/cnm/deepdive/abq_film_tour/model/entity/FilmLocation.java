@@ -6,6 +6,7 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.UUID;
 
 @Entity(    foreignKeys =  {
     @ForeignKey(entity = User.class, parentColumns = "user_id",
@@ -15,9 +16,8 @@ import com.google.gson.annotations.SerializedName;
 })
 public class FilmLocation {
 
-  @PrimaryKey(autoGenerate = true)
-  @ColumnInfo(name = "film_location_id")
-  private long id;
+  @Expose
+  private UUID id;
 
   //These fields exist in the city data but are critical to the entity and should be the minimum
   //requirements for submitted data.
@@ -66,11 +66,11 @@ public class FilmLocation {
 
   }
 
-  public long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

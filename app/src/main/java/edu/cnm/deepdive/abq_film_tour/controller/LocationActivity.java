@@ -2,13 +2,11 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import edu.cnm.deepdive.abq_film_tour.R;
@@ -40,6 +38,10 @@ public class LocationActivity extends AppCompatActivity {
     production = MapsActivity.exampleProduction;
     comment = MapsActivity.exampleComment;
 
+    Bundle extras = getIntent().getExtras();
+    String locationID = extras.getString("locationID");
+    this.setTitle(locationID);
+
     locationImage = findViewById(R.id.image_view);
     locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);
@@ -47,12 +49,7 @@ public class LocationActivity extends AppCompatActivity {
     locationComments = findViewById(R.id.comments_view);
     locationPlot = findViewById(R.id.plot_view);
 
-
-    updateLocationTitle();
-    updateProductionTitle();
-    setLocationPlot();
-    setLocationComments();
-    setLocationImdb();
+    new LocationTask().execute();
 
     locationImdb.setOnClickListener(new View.OnClickListener() {
       String imdbId = production.getImdbID();
@@ -64,30 +61,32 @@ public class LocationActivity extends AppCompatActivity {
       }
     });
   }
-  public void updateLocationTitle(){
-    String locationText = location.getSiteName();
-    locationTitle.setText(locationText);
+
+
+  public class LocationTask extends AsyncTask<Void, Void, String>{
+
+
+    @Override
+    protected void onPostExecute(String locationId) {
+      super.onPostExecute(locationId);
+
+        String locationText = location.getSiteName();
+        locationTitle.setText(locationText);
+        String productionTitle = production.getTitle();
+        locationProductionTitle.setText(productionTitle);
+        String productionPlot = production.getPlot();
+        locationPlot.setText(productionPlot);
+        String locationComment = comment.getContent();
+        locationComments.setText(locationComment);
+        locationImdb.setText(R.string.imdb_link);
+
+    }
+
+    @Override
+    protected String doInBackground(Void... voids) {
+      return null;
+    }
   }
-
-  public void updateProductionTitle(){
-    String productionTitle = production.getTitle();
-    locationProductionTitle.setText(productionTitle);
-  }
-
- public void setLocationPlot(){
-    String productionPlot = production.getPlot();
-    locationPlot.setText(productionPlot);
- }
-
- public void setLocationComments(){
-      String locationComment = comment.getContent();
-      locationComments.setText(locationComment);
- }
-
- public void setLocationImdb(){
-      locationImdb.setText("IMDB Link");
-
- }
 
 
 }
