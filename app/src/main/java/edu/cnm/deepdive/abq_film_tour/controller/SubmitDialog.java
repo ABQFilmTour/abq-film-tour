@@ -9,9 +9,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,24 +30,35 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   EditText siteName, description;
 
 
+
+
+  @Nullable
   @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    View view = inflater.inflate(R.layout.submit_fragment, null, false);
+//    dialog.setContentView(view);
+//    dialog.setCancelable(true);
 
-    Dialog dialog = new Dialog(getActivity());
-    View view = getView().findViewById(R.id.submit_fragment);
-    dialog.setContentView(view);
-    dialog.setCancelable(true);
+    uploadImage = view.findViewById(R.id.upload_image);
 
-    uploadImage = getView().findViewById(R.id.upload_image);
-
-    uploadImagebutton = getView().findViewById(R.id.upload_image_btn);
-    registerButton = getView().findViewById(R.id.register);
+    uploadImagebutton = view.findViewById(R.id.upload_image_btn);
+    registerButton = view.findViewById(R.id.register);
 
     uploadImage.setOnClickListener(this);
     uploadImagebutton.setOnClickListener(this);
     registerButton.setOnClickListener(this);
 
+    return  view;
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+    params.width = LayoutParams.MATCH_PARENT;
+    getDialog().getWindow().setAttributes((WindowManager.LayoutParams) params);
   }
 
   @Override
