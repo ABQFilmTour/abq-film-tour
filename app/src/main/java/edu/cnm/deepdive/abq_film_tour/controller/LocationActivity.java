@@ -13,6 +13,8 @@ import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
+import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
+import java.io.IOException;
 
 public class LocationActivity extends AppCompatActivity {
 
@@ -28,19 +30,18 @@ public class LocationActivity extends AppCompatActivity {
   public static UserComment comment;
 
 
+  FilmTourApplication filmTourApplication;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_location);
+    filmTourApplication = (FilmTourApplication) getApplication();
 
-    location = MapsActivity.exampleLocation;
-    production = MapsActivity.exampleProduction;
-    comment = MapsActivity.exampleComment;
+    comment = MapsActivity.exampleComment; //TODO fix
 
     Bundle extras = getIntent().getExtras();
     String locationID = extras.getString("locationID");
-    this.setTitle(locationID);
 
     locationImage = findViewById(R.id.image_view);
     locationTitle = findViewById(R.id.location_title_view);
@@ -49,44 +50,43 @@ public class LocationActivity extends AppCompatActivity {
     locationComments = findViewById(R.id.comments_view);
     locationPlot = findViewById(R.id.plot_view);
 
-    new LocationTask().execute();
-
-    locationImdb.setOnClickListener(new View.OnClickListener() {
-      String imdbId = production.getImdbID();
-      @Override
-      public void onClick(View v) {
-       Uri locationImdb = Uri.parse("https://www.imdb.com/title/" + imdbId);
-        Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
-        startActivity(intent);
-      }
-    });
+    new LocationTask().execute(locationID);
   }
 
 
-  public class LocationTask extends AsyncTask<Void, Void, String>{
+  public class LocationTask extends AsyncTask<String, Void, Void> {
 
 
     @Override
-    protected void onPostExecute(String locationId) {
-      super.onPostExecute(locationId);
-
-        String locationText = location.getSiteName();
-        locationTitle.setText(locationText);
-        String productionTitle = production.getTitle();
-        locationProductionTitle.setText(productionTitle);
-        String productionPlot = production.getPlot();
-        locationPlot.setText(productionPlot);
-        String locationComment = comment.getContent();
-        locationComments.setText(locationComment);
-        locationImdb.setText(R.string.imdb_link);
-
-    }
-
-    @Override
-    protected String doInBackground(Void... voids) {
+    protected Void doInBackground(String... strings) {
+      try {
+        location = filmTourApplication.getService().getFilmLocation(strings[0]).execute().body();
+      } catch (IOException e) {
+        System.out.println("oh no!!!!!");
+      }
       return null;
     }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      super.onPostExecute(aVoid);
+      production = location.getProduction();
+      String locationText = location.getSiteName();
+      locationTitle.setText(locationText);
+      String productionTitle = production.getTitle();
+      locationProductionTitle.setText(productionTitle);
+      String productionPlot = production.getPlot();
+      locationPlot.setText(productionPlot);
+      String locationComment = comment.getContent();
+      locationComments.setText(locationComment);
+      locationImdb.setText(R.string.imdb_link);
+      locationImdb.setOnClickListener(v -> {
+        System.out.println(production.getTitle());
+        System.out.println(production.getImdbID());
+        Uri locationImdb = Uri.parse("https://www.imdb.com/title/" + production.getImdbID());
+        Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
+        startActivity(intent);
+      });
+    }
   }
-
-
 }

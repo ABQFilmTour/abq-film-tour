@@ -12,14 +12,19 @@ import retrofit2.http.Query;
 
 public interface Service {
 
+  @GET("rest/film_locations/{id}/")
+  Call<FilmLocation> getFilmLocation(@Path(value = "id") String id);
+
   @GET("rest/film_locations/")
   Call<List<FilmLocation>> getLocations();
-/*
-  @GET("rest/film_locations/{id}/user_comments");
-  Call<List<UserComment>> getCommentts(@Path(value = "id");
-*/
+
   @GET("rest/productions/")
   Call<List<Production>> getProductions();
+
+  /*
+  @GET("rest/film_locations/{id}/user_comments")
+  Call<List<UserComment>> getCommentts(@Path(value = "id")String id ;*/
+
 
 /*  @GET('rest/users')
   Call<User> getUsers(); */

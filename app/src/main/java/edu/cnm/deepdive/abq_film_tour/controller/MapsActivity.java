@@ -61,15 +61,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private FilmTourApplication filmTourApplication;
 
-  private Gson gson;
-  private Retrofit retrofit;
-  private Service service;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
-    setupService();
     new GetProductionsTask().execute();
     ActionBar actionBar = getSupportActionBar();
     actionBar.setLogo(R.mipmap.ic_filmtour_round);
@@ -82,17 +78,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     createExampleData();
   }
 
-  private void setupService() {
-    gson = new GsonBuilder()
-        .excludeFieldsWithoutExposeAnnotation()
-        .create();
-    retrofit = new Retrofit.Builder()
-        .baseUrl(getString(R.string.base_url))
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build();
-    service = retrofit.create(Service.class);
-//    apiKey = BuildConfig.API_KEY;
-  }
 
   private void createExampleData() {
     exampleUser = new User();
@@ -238,7 +223,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected Void doInBackground(Void... voids) {
       try {
-        productions = service.getProductions().execute().body();
+        productions = filmTourApplication.getService().getProductions().execute().body();
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -265,7 +250,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected Void doInBackground(Void... voids) {
       System.out.println("execution");
       try {
-        locations = service.getLocations().execute().body();
+        locations = filmTourApplication.getService().getLocations().execute().body();
         System.out.println("hello " + locations.get(0).getSiteName());
       } catch (IOException e) {
         System.out.println("oh no!!");
@@ -286,12 +271,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .title(location.getSiteName())
             .snippet(
                 location.getProduction().getTitle())); //TODO Snipper should be something else?
-        marker.setTag(exampleLocation);
+        marker.setTag(location);
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
           @Override
           public void onInfoWindowClick(Marker marker) {
-            FilmLocation markerLocation = ((FilmLocation) marker.getTag());
-            Bundle extras = new Bundle();
             String test = location.getId().toString();
             Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
             intent.putExtra("locationID", test);
