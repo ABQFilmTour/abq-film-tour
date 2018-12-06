@@ -4,10 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;
-import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
-import edu.cnm.deepdive.abq_film_tour.model.entity.User;
+import com.google.gson.annotations.SerializedName;
 
 @Entity(    foreignKeys =  {
     @ForeignKey(entity = User.class, parentColumns = "user_id",
@@ -37,22 +35,31 @@ public class FilmLocation {
 
   //Film and series listed on imdb are 7 digit ids prefixed with "tt".
   //can be accessed with www.omdbapi.com/
-  @NonNull
-  @ColumnInfo(name = "imdb_id")
-  private String imdbid;
+  @SerializedName("imdbId")
+  @Expose
+  private String imdbID;
 
   //These fields exist in the city data but can be pulled from the imdb ID and may not be necessary.
+  @Expose
   private String title;
+
+  @Expose
   private String type;
 
   //These fields exist in the city data and may be useful, perhaps could be mentioned in a comment,
   // but do not seem critically important.
+  @Expose
   private String address;
-  @ColumnInfo(name = "shoot_date")
-  private long ShootDate;
-  @ColumnInfo(name = "original_details")
+  @Expose
+  private long shootDate;
+  @Expose
   private String originalDetails;
 
+  @Expose
+  @SerializedName("googleUser")
+  private User user;
+
+  @Expose
   private Production production;
 
   public FilmLocation() {
@@ -76,11 +83,11 @@ public class FilmLocation {
   }
 
   public String getImdbid() {
-    return imdbid;
+    return imdbID;
   }
 
   public void setImdbid(String imdbid) {
-    this.imdbid = imdbid;
+    this.imdbID = imdbid;
   }
 
   public Production getProduction() {
@@ -116,11 +123,11 @@ public class FilmLocation {
   }
 
   public long getShootDate() {
-    return ShootDate;
+    return shootDate;
   }
 
   public void setShootDate(long shootDate) {
-    ShootDate = shootDate;
+    this.shootDate = shootDate;
   }
 
   public String getOriginalDetails() {

@@ -32,6 +32,7 @@ import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import edu.cnm.deepdive.abq_film_tour.service.Service;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -46,18 +47,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private ArrayList<String> movieTitles;
   private ArrayList<String> tvTitles;
-  List<FilmLocation> locations;
+  private List<FilmLocation> locations;
+  private List<Production> productions;
   private GoogleMap map;
   private SelectionDialog selectionDialog;
   private FusedLocationProviderClient fusedLocationProviderClient;
   private Bundle arguments;
 
-  private FilmLocation exampleLocation;
-  private Production exampleProduction;
-  private User exampleUser;
-  private UserComment exampleComment;
+  public static FilmLocation exampleLocation;
+  public static Production exampleProduction;
+  public static User exampleUser;
+  public static UserComment exampleComment;
 
-  FilmTourApplication filmTourApplication;
+  private FilmTourApplication filmTourApplication;
 
   private Gson gson;
   private Retrofit retrofit;
@@ -67,16 +69,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+    setupService();
+    new GetProductionsTask().execute();
     ActionBar actionBar = getSupportActionBar();
     actionBar.setLogo(R.mipmap.ic_filmtour_round);
     actionBar.setDisplayUseLogoEnabled(true);
     actionBar.setDisplayShowHomeEnabled(true);
-    setupService();
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
-    createDummyTitles();
     createExampleData();
   }
 
@@ -129,6 +131,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       movieTitles.add("Movie Title " + i);
       tvTitles.add("TV Title " + i);
     }
+  }
+
+  private void createNotDummyTitles() {
+    movieTitles = new ArrayList<>();
+    tvTitles = new ArrayList<>();
+    for (Production production : productions) {
+      if (production.getType() == null) {
+        System.out.println(production.getTitle() + "IS NULL!!");
+        continue;
+      }
+      else if (production.getType().equals("series")) {
+        tvTitles.add(production.getTitle());
+      }
+      else if (production.getType().equals("movie")) {
+        movieTitles.add(production.getTitle());
+      }
+    }
+    Collections.sort(tvTitles);
+    Collections.sort(movieTitles);
   }
 
   @Override
@@ -208,6 +229,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
   }
 
+  private class GetProductionsTask extends AsyncTask<Void, Void, Void> {
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+      try {
+        productions = service.getProductions().execute().body();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      super.onPostExecute(aVoid);
+      createNotDummyTitles();
+      System.out.println("productions in");
+    }
+  }
+
   private class PopulateMapPinsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
@@ -226,6 +272,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         System.out.println("oh no!!");
       }
       return null;
+
     }
 
     @Override
@@ -238,8 +285,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .position(coordinates)
             .title(location.getSiteName())
             .snippet(
-                location.getOriginalDetails())); //TODO Snipper should be something else?
+                location.getProduction().getTitle())); //TODO Snipper should be something else?
         marker.setTag(exampleLocation);
+        System.out.println(location.getProduction().getTitle());
+        System.out.println(location.getImdbid());
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
           @Override
           public void onInfoWindowClick(Marker marker) {
