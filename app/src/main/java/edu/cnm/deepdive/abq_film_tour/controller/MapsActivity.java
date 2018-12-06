@@ -52,10 +52,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private FusedLocationProviderClient fusedLocationProviderClient;
   private Bundle arguments;
 
-  private FilmLocation exampleLocation;
-  private Production exampleProduction;
-  private User exampleUser;
-  private UserComment exampleComment;
+  public static FilmLocation exampleLocation;
+  public static Production exampleProduction;
+  public static User exampleUser;
+  public static UserComment exampleComment;
 
   FilmTourApplication filmTourApplication;
 
@@ -233,7 +233,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       System.out.println("on post execute");
       for (FilmLocation location : locations) {
         System.out.println(location.getSiteName());
-        LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()), Double.valueOf(location.getLatCoordinate()));
+        LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
+            Double.valueOf(location.getLatCoordinate()));
         Marker marker = map.addMarker(new MarkerOptions()
             .position(coordinates)
             .title(location.getSiteName())
@@ -250,7 +251,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(intent);
           }
         });
-        LatLng startCoordinates = new LatLng(Double.valueOf(exampleLocation.getLongCoordinate()), Double.valueOf(exampleLocation.getLatCoordinate()));
+        LatLng startCoordinates = new LatLng(Double.valueOf(exampleLocation.getLongCoordinate()),
+            Double.valueOf(exampleLocation.getLatCoordinate()));
         map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
         map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
       }
