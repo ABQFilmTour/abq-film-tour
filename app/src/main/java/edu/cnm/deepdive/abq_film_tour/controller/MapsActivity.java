@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -43,7 +42,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private SelectionDialog selectionDialog;
   private FusedLocationProviderClient fusedLocationProviderClient;
   private Bundle arguments;
-
   private FilmLocation exampleLocation;
   private Production exampleProduction;
   private User exampleUser;
@@ -53,10 +51,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
-    ActionBar actionBar = getSupportActionBar();
-    actionBar.setLogo(R.mipmap.ic_filmtour_round);
-    actionBar.setDisplayUseLogoEnabled(true);
-    actionBar.setDisplayShowHomeEnabled(true);
+
+    //sets action bar icon
+//    ActionBar actionBar = getSupportActionBar();
+//    actionBar.setIcon(R.mipmap.ic_filmtour_round);
+//    actionBar.setDisplayUseLogoEnabled(true);
+//    actionBar.setDisplayShowHomeEnabled(true);
 
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

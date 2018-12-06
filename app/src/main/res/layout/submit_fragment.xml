@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:gravity="center"
+  android:orientation="vertical"
+  android:padding="10dp"
+  android:background="#FFFFFF">
+
+  <ImageView
+    android:id="@+id/upload_image"
+    android:layout_gravity="center_horizontal"
+    android:layout_width="150dp"
+    android:layout_height="150dp"/>
+  <Button
+    android:id="@+id/upload_image_btn"
+    android:text="Upload"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+  <android.support.design.widget.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <EditText
+      android:id="@+id/register_site_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="Site Name"
+      android:maxEms="15"/>
+    <android.support.design.widget.TextInputLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:gravity="center_horizontal">
+
+      <EditText
+        android:id="@+id/register_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description"
+        android:maxEms="100"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+  </android.support.design.widget.TextInputLayout>
+
+  <Button
+    android:id="@+id/Register"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
+    android:layout_marginTop="40dp"
+    android:text="Register"
+    android:textColor="@color/colorPrimaryDark"/>
+
+</LinearLayout>

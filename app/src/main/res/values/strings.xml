@@ -1,6 +1,6 @@
 <resources>
   <string name="app_name">abq-film-tour</string>
-  <string name="title_activity_maps">ABQ Film Tour</string>
+  <string name="title_activity_maps">Film Tour</string>
   <string name="menu_all_near_me">Near Me</string>
   <string name="menu_film">Film</string>
   <string name="menu_television">Television</string>
