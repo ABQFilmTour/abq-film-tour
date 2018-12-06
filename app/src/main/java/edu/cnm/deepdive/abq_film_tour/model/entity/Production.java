@@ -6,8 +6,11 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity(
     foreignKeys = {
@@ -15,37 +18,28 @@ import java.util.Date;
             childColumns = "film_location_id", onDelete = ForeignKey.CASCADE)
     }
 )
-
-
 public class Production {
 
-  @ColumnInfo(index = true)
-  private Date timestamp = new Date();
-
+  @Expose
   //"movie" or "series"
   private String type;
 
+  @Expose
   private String releaseYear;
 
-  @PrimaryKey(autoGenerate = true)
-  @ColumnInfo(name="production_id")
-  private long id;
+  //@PrimaryKey(autoGenerate = true)
+  //@ColumnInfo(name="production_id")
+  @Expose
+  private String id;
 
+  @Expose
   private String title;
 
-  //imdb key
+  @Expose
   private String imdbID;
 
+  @Expose
   private String plot;
-
-  @NonNull
-  public Date getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(@NonNull Date timestamp) {
-    this.timestamp = timestamp;
-  }
 
   public String getReleaseYear() {
     return releaseYear;
@@ -63,11 +57,11 @@ public class Production {
     this.type = type;
   }
 
-  public long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(String id) {
     this.id = id;
   }
 

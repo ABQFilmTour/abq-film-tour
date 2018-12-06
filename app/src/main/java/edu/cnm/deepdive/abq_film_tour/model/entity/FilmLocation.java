@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import com.google.gson.annotations.Expose;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 
@@ -22,17 +23,16 @@ public class FilmLocation {
 
   //These fields exist in the city data but are critical to the entity and should be the minimum
   //requirements for submitted data.
-  @NonNull
-  @ColumnInfo(name = "long_coor")
-  private double longCoordinate;
-  @NonNull
-  @ColumnInfo(name = "lat_coor")
-  private double latCoordinate;
+
+  @Expose
+  private String longCoordinate;
+
+  @Expose
+  private String latCoordinate;
 
   //Even if a location may not necessarily have a site name, it probably should be required if this
   //data will be displayed in a a table.
-  @NonNull
-  @ColumnInfo(name = "site_name")
+  @Expose
   private String siteName;
 
   //Film and series listed on imdb are 7 digit ids prefixed with "tt".
@@ -57,12 +57,6 @@ public class FilmLocation {
 
   public FilmLocation() {
 
-  }
-
-  public FilmLocation(String siteName, double longCoordinate, double latCoordinate) {
-    this.siteName = siteName;
-    this.longCoordinate = longCoordinate;
-    this.latCoordinate = latCoordinate;
   }
 
   public long getId() {
@@ -137,19 +131,19 @@ public class FilmLocation {
     this.originalDetails = originalDetails;
   }
 
-  public double getLongCoordinate() {
+  public String getLongCoordinate() {
     return longCoordinate;
   }
 
-  public void setLongCoordinate(double longCoordinate) {
+  public void setLongCoordinate(String longCoordinate) {
     this.longCoordinate = longCoordinate;
   }
 
-  public double getLatCoordinate() {
+  public String getLatCoordinate() {
     return latCoordinate;
   }
 
-  public void setLatCoordinate(double latCoordinate) {
+  public void setLatCoordinate(String latCoordinate) {
     this.latCoordinate = latCoordinate;
   }
 
