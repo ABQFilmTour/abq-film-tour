@@ -71,14 +71,12 @@ public class SelectionDialog extends DialogFragment {
     ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
     params.width = LayoutParams.MATCH_PARENT;
     params.height = LayoutParams.MATCH_PARENT;
-
-
     final Drawable d = new ColorDrawable(Color.BLACK);
     d.setAlpha(50);
     getDialog().getWindow().setBackgroundDrawable(d);
-
     getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams)params);
     super.onResume();
   }
+
 }
 

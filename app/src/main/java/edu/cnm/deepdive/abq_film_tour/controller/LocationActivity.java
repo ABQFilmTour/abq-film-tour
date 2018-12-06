@@ -38,6 +38,10 @@ public class LocationActivity extends AppCompatActivity {
     production = MapsActivity.exampleProduction;
     comment = MapsActivity.exampleComment;
 
+    Bundle extras = getIntent().getExtras();
+    String locationID = extras.getString("locationID");
+    this.setTitle(locationID);
+
     locationImage = findViewById(R.id.image_view);
     locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);

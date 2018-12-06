@@ -119,7 +119,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     exampleLocation.setShootDate(1216857600000L);
 
     exampleComment = new UserComment();
-    exampleComment.setFilmLocationId(exampleLocation.getId());
     exampleComment.setContent(
         "Shot on 07/23/2008 at 1216 Central Avenue NW. The Dog House - 1216 Central - ITC on Central from 11th to 14th St.");
   }
@@ -279,7 +278,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onPostExecute(Void aVoid) {
       System.out.println("on post execute");
       for (FilmLocation location : locations) {
-        System.out.println(location.getSiteName());
+        System.out.println(location.getId());
         LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
             Double.valueOf(location.getLatCoordinate()));
         Marker marker = map.addMarker(new MarkerOptions()
@@ -288,15 +287,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .snippet(
                 location.getProduction().getTitle())); //TODO Snipper should be something else?
         marker.setTag(exampleLocation);
-        System.out.println(location.getProduction().getTitle());
-        System.out.println(location.getImdbid());
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
           @Override
           public void onInfoWindowClick(Marker marker) {
             FilmLocation markerLocation = ((FilmLocation) marker.getTag());
             Bundle extras = new Bundle();
-            extras.putString("exampleTag", markerLocation.getSiteName());
+            String test = location.getId().toString();
             Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
+            intent.putExtra("locationID", test);
             startActivity(intent);
           }
         });
