@@ -44,10 +44,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private FusedLocationProviderClient fusedLocationProviderClient;
   private Bundle arguments;
 
-  private FilmLocation exampleLocation;
-  private Production exampleProduction;
-  private User exampleUser;
-  private UserComment exampleComment;
+  public static FilmLocation exampleLocation;
+  public static Production exampleProduction;
+  public static User exampleUser;
+  public static UserComment exampleComment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     createExampleData();
   }
 
-  private void createExampleData() {
+  public void createExampleData() {
     exampleUser = new User();
     exampleUser.setGoogleName("Walter White");
     exampleUser.setGoogleId("12345");
