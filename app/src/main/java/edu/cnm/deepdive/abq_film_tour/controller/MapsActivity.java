@@ -96,7 +96,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     mapFragment.getMapAsync(this);
 
     ActionBar actionBar = getSupportActionBar();
-    actionBar.setLogo(R.mipmap.ic_filmtour_round);
+    actionBar.setLogo(R.drawable.toolbar_icon);
     actionBar.setDisplayUseLogoEnabled(true);
     actionBar.setDisplayShowHomeEnabled(true);
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
