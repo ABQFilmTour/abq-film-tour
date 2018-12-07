@@ -3,15 +3,19 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +25,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import edu.cnm.deepdive.abq_film_tour.R;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class SubmitDialog extends DialogFragment implements View.OnClickListener{
   private static final int RESULT_LOAD_IMAGE = 1;
@@ -37,15 +43,12 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.submit_fragment, null, false);
-//    dialog.setContentView(view);
-//    dialog.setCancelable(true);
 
     uploadImage = view.findViewById(R.id.upload_image);
 
     uploadImagebutton = view.findViewById(R.id.upload_image_btn);
     registerButton = view.findViewById(R.id.register);
 
-    uploadImage.setOnClickListener(this);
     uploadImagebutton.setOnClickListener(this);
     registerButton.setOnClickListener(this);
 
@@ -71,6 +74,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
         startActivityForResult(galleryIntenet, RESULT_LOAD_IMAGE);
         break;
       case R.id.register:
+        Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
         break;
     }
   }
@@ -81,6 +85,36 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
       Uri selectedImage = data.getData();
       uploadImage.setImageURI(selectedImage);
+    }
+  }
+
+  private class Register extends AsyncTask<Void, Void, Void>{
+
+    Bitmap image;
+    String siteName;
+    String description;
+
+    public Register(Bitmap image, String siteName, String description){
+      this.image = image;
+      this.siteName = siteName;
+      this.description = description;
+
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      image.compress(CompressFormat.JPEG, 100, byteArrayOutputStream);
+      String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(),
+          Base64.DEFAULT);
+
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      super.onPostExecute(aVoid);
     }
   }
 }
