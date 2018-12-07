@@ -53,12 +53,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private static final String TYPE_SERIES = "series";
   private static final String TYPE_MOVIE = "movie";
   private static final String LOCATION_ID_KEY = "location_id_key";
-  private static final float ZOOM_LEVEL = 10; //TODO Zoom level? Start coordinates?
+  private static final float ZOOM_LEVEL = 8; //TODO Zoom level? Start coordinates?
   //First result on google when I searched "city of albuquerque coordinates"
   private static final String START_LONG = "-106.6055534";
   private static final String START_LAT = "35.0853336";
   public static final String TITLE_LIST_KEY = "titlesList";
   public static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
+  private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
 
   //FIELDS
   private FilmTourApplication filmTourApplication;
@@ -127,7 +128,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       double latitude = location.getLatitude();
       double longitude = location.getLongitude();
       String msg = "New Latitude: " + latitude + "New Longitude: " + longitude;
-      Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+      //Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -154,7 +155,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private void isLocationEnabled() {
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-      AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+      /*AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
       alertDialog.setTitle("Enable Location");
       alertDialog
           .setMessage("Your locations setting is not enabled. Please enabled it in settings menu.");
@@ -174,14 +175,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     } else {
       AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
       alertDialog.setTitle("Confirm Location");
-      alertDialog.setMessage("Your Location is enabled, please enjoy");
+      alertDialog.setMessage("Select a title to begin!");
       alertDialog.setNegativeButton("Back to interface", new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
           dialog.cancel();
         }
       });
       AlertDialog alert = alertDialog.create();
-      alert.show();
+      alert.show();*/
     }
   }
 
@@ -224,7 +225,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_all_near_me:
         getDeviceLocation();
-        Toast.makeText(this, "Near me", Toast.LENGTH_SHORT).show();
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
@@ -284,6 +284,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   public void populateMapFromTitle(String title) {
     map.clear();
     for (FilmLocation location : locations) {
+      this.setTitle(title);
       if (location.getProduction().getTitle() != null && location.getProduction().getTitle()
           .equals(title)) {
         LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
@@ -294,7 +295,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .snippet(
                 location.getProduction().getTitle())); //TODO Snipper should be something else?
         marker.setTag(location);
-
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
           @Override
           public void onInfoWindowClick(Marker marker) {
@@ -358,34 +358,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      for (FilmLocation location : locations) {
-        LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
-            Double.valueOf(location.getLatCoordinate()));
-        Marker marker = map.addMarker(new MarkerOptions()
-            .position(coordinates)
-            .title(location.getSiteName())
-            .snippet(
-                location.getProduction().getTitle())); //TODO Snipper should be something else?
-        marker.setTag(location);
-        map.setOnInfoWindowClickListener(marker1 -> {
-          FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
-          Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
-          intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
-          startActivity(intent);
-        });
-      }
+      Toast.makeText(MapsActivity.this, "Select a title from the drop down menu to get started!", Toast.LENGTH_LONG).show();
     }
   }
 
-  private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
-
-//  @Override
-//  public void onCreate(@Nullable Bundle savedInstanceState,
-//      @Nullable PersistableBundle persistentState) {
-//    this.setTitle(this.getIntent().getExtras().getString("exampleTag"));
-//
-//    super.onCreate(savedInstanceState, persistentState);
-//  }
 
 
   private void getLocationPermission() {
@@ -464,42 +440,3 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
 }
-
-//      Location location = locationManager
-//          .getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-
-
-//      if (location == null) {
-//        FilmLocation hotDogPlace = new FilmLocation("The Dog House", 35.0879, -106.6614);
-//        hotDogPlace.setOriginalDetails("Original details here \uD83C\uDF2D");
-//        LatLng dogHouseCoordinates = new LatLng(hotDogPlace.getLongCoordinate(), hotDogPlace.getLatCoordinate());
-//        map.moveCamera(CameraUpdateFactory.newLatLng(dogHouseCoordinates));
-//        map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
-//
-//      }else{
-//          fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, userLocation -> {
-//            userLocation.setLatitude(lastKnownLocation.getLatitude());
-//            userLocation.setLongitude(lastKnownLocation.getLongitude());
-//            LatLng userLocationCoordinates =
-//                new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-//            map.moveCamera(CameraUpdateFactory.newLatLng(userLocationCoordinates));
-//          });
-//        }
-
-//      }else{ MapsActivity.map.animateCamera(CameraUpdateFactory
-//          .newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-//
-//        CameraPosition cameraPosition = new CameraPosition.Builder()
-//            .target(new LatLng(location.getLatitude(),
-//                location.getLongitude()))      // Sets the center of the map to location user
-//            .zoom(17)                   // Sets the zoom
-//            .bearing(90)                // Sets the orientation of the camera to east
-//            .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-//            .build();                   // Creates a CameraPosition from the builder
-//        MapsActivity.map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-
-
-
-
