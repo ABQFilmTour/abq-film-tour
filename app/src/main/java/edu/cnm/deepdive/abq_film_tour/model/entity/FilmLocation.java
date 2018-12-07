@@ -1,11 +1,10 @@
 package edu.cnm.deepdive.abq_film_tour.model.entity;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity(    foreignKeys =  {
@@ -18,6 +17,9 @@ public class FilmLocation {
 
   @Expose
   private UUID id;
+
+  @Expose
+  private Date created;
 
   //These fields exist in the city data but are critical to the entity and should be the minimum
   //requirements for submitted data.
@@ -35,9 +37,8 @@ public class FilmLocation {
 
   //Film and series listed on imdb are 7 digit ids prefixed with "tt".
   //can be accessed with www.omdbapi.com/
-  @SerializedName("imdbId")
   @Expose
-  private String imdbID;
+  private String imdbId;
 
   //These fields exist in the city data but can be pulled from the imdb ID and may not be necessary.
   @Expose
@@ -83,11 +84,11 @@ public class FilmLocation {
   }
 
   public String getImdbid() {
-    return imdbID;
+    return imdbId;
   }
 
   public void setImdbid(String imdbid) {
-    this.imdbID = imdbid;
+    this.imdbId = imdbid;
   }
 
   public Production getProduction() {
