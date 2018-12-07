@@ -1,14 +1,11 @@
 package edu.cnm.deepdive.abq_film_tour.model.entity;
 
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;
-import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
-import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 import java.util.Date;
 import java.util.UUID;
 
@@ -19,33 +16,24 @@ import java.util.UUID;
         @ForeignKey(entity = User.class, parentColumns = "userId",
             childColumns = "userId", onDelete = ForeignKey.CASCADE)
     }
-
-
 )
 public class UserComment {
 
-  @PrimaryKey(autoGenerate = true)
+  @PrimaryKey(autoGenerate = false)
+  @Expose
   private UUID id;
 
-  @ColumnInfo(name = "film_location_id")
-  private UUID filmLocationId;
-
-  @ColumnInfo(name = "user_id")
-  private UUID userId;
+  @Expose
+  private FilmLocation filmLocation;
 
   @Expose
-  private Date timestamp = new Date();
+  private User user;
 
-  private String content;
+  @Expose
+  private Date created;
 
-  @NonNull
-  public Date getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(@NonNull Date timestamp) {
-    this.timestamp = timestamp;
-  }
+  @Expose
+  private String text;
 
   public UUID getId() {
     return id;
@@ -55,27 +43,35 @@ public class UserComment {
     this.id = id;
   }
 
-  public UUID getFilmLocationId() {
-    return filmLocationId;
+  public FilmLocation getFilmLocation() {
+    return filmLocation;
   }
 
-  public void setFilmLocationId(UUID filmLocationId) {
-    this.filmLocationId = filmLocationId;
+  public void setFilmLocation(FilmLocation filmLocation) {
+    this.filmLocation = filmLocation;
   }
 
-  public UUID getUserId() {
-    return userId;
+  public User getUser() {
+    return user;
   }
 
-  public void setUserId(UUID userId) {
-    this.userId = userId;
+  public void setUser(User user) {
+    this.user = user;
   }
 
-  public String getContent() {
-    return content;
+  public Date getCreated() {
+    return created;
   }
 
-  public void setContent(String content) {
-    this.content = content;
+  public void setCreated(Date created) {
+    this.created = created;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
   }
 }

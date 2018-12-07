@@ -201,6 +201,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .snippet(
                 location.getProduction().getTitle())); //TODO Snipper should be something else?
         marker.setTag(location);
+
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
           @Override
           public void onInfoWindowClick(Marker marker) {

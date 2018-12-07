@@ -41,8 +41,6 @@ public class LocationActivity extends AppCompatActivity {
     setContentView(R.layout.activity_location);
     filmTourApplication = (FilmTourApplication) getApplication();
 
-//    comment = MapsActivity.exampleComment; //TODO fix
-
     Bundle extras = getIntent().getExtras();
     assert extras != null;
     String locationID = extras.getString(LOCATION_ID_KEY);
@@ -51,7 +49,7 @@ public class LocationActivity extends AppCompatActivity {
     locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);
     locationImdb = findViewById(R.id.imdb_link_view);
-//    locationComments = findViewById(R.id.comments_view);
+    locationComments = findViewById(R.id.comments_view);
     locationPlot = findViewById(R.id.plot_view);
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
@@ -60,14 +58,13 @@ public class LocationActivity extends AppCompatActivity {
 
   public class LocationTask extends AsyncTask<UUID, Void, Void> {
 
-
     @Override
     protected Void doInBackground(UUID... UUIDs) {
       try {
         location = filmTourApplication.getService().getFilmLocation(UUIDs[0]).execute().body();
         userComments = filmTourApplication.getService().getComments(UUIDs[0]).execute().body();
       } catch (IOException e) {
-        // TODO Handle or don't.
+        System.out.println("IO exception thrown in LocationTask of LocationActivity.");
       }
       return null;
     }
@@ -83,9 +80,8 @@ public class LocationActivity extends AppCompatActivity {
       locationProductionTitle.setText(productionTitle);
       String productionPlot = production.getPlot();
       locationPlot.setText(productionPlot);
-      /* TODO get real comments as opposed to one
-      String locationComment = userComments.get(0).getContent();
-      locationComments.setText(locationComment);*/
+      String locationComment = userComments.get(0).getText();
+      locationComments.setText(locationComment);
       locationImdb.setText(R.string.imdb_link);
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());
