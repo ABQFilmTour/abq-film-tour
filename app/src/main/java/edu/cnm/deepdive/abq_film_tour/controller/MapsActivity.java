@@ -53,6 +53,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private List<Production> productions;
   private GoogleMap map;
   private SelectionDialog selectionDialog;
+  private SubmitDialog submitDialog;
   private FusedLocationProviderClient fusedLocationProviderClient;
   private Bundle arguments;
 
@@ -181,6 +182,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         arguments.putStringArrayList(TITLE_LIST_KEY, movieTitles);
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
+        break;
+
+      case R.id.menu_submit:
+        submitDialog = new SubmitDialog();
+        submitDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.sign_out:
         signOut();

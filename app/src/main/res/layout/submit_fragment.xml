@@ -1,42 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+  android:id="@+id/submit_fragment"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:gravity="center"
+  android:layout_gravity="center"
   android:orientation="vertical"
   android:padding="10dp"
-  android:background="#FFFFFF">
+  android:layout_margin="32dp"
+  android:background="@color/colorPrimaryDark">
 
   <ImageView
     android:id="@+id/upload_image"
     android:layout_gravity="center_horizontal"
     android:layout_width="150dp"
     android:layout_height="150dp"/>
+
   <Button
     android:id="@+id/upload_image_btn"
-    android:text="Upload"
+    android:text="Upload Image"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content"
+    android:textColor="@color/colorPrimaryDark"
+    android:background="#ffad29"
+    android:padding="10dp"/>
 
   <android.support.design.widget.TextInputLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center">
+    android:gravity="center_horizontal"
+    android:background="#D3D3D3"
+    android:paddingTop="20dp">
 
     <EditText
       android:id="@+id/register_site_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Site Name"
-      android:maxEms="15"/>
+      android:maxEms="15"
+      />
     <android.support.design.widget.TextInputLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="10dp"
-      android:gravity="center_horizontal">
+      android:gravity="center_horizontal"
+      android:background="#D3D3D3">
 
       <EditText
         android:id="@+id/register_description"
@@ -50,12 +60,12 @@
   </android.support.design.widget.TextInputLayout>
 
   <Button
-    android:id="@+id/Register"
+    android:id="@+id/register"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorAccent"
-    android:layout_marginTop="40dp"
+    android:layout_marginTop="10dp"
     android:text="Register"
-    android:textColor="@color/colorPrimaryDark"/>
+    android:textColor="@color/colorPrimaryDark"
+    android:background="#ffad29"/>
 
 </LinearLayout>
