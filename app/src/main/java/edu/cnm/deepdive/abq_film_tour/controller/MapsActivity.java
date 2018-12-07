@@ -4,6 +4,7 @@ import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.SELECTED
 import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.TITLE_LIST_KEY;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * The type Maps activity.
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,DialogInterface.OnDismissListener {
 
 
   private final String LOCATION_ID_KEY = "location_id_key";
@@ -173,6 +174,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "TV SHOW");
         arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
         selectionDialog.setArguments(arguments);
+        selectionDialog.onDismiss(new DialogInterface() {
+          @Override
+          public void cancel() {
+            System.out.println("cancelled");
+          }
+
+          @Override
+          public void dismiss() {
+            System.out.println("DISMISSED!!!");
+          }
+        });
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.menu_film:
@@ -183,11 +195,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
-
+/*
       case R.id.menu_submit:
         submitDialog = new SubmitDialog();
         submitDialog.show(getSupportFragmentManager(), "dialog");
-        break;
+        break; */
       case R.id.sign_out:
         signOut();
         break;
@@ -211,6 +223,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     new PopulateMapPinsTask().execute();
   }
 
+  public void nestedMethod(String title) {
+    populateMapFromTitle(title);
+  }
+
   private void signOut() {
     FilmTourApplication app = FilmTourApplication.getInstance();
     app.getClient().signOut().addOnCompleteListener(this, (task) -> {
@@ -220,6 +236,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       startActivity(intent);
     });
   }
+
+  @Override
+  public void onDismiss(DialogInterface dialog) {
+    System.out.println("dismissed??");
+  }
+
+  private void populateMapFromTitle(String title) {
+    map.clear();
+    System.out.println("Map cleared");
+    for (FilmLocation location : locations) {
+      if (location.getProduction().getTitle() != null && location.getProduction().getTitle().equals(title)) {
+        LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
+            Double.valueOf(location.getLatCoordinate()));
+        Marker marker = map.addMarker(new MarkerOptions()
+            .position(coordinates)
+            .title(location.getSiteName())
+            .snippet(
+                location.getProduction().getTitle())); //TODO Snipper should be something else?
+        marker.setTag(location);
+        map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+          @Override
+          public void onInfoWindowClick(Marker marker) {
+            FilmLocation taggedLocation = (FilmLocation) marker.getTag();
+            System.out.println(marker.getTag());
+            Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
+            intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
+            startActivity(intent);
+          }
+        });
+      }
+    }
+  }
+
 
   private class GetProductionsTask extends AsyncTask<Void, Void, Void> {
 

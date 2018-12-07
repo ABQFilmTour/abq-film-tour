@@ -4,6 +4,7 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 
 import android.widget.Toast;
 import edu.cnm.deepdive.abq_film_tour.R;
+import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -29,7 +31,7 @@ public class SelectionDialog extends DialogFragment {
 
   public static final String TITLE_LIST_KEY="titlesList";
   public static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
-
+  MapsActivity parentMap;
 
   @NonNull
   @Override
@@ -37,6 +39,7 @@ public class SelectionDialog extends DialogFragment {
   super.onCreateDialog(savedInstanceState);
     AlertDialog.Builder builder = new Builder(getActivity());
 
+    parentMap = (MapsActivity) getActivity();
 
     View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_selection, null,false);
     Toolbar toolbar = view.findViewById(R.id.my_toolbar);
@@ -52,18 +55,20 @@ public class SelectionDialog extends DialogFragment {
         android.R.layout.simple_list_item_1, titles);
     selectionListView.setAdapter(adapter);
     selectionListView.setVisibility(View.VISIBLE);
-    selectionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        System.out.println(titles.get(position));
-        Toast.makeText(getContext(), titles.get(position), Toast.LENGTH_LONG).show();
-      }
+    selectionListView.setOnItemClickListener((parent, view1, position, id) -> {
+      System.out.println(titles.get(position));
+      String theTitle = titles.get(position);
+      parentMap.nestedMethod(theTitle);
+      dismiss();
     });
-
 
 
   builder.setView(view);
   return builder.create();
+  }
+
+  @Override
+  public void onDismiss(DialogInterface dialog) {
   }
 
   @Override
