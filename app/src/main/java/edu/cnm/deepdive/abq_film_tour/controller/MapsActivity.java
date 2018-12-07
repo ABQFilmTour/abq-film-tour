@@ -20,6 +20,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -95,7 +97,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     mapFragment.getMapAsync(this);
 
     ActionBar actionBar = getSupportActionBar();
-    actionBar.setLogo(R.mipmap.ic_filmtour_round);
+    actionBar.setLogo(R.drawable.toolbar_icon);
     actionBar.setDisplayUseLogoEnabled(true);
     actionBar.setDisplayShowHomeEnabled(true);
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -366,6 +368,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .title(location.getSiteName())
             .snippet(
                 location.getProduction().getTitle())); //TODO Snipper should be something else?
+
         marker.setTag(location);
         map.setOnInfoWindowClickListener(marker1 -> {
           FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
