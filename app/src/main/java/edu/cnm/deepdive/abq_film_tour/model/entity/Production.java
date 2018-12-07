@@ -36,7 +36,7 @@ public class Production {
   private String title;
 
   @Expose
-  private String imdbID;
+  private String imdbId;
 
   @Expose
   private String plot;
@@ -74,11 +74,11 @@ public class Production {
   }
 
   public String getImdbID() {
-    return imdbID;
+    return imdbId;
   }
 
   public void setImdbID(String imdbID) {
-    this.imdbID = imdbID;
+    this.imdbId = imdbID;
   }
 
   public String getPlot() {

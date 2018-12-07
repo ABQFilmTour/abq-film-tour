@@ -58,7 +58,7 @@ public class SelectionDialog extends DialogFragment {
     selectionListView.setOnItemClickListener((parent, view1, position, id) -> {
       System.out.println(titles.get(position));
       String theTitle = titles.get(position);
-      parentMap.nestedMethod(theTitle);
+      parentMap.populateMapFromTitle(theTitle);
       dismiss();
     });
 

@@ -15,6 +15,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 public class LocationActivity extends AppCompatActivity {
@@ -26,9 +27,9 @@ public class LocationActivity extends AppCompatActivity {
   private TextView locationPlot;
   private TextView locationComments;
 
-  private static FilmLocation location;
-  private static Production production;
-  private static UserComment comment;
+  private FilmLocation location;
+  private Production production;
+  private List<UserComment> userComments;
 
   private final String LOCATION_ID_KEY = "location_id_key";
 
@@ -40,7 +41,7 @@ public class LocationActivity extends AppCompatActivity {
     setContentView(R.layout.activity_location);
     filmTourApplication = (FilmTourApplication) getApplication();
 
-    comment = MapsActivity.exampleComment; //TODO fix
+//    comment = MapsActivity.exampleComment; //TODO fix
 
     Bundle extras = getIntent().getExtras();
     assert extras != null;
@@ -50,7 +51,7 @@ public class LocationActivity extends AppCompatActivity {
     locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);
     locationImdb = findViewById(R.id.imdb_link_view);
-    locationComments = findViewById(R.id.comments_view);
+//    locationComments = findViewById(R.id.comments_view);
     locationPlot = findViewById(R.id.plot_view);
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
@@ -64,6 +65,7 @@ public class LocationActivity extends AppCompatActivity {
     protected Void doInBackground(UUID... UUIDs) {
       try {
         location = filmTourApplication.getService().getFilmLocation(UUIDs[0]).execute().body();
+        userComments = filmTourApplication.getService().getComments(UUIDs[0]).execute().body();
       } catch (IOException e) {
         // TODO Handle or don't.
       }
@@ -73,6 +75,7 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onPostExecute(Void aVoid) {
       super.onPostExecute(aVoid);
+      String pathId = location.getId().toString();
       production = location.getProduction();
       String locationText = location.getSiteName();
       locationTitle.setText(locationText);
@@ -80,11 +83,10 @@ public class LocationActivity extends AppCompatActivity {
       locationProductionTitle.setText(productionTitle);
       String productionPlot = production.getPlot();
       locationPlot.setText(productionPlot);
-      /* TODO Get real comments
-      String locationComment = comment.getContent();
-      locationComments.setText(locationComment);
-      */
-      locationImdb.setText(R.string.imdb_link); // FIXME Null ID on link
+      /* TODO get real comments as opposed to one
+      String locationComment = userComments.get(0).getContent();
+      locationComments.setText(locationComment);*/
+      locationImdb.setText(R.string.imdb_link);
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());
         System.out.println(production.getImdbID());

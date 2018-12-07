@@ -6,9 +6,11 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import com.google.gson.annotations.Expose;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity(
     foreignKeys =  {
@@ -22,22 +24,18 @@ import java.util.Date;
 )
 public class UserComment {
 
-
-  @ColumnInfo(name = "comments_id")
   @PrimaryKey(autoGenerate = true)
-  private long id;
+  private UUID id;
 
   @ColumnInfo(name = "film_location_id")
-  private long filmLocationId;
+  private UUID filmLocationId;
 
   @ColumnInfo(name = "user_id")
-  private long userId;
+  private UUID userId;
 
-  @NonNull
-  @ColumnInfo(index = true)
+  @Expose
   private Date timestamp = new Date();
 
-  @ColumnInfo(name = "content")
   private String content;
 
   @NonNull
@@ -49,27 +47,27 @@ public class UserComment {
     this.timestamp = timestamp;
   }
 
-  public long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
-  public long getFilmLocationId() {
+  public UUID getFilmLocationId() {
     return filmLocationId;
   }
 
-  public void setFilmLocationId(long filmLocationId) {
+  public void setFilmLocationId(UUID filmLocationId) {
     this.filmLocationId = filmLocationId;
   }
 
-  public long getUserId() {
+  public UUID getUserId() {
     return userId;
   }
 
-  public void setUserId(long userId) {
+  public void setUserId(UUID userId) {
     this.userId = userId;
   }
 

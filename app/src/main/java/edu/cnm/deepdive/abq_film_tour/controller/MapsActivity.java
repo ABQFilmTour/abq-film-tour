@@ -42,7 +42,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private static final String TYPE_SERIES = "series";
   private static final String TYPE_MOVIE = "movie";
   private static final String LOCATION_ID_KEY = "location_id_key";
-  private static final float ZOOM_LEVEL = 15; //TODO Zoom level? Start coordinates?
+  private static final float ZOOM_LEVEL = 10; //TODO Zoom level? Start coordinates?
   //First result on google when I searched "city of albuquerque coordinates"
   private static final String START_LONG = "-106.6055534";
   private static final String START_LAT = "35.0853336";
@@ -117,7 +117,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    String TITLE_SELECTED;
     selectionDialog = new SelectionDialog();
     boolean handled = true;
     switch (item.getItemId()) {
@@ -181,10 +180,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
   }
 
-  public void nestedMethod(String title) {
-    populateMapFromTitle(title);
-  }
-
   private void signOut() {
     FilmTourApplication app = FilmTourApplication.getInstance();
     app.getClient().signOut().addOnCompleteListener(this, (task) -> {
@@ -195,7 +190,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
   }
 
-  private void populateMapFromTitle(String title) {
+  public void populateMapFromTitle(String title) {
     map.clear();
     for (FilmLocation location : locations) {
       if (location.getProduction().getTitle() != null && location.getProduction().getTitle().equals(title)) {

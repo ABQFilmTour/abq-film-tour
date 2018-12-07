@@ -22,12 +22,10 @@ public interface Service {
   @GET("rest/productions/")
   Call<List<Production>> getProductions();
 
-  /*
-  @GET("rest/film_locations/{id}/user_comments")
-  Call<List<UserComment>> getCommentts(@Path(value = "id")String id ;*/
+  @GET("rest/film_locations/{id}/user_comments/")
+  Call<List<UserComment>> getComments(@Path(value = "id") UUID id);
 
-
-/*  @GET('rest/users')
-  Call<User> getUsers(); */
+  @GET("rest/users/")
+  Call<List<User>> getUsers();
 
 }
