@@ -26,13 +26,13 @@ public class LocationActivity extends AppCompatActivity {
   private TextView locationPlot;
   private TextView locationComments;
 
-  public static FilmLocation location;
-  public static Production production;
-  public static UserComment comment;
+  private static FilmLocation location;
+  private static Production production;
+  private static UserComment comment;
 
   private final String LOCATION_ID_KEY = "location_id_key";
 
-  FilmTourApplication filmTourApplication;
+  private FilmTourApplication filmTourApplication;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class LocationActivity extends AppCompatActivity {
       try {
         location = filmTourApplication.getService().getFilmLocation(UUIDs[0]).execute().body();
       } catch (IOException e) {
-        System.out.println("oh no!!!!!");
+        // TODO Handle or don't.
       }
       return null;
     }
@@ -80,9 +80,11 @@ public class LocationActivity extends AppCompatActivity {
       locationProductionTitle.setText(productionTitle);
       String productionPlot = production.getPlot();
       locationPlot.setText(productionPlot);
+      /* TODO Get real comments
       String locationComment = comment.getContent();
       locationComments.setText(locationComment);
-      locationImdb.setText(R.string.imdb_link);
+      */
+      locationImdb.setText(R.string.imdb_link); // FIXME Null ID on link
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());
         System.out.println(production.getImdbID());

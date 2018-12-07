@@ -3,8 +3,6 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.SELECTED_OPTIONS_MENU_ITEM_KEY;
 import static edu.cnm.deepdive.abq_film_tour.controller.SelectionDialog.TITLE_LIST_KEY;
 
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,32 +20,35 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
-import edu.cnm.deepdive.abq_film_tour.service.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * The type Maps activity.
+ * This is the primary activity for the application. It implements Google Map functionality and
+ * displays map markers generated from the backend server.
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,DialogInterface.OnDismissListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+  //CONSTANTS
+  //TODO resolve weird constant imports
+  private static final String TYPE_SERIES = "series";
+  private static final String TYPE_MOVIE = "movie";
+  private static final String LOCATION_ID_KEY = "location_id_key";
+  private static final float ZOOM_LEVEL = 15; //TODO Zoom level? Start coordinates?
+  //First result on google when I searched "city of albuquerque coordinates"
+  private static final String START_LONG = "-106.6055534";
+  private static final String START_LAT = "35.0853336";
 
-  private final String LOCATION_ID_KEY = "location_id_key";
-
-  private static final float ZOOM_LEVEL = 15;
-
+  //FIELDS
+  private FilmTourApplication filmTourApplication;
   private ArrayList<String> movieTitles;
   private ArrayList<String> tvTitles;
   private List<FilmLocation> locations;
@@ -58,12 +59,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private FusedLocationProviderClient fusedLocationProviderClient;
   private Bundle arguments;
 
-  public static FilmLocation exampleLocation;
-  public static Production exampleProduction;
-  public static User exampleUser;
-  public static UserComment exampleComment;
-
-  private FilmTourApplication filmTourApplication;
+  // TODO Remove these fields when the data is more stable.
+  private static FilmLocation startLocation;
+  static UserComment exampleComment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -71,68 +69,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
     new GetProductionsTask().execute();
+
+    //CREATE START LOCATION TO POSITION CAMERA TO
+    startLocation = new FilmLocation();
+    startLocation.setLatCoordinate(START_LAT);
+    startLocation.setLongCoordinate(START_LONG);
+    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        .findFragmentById(R.id.map);
+    mapFragment.getMapAsync(this);
+
     ActionBar actionBar = getSupportActionBar();
     actionBar.setLogo(R.mipmap.ic_filmtour_round);
     actionBar.setDisplayUseLogoEnabled(true);
     actionBar.setDisplayShowHomeEnabled(true);
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.map);
-    mapFragment.getMapAsync(this);
-    createExampleData();
   }
 
-
-  private void createExampleData() {
-    exampleUser = new User();
-    exampleUser.setGoogleName("Walter White");
-    exampleUser.setGoogleId("12345");
-    exampleUser.setGmailAddress("walterwhite@gmail.com");
-
-    exampleProduction = new Production();
-    exampleProduction.setImdbID("tt0903747");
-    exampleProduction.setTitle("Breaking Bad");
-    exampleProduction.setType("series");
-    exampleProduction.setReleaseYear("2008-2013");
-    exampleProduction.setPlot(
-        "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future.");
-
-    exampleLocation = new FilmLocation();
-    exampleLocation.setSiteName("The Dog House Drive In");
-    exampleLocation.setLongCoordinate("35.0879012653313");
-    exampleLocation.setLatCoordinate("-106.661403252821");
-    exampleLocation.setProduction(exampleProduction);
-    exampleLocation
-        .setOriginalDetails("The Dog House - 1216 Central - ITC on Central from 11th to 14th St.");
-    exampleLocation.setAddress("1216 Central Avenue NW");
-    exampleLocation.setShootDate(1216857600000L);
-
-    exampleComment = new UserComment();
-    exampleComment.setContent(
-        "Shot on 07/23/2008 at 1216 Central Avenue NW. The Dog House - 1216 Central - ITC on Central from 11th to 14th St.");
-  }
-
-  private void createDummyTitles() {
-    movieTitles = new ArrayList<>();
-    tvTitles = new ArrayList<>();
-    for (int i = 0; i < 100; i++) {
-      movieTitles.add("Movie Title " + i);
-      tvTitles.add("TV Title " + i);
-    }
-  }
-
-  private void createNotDummyTitles() {
+  /**
+   * This method populates the "movie titles" and "series titles" lists to be displayed from the
+   * SelectionDialog fragment.
+   */
+  private void populateTitlesList() {
     movieTitles = new ArrayList<>();
     tvTitles = new ArrayList<>();
     for (Production production : productions) {
       if (production.getType() == null) {
-        System.out.println(production.getTitle() + "IS NULL!!");
-        continue;
+        //TODO Record if null data is in the database
+        continue; // skip null data
       }
-      else if (production.getType().equals("series")) {
+      else if (production.getType().equals(TYPE_SERIES)) {
         tvTitles.add(production.getTitle());
       }
-      else if (production.getType().equals("movie")) {
+      else if (production.getType().equals(TYPE_MOVIE)) {
         movieTitles.add(production.getTitle());
       }
     }
@@ -146,7 +114,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     getMenuInflater().inflate(R.menu.options, menu);
     return true;
   }
-
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -174,17 +141,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "TV SHOW");
         arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
         selectionDialog.setArguments(arguments);
-        selectionDialog.onDismiss(new DialogInterface() {
-          @Override
-          public void cancel() {
-            System.out.println("cancelled");
-          }
-
-          @Override
-          public void dismiss() {
-            System.out.println("DISMISSED!!!");
-          }
-        });
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.menu_film:
@@ -207,7 +163,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     return handled;
   }
 
-
   /**
    * Manipulates the map once available. This callback is triggered when the map is ready to be
    * used. This is where we can add markers or lines, add listeners or move the camera. In this
@@ -219,8 +174,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   @Override
   public void onMapReady(GoogleMap googleMap) {
     map = googleMap;
-    System.out.println("map ready");
     new PopulateMapPinsTask().execute();
+    LatLng startCoordinates = new LatLng(Double.valueOf(startLocation.getLatCoordinate()),
+        Double.valueOf(startLocation.getLongCoordinate()));
+    map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
+    map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
   }
 
   public void nestedMethod(String title) {
@@ -237,14 +195,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
   }
 
-  @Override
-  public void onDismiss(DialogInterface dialog) {
-    System.out.println("dismissed??");
-  }
-
   private void populateMapFromTitle(String title) {
     map.clear();
-    System.out.println("Map cleared");
     for (FilmLocation location : locations) {
       if (location.getProduction().getTitle() != null && location.getProduction().getTitle().equals(title)) {
         LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
@@ -259,7 +211,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           @Override
           public void onInfoWindowClick(Marker marker) {
             FilmLocation taggedLocation = (FilmLocation) marker.getTag();
-            System.out.println(marker.getTag());
             Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
             intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
             startActivity(intent);
@@ -269,7 +220,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   }
 
-
+  /**
+   * Asynchronous task that retrieves the productions from the server.
+   */
   private class GetProductionsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
@@ -290,27 +243,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onPostExecute(Void aVoid) {
       super.onPostExecute(aVoid);
-      createNotDummyTitles();
-      System.out.println("productions in");
+      populateTitlesList();
     }
   }
 
+  /**
+   * Asynchronous task that retrieves the film locations from the server.
+   */
   private class PopulateMapPinsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPreExecute() {
-      System.out.println("on pre execute");
       super.onPreExecute();
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-      System.out.println("execution");
       try {
         locations = filmTourApplication.getService().getLocations().execute().body();
-        System.out.println("hello " + locations.get(0).getSiteName());
       } catch (IOException e) {
-        System.out.println("oh no!!");
+        //TODO Handle or don't.
       }
       return null;
 
@@ -318,9 +270,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      System.out.println("on post execute");
       for (FilmLocation location : locations) {
-        System.out.println(location.getId());
         LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
             Double.valueOf(location.getLatCoordinate()));
         Marker marker = map.addMarker(new MarkerOptions()
@@ -329,20 +279,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .snippet(
                 location.getProduction().getTitle())); //TODO Snipper should be something else?
         marker.setTag(location);
-        map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-          @Override
-          public void onInfoWindowClick(Marker marker) {
-            FilmLocation taggedLocation = (FilmLocation) marker.getTag();
-            System.out.println(marker.getTag());
-            Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
-            intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
-            startActivity(intent);
-          }
+        map.setOnInfoWindowClickListener(marker1 -> {
+          FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
+          Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
+          intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
+          startActivity(intent);
         });
-        LatLng startCoordinates = new LatLng(Double.valueOf(exampleLocation.getLongCoordinate()),
-            Double.valueOf(exampleLocation.getLatCoordinate()));
-        map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
-        map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
       }
     }
   }
