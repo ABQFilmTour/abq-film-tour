@@ -20,12 +20,13 @@
 
   <Button
     android:id="@+id/upload_image_btn"
-    android:text="Upload Image"
+    android:textStyle="bold"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textColor="@color/colorPrimaryDark"
-    android:background="#ffad29"
-    android:padding="10dp"/>
+    android:padding="10dp"
+    android:background="#ff7326"
+    android:text="Upload Image"
+    android:textColor="@color/colorPrimaryDark"/>
 
   <android.support.design.widget.TextInputLayout
     android:layout_width="match_parent"
@@ -61,11 +62,12 @@
 
   <Button
     android:id="@+id/register"
+    android:textStyle="bold"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
+    android:background="#ff7326"
     android:text="Register"
-    android:textColor="@color/colorPrimaryDark"
-    android:background="#ffad29"/>
+    android:textColor="@color/colorPrimaryDark"/>
 
 </LinearLayout>

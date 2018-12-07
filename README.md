@@ -43,11 +43,11 @@ ABQ Film Tour is an Android app that uses city provided film permit data to popu
 ### Wireframes and User Stories
 *Links to the most recent wireframes and up-to-date user stories for your project.* <br/>
 [Wireframes](https://xd.adobe.com/view/81f12600-75b1-4f07-7cc3-a86bc45dacf9-f7c0/) <br/>
-[User Stories](docs/UserStories.md) ***NOT READY***
+[User Stories](docs/UserStories.md) 
 
 ### ERD and DDL
 *Links to the up-to-date ERD and DDL for this component’s data model, unless the component doesn’t have it’s own database.* <br/>
-[ERD](docs/ERD.pdf) <br/ >
+[ERD](docs/ERD.pdf) <br/>
 DDL ***NOT READY***
 
 ### Javadocs

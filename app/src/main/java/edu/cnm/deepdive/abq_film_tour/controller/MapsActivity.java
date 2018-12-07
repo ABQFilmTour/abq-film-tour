@@ -150,11 +150,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
-/*
       case R.id.menu_submit:
         submitDialog = new SubmitDialog();
         submitDialog.show(getSupportFragmentManager(), "dialog");
-        break; */
+        break;
       case R.id.sign_out:
         signOut();
         break;
