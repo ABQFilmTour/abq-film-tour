@@ -24,13 +24,13 @@ public class UserComment {
   private UUID id;
 
   @Expose
+  private Date created;
+
+  @Expose
   private FilmLocation filmLocation;
 
   @Expose
   private User user;
-
-  @Expose
-  private Date created;
 
   @Expose
   private String text;

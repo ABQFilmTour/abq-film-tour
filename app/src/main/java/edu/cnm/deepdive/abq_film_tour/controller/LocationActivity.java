@@ -80,8 +80,14 @@ public class LocationActivity extends AppCompatActivity {
       locationProductionTitle.setText(productionTitle);
       String productionPlot = production.getPlot();
       locationPlot.setText(productionPlot);
-      String locationComment = userComments.get(0).getText();
-      locationComments.setText(locationComment);
+
+      //Example comment, testing to see if its getting the user and the comment
+      StringBuilder locationComment = new StringBuilder();
+      //locationComment.append(userComments.get(0).getUser().getGoogleName()); TODO Server needs to be rebooted before I can get the username.
+      locationComment.append("USER: ");
+      locationComment.append(userComments.get(0).getText());
+      locationComments.setText(locationComment.toString());
+
       locationImdb.setText(R.string.imdb_link);
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());

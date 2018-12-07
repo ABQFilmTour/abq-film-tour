@@ -24,13 +24,13 @@ public class Image {
   private UUID id;
 
   @Expose
+  private Date created;
+
+  @Expose
   private FilmLocation filmLocation;
 
   @Expose
   private User user;
-
-  @Expose
-  private Date created;
 
   @Expose
   private String description;

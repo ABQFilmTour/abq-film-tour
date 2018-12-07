@@ -20,6 +20,13 @@ import java.util.UUID;
 )
 public class Production {
 
+  @PrimaryKey
+  @Expose
+  private UUID id;
+
+  @Expose
+  private String imdbId;
+
   @Expose
   //"movie" or "series"
   private String type;
@@ -27,16 +34,8 @@ public class Production {
   @Expose
   private String releaseYear;
 
-  //@PrimaryKey(autoGenerate = true)
-  //@ColumnInfo(name="production_id")
-  @Expose
-  private String id;
-
   @Expose
   private String title;
-
-  @Expose
-  private String imdbId;
 
   @Expose
   private String plot;
@@ -57,11 +56,11 @@ public class Production {
     this.type = type;
   }
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
