@@ -43,6 +43,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
+  private final String LOCATION_ID_KEY = "location_id_key";
+
   private static final float ZOOM_LEVEL = 15;
 
   private ArrayList<String> movieTitles;
@@ -275,9 +277,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
           @Override
           public void onInfoWindowClick(Marker marker) {
-            String test = location.getId().toString();
+            FilmLocation taggedLocation = (FilmLocation) marker.getTag();
+            System.out.println(marker.getTag());
             Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
-            intent.putExtra("locationID", test);
+            intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
             startActivity(intent);
           }
         });

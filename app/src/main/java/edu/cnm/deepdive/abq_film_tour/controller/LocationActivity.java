@@ -15,6 +15,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
+import java.util.UUID;
 
 public class LocationActivity extends AppCompatActivity {
 
@@ -29,6 +30,7 @@ public class LocationActivity extends AppCompatActivity {
   public static Production production;
   public static UserComment comment;
 
+  private final String LOCATION_ID_KEY = "location_id_key";
 
   FilmTourApplication filmTourApplication;
 
@@ -41,7 +43,8 @@ public class LocationActivity extends AppCompatActivity {
     comment = MapsActivity.exampleComment; //TODO fix
 
     Bundle extras = getIntent().getExtras();
-    String locationID = extras.getString("locationID");
+    assert extras != null;
+    String locationID = extras.getString(LOCATION_ID_KEY);
 
     locationImage = findViewById(R.id.image_view);
     locationTitle = findViewById(R.id.location_title_view);
@@ -49,18 +52,18 @@ public class LocationActivity extends AppCompatActivity {
     locationImdb = findViewById(R.id.imdb_link_view);
     locationComments = findViewById(R.id.comments_view);
     locationPlot = findViewById(R.id.plot_view);
-
-    new LocationTask().execute(locationID);
+    UUID locationUUID = UUID.fromString(locationID);
+    new LocationTask().execute(locationUUID);
   }
 
 
-  public class LocationTask extends AsyncTask<String, Void, Void> {
+  public class LocationTask extends AsyncTask<UUID, Void, Void> {
 
 
     @Override
-    protected Void doInBackground(String... strings) {
+    protected Void doInBackground(UUID... UUIDs) {
       try {
-        location = filmTourApplication.getService().getFilmLocation(strings[0]).execute().body();
+        location = filmTourApplication.getService().getFilmLocation(UUIDs[0]).execute().body();
       } catch (IOException e) {
         System.out.println("oh no!!!!!");
       }
