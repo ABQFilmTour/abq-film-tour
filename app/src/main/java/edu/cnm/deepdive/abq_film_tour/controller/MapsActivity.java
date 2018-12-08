@@ -1,26 +1,37 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.Manifest.permission;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.provider.Settings;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,10 +39,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import de.hdodenhof.circleimageview.CircleImageView;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
@@ -159,34 +172,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private void isLocationEnabled() {
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-      /*AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+      AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.AlertDialog);
       alertDialog.setTitle("Enable Location");
       alertDialog
-          .setMessage("Your locations setting is not enabled. Please enabled it in settings menu.");
+          .setMessage(R.string.enable_location_settings);
       alertDialog.setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
           Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
           startActivity(intent);
         }
       });
-      alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+      alertDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
           dialog.cancel();
         }
       });
       AlertDialog alert = alertDialog.create();
       alert.show();
-    } else {
-      AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-      alertDialog.setTitle("Confirm Location");
-      alertDialog.setMessage("Select a title to begin!");
-      alertDialog.setNegativeButton("Back to interface", new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          dialog.cancel();
-        }
-      });
-      AlertDialog alert = alertDialog.create();
-      alert.show();*/
     }
   }
 
@@ -297,9 +299,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Double.valueOf(location.getLatCoordinate()));
         Marker marker = map.addMarker(new MarkerOptions()
             .position(coordinates)
+            .icon(BitmapDescriptorFactory.fromBitmap(
+                createCustomMarker(MapsActivity.this, R.drawable.map_pin)))
             .title(location.getSiteName())
             .snippet(
-                location.getProduction().getTitle())); //TODO Snipper should be something else?
+                location.getProduction().getTitle()));
+        map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
         marker.setTag(location);
         map.setOnInfoWindowClickListener(marker1 -> {
           FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
@@ -415,7 +420,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
               locationListenerGPS);
         } else {
           // permission denied, boo!
-          Toast.makeText(this, "Cannot enable location.",
+          Toast.makeText(this, R.string.cannot_enable_location,
               Toast.LENGTH_LONG).show();
         }
       }
@@ -444,7 +449,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .tilt(TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
             .build();                   // Creates a CameraPosition from the builder
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+      }else{
+        Toast.makeText(this, R.string.null_location ,Toast.LENGTH_LONG).show();
       }
     }
+  }
+
+  private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
+
+    View marker = ((LayoutInflater) context.getSystemService(
+        Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
+
+    CircleImageView markerImage = (CircleImageView) marker.findViewById(R.id.user_dp);
+    markerImage.setImageResource(resource);
+
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
+    marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+    marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+    marker.buildDrawingCache();
+    Bitmap bitmap = Bitmap.createBitmap(
+        marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    marker.draw(canvas);
+
+    return bitmap;
   }
 }

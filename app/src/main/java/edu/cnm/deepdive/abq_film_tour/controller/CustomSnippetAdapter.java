@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import edu.cnm.deepdive.abq_film_tour.R;
+import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import org.w3c.dom.Text;
 
 public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
@@ -23,6 +24,8 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
     String title = marker.getTitle();
     TextView snippetTitle = (TextView) view.findViewById(R.id.snippet_title);
 
+    FilmLocation location = (FilmLocation) marker.getTag();
+
     if (!title.equals("")){
       snippetTitle.setText(title);
     }
@@ -30,7 +33,7 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
     TextView snippetDescription = (TextView) view.findViewById(R.id.snippet_description);
 
     if (!snippet.equals("")) {
-      snippetDescription.setText(snippet);
+      snippetDescription.setText(location.getProduction().getTitle());
     }
   }
 
@@ -38,12 +41,12 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
   @Override
   public View getInfoWindow(Marker marker) {
     renderSnippetText(marker, mSnippet);
-    return null;
+    return mSnippet;
   }
 
   @Override
   public View getInfoContents(Marker marker) {
     renderSnippetText(marker, mSnippet);
-    return null;
+    return mSnippet;
   }
 }
