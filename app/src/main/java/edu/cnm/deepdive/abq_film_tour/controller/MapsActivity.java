@@ -2,7 +2,6 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.Manifest.permission;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -11,12 +10,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +29,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
-import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
@@ -49,11 +43,14 @@ import java.util.List;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   //CONSTANTS
-  //TODO resolve weird constant imports
   private static final String TYPE_SERIES = "series";
   private static final String TYPE_MOVIE = "movie";
   private static final String LOCATION_ID_KEY = "location_id_key";
-  private static final float ZOOM_LEVEL = 8; //TODO Zoom level? Start coordinates?
+  private static final float ZOOM_LEVEL_INITIAL = 9;
+  private static final float ZOOM_LEVEL_NEAR_ME = 17;
+  private static final float BEARING_LEVEL_NEAR_ME = 90;
+  private static final float TILT_LEVEL_NEAR_ME = 40;
+
   //First result on google when I searched "city of albuquerque coordinates"
   private static final String START_LONG = "-106.6055534";
   private static final String START_LAT = "35.0853336";
@@ -73,9 +70,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private FusedLocationProviderClient fusedLocationProviderClient;
   private Bundle arguments;
 
-  // TODO Remove these fields when the data is more stable.
-  private static FilmLocation startLocation;
-  static UserComment exampleComment;
+  private static FilmLocation startLocation; //Should this be a FilmLocation? Only coordinates needed
   LocationManager locationManager;
   Context context;
 
@@ -229,7 +224,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
         arguments = new Bundle();
-        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "TV SHOW");
+        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, getString(R.string.selected_options_series_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
@@ -237,7 +232,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       case R.id.menu_film:
         selectionDialog = new SelectionDialog();
         arguments = new Bundle();
-        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, "FILMS");
+        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, getString(R.string.selected_options_films_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, movieTitles);
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
@@ -268,7 +263,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng startCoordinates = new LatLng(Double.valueOf(startLocation.getLatCoordinate()),
         Double.valueOf(startLocation.getLongCoordinate()));
     map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
-    map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
+    map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL_INITIAL));
   }
 
   private void signOut() {
@@ -296,14 +291,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 location.getProduction().getTitle()));
         map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
         marker.setTag(location);
-        map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-          @Override
-          public void onInfoWindowClick(Marker marker) {
-            FilmLocation taggedLocation = (FilmLocation) marker.getTag();
-            Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
-            intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
-            startActivity(intent);
-          }
+        map.setOnInfoWindowClickListener(marker1 -> {
+          FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
+          Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
+          intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
+          startActivity(intent);
         });
       }
     }
@@ -354,16 +346,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //TODO Handle or don't.
       }
       return null;
-
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      Toast.makeText(MapsActivity.this, "Select a title from the drop down menu to get started!", Toast.LENGTH_LONG).show();
+      Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
     }
   }
-
-
 
   private void getLocationPermission() {
     /*
@@ -409,10 +398,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   public void getDeviceLocation() {
     LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//    System.out.println("hello world");
-//    System.out.println(ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION));
-//    System.out.println(PackageManager.PERMISSION_GRANTED);
-//    System.out.println(ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED);
     if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
         != PackageManager.PERMISSION_GRANTED
         && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
@@ -423,21 +408,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       criteria.setAccuracy(Criteria.ACCURACY_COARSE);
       Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, true));
       if (location != null) {
-
-//        map.animateCamera(CameraUpdateFactory
-//            .newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
         CameraPosition cameraPosition = new CameraPosition.Builder()
             .target(new LatLng(location.getLatitude(),
                 location.getLongitude()))      // Sets the center of the map to location user
-            .zoom(17)                   // Sets the zoom
-            .bearing(90)                // Sets the orientation of the camera to east
-            .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+            .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
+            .bearing(BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
+            .tilt(TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
             .build();                   // Creates a CameraPosition from the builder
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
       }
-
     }
   }
-
 }
