@@ -83,7 +83,7 @@ public class LocationActivity extends AppCompatActivity {
 
       //Example comment, testing to see if its getting the user and the comment
       StringBuilder locationComment = new StringBuilder();
-      //locationComment.append(userComments.get(0).getUser().getGoogleName()); TODO Server needs to be rebooted before I can get the username.
+      //locationComment.append(userComments.get(0).getUser().getGoogleName()); *TODO Server needs to be rebooted before I can get the username.
       locationComment.append("USER: ");
       locationComment.append(userComments.get(0).getText());
       locationComments.setText(locationComment.toString());
