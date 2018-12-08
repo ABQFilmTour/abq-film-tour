@@ -24,7 +24,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -298,28 +297,41 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     map.clear();
     for (FilmLocation location : locations) {
       this.setTitle(title);
+      saveSharedPreferences(title);
       if (location.getProduction().getTitle() != null && location.getProduction().getTitle()
           .equals(title)) {
-        LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
-            Double.valueOf(location.getLatCoordinate()));
-        Marker marker = map.addMarker(new MarkerOptions()
-            .position(coordinates)
-            .icon(BitmapDescriptorFactory.fromBitmap(
-                createCustomMarker(MapsActivity.this, R.drawable.map_pin)))
-            .title(location.getSiteName())
-            .snippet(
-                location.getProduction().getTitle()));
-        map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
-        marker.setTag(location);
-        map.setOnInfoWindowClickListener(marker1 -> {
-          FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
-          Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
-          intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
-          startActivity(intent);
-        });
-        saveSharedPreferences(title);
+        createMapPin(location);
       }
     }
+  }
+
+  private void populateMapFromLocation(LatLng userLatLng) {
+    map.clear();
+    for (FilmLocation location : locations) {
+      if (true) { // TODO check if within bounds
+        createMapPin(location);
+      }
+    }
+  }
+
+  private void createMapPin(FilmLocation location) {
+    LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
+        Double.valueOf(location.getLatCoordinate()));
+    Marker marker = map.addMarker(new MarkerOptions()
+        .position(coordinates)
+        .icon(BitmapDescriptorFactory.fromBitmap(
+            createCustomMarker(MapsActivity.this, R.drawable.map_pin)))
+        .title(location.getSiteName())
+        .snippet(
+            location.getProduction().getTitle()));
+    map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
+    marker.setTag(location);
+    map.setOnInfoWindowClickListener(marker1 -> {
+      FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
+      Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
+      intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
+      startActivity(intent);
+    });
   }
 
   private void saveSharedPreferences(String title) {
@@ -432,51 +444,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       }
     }
 
-    public void getDeviceLocation() {
-      LocationManager locationManager = (LocationManager) getSystemService(
-          Context.LOCATION_SERVICE);
-      if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED
-          && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED) {
+  public void getDeviceLocation() {
+    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED
+        && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED) {
+        // Do nothing
+    } else {
+      Criteria criteria = new Criteria();
+      criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+      Location location = locationManager
+          .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
+      if (location != null) {
+        LatLng userLatLng = new LatLng(location.getLatitude(),
+            location.getLongitude());
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+            .target(userLatLng)      // Sets the center of the map to location user
+            .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
+            .bearing(
+                BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
+            .tilt(TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
+            .build();                   // Creates a CameraPosition from the builder
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-      } else {
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        Location location = locationManager
-            .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
-        if (location != null) {
-          CameraPosition cameraPosition = new CameraPosition.Builder()
-              .target(new LatLng(location.getLatitude(),
-                  location.getLongitude()))      // Sets the center of the map to location user
-              .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
-              .bearing(
-                  BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
-              .tilt(
-                  TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
-              .build();                   // Creates a CameraPosition from the builder
-          map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        } else {
-          Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
-        }
+        populateMapFromLocation(userLatLng);
+
+      }else{
+        Toast.makeText(this, R.string.null_location ,Toast.LENGTH_LONG).show();
       }
     }
+  }
 
     private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
 
       View marker = ((LayoutInflater) context.getSystemService(
           Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
 
-      DisplayMetrics displayMetrics = new DisplayMetrics();
-      ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-      marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
-      marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
-      marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
-      marker.buildDrawingCache();
-      Bitmap bitmap = Bitmap.createBitmap(
-          marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-      Canvas canvas = new Canvas(bitmap);
-      marker.draw(canvas);
+
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
+    marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+    marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+    Bitmap bitmap = Bitmap.createBitmap(
+        marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    marker.draw(canvas);
 
       return bitmap;
     }
