@@ -2,7 +2,10 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.Manifest.permission;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -10,8 +13,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +52,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private static final String TYPE_SERIES = "series";
   private static final String TYPE_MOVIE = "movie";
   private static final String LOCATION_ID_KEY = "location_id_key";
+  private static final String SHARED_PREF_LAST_TITLE = "last_title";
   private static final float ZOOM_LEVEL_INITIAL = 9;
   private static final float ZOOM_LEVEL_NEAR_ME = 17;
   private static final float BEARING_LEVEL_NEAR_ME = 90;
@@ -74,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   LocationManager locationManager;
   Context context;
 
+  private SharedPreferences sharedPref;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +89,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
     new GetProductionsTask().execute();
+    sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
     //CREATE START LOCATION TO POSITION CAMERA TO
     startLocation = new FilmLocation();
@@ -224,7 +233,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
         arguments = new Bundle();
-        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, getString(R.string.selected_options_series_title));
+        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY,
+            getString(R.string.selected_options_series_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
@@ -232,7 +242,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       case R.id.menu_film:
         selectionDialog = new SelectionDialog();
         arguments = new Bundle();
-        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY, getString(R.string.selected_options_films_title));
+        arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY,
+            getString(R.string.selected_options_films_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, movieTitles);
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
@@ -296,8 +307,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
           startActivity(intent);
         });
+        saveSharedPreferences(title);
       }
     }
+  }
+
+  private void saveSharedPreferences(String title) {
+    SharedPreferences.Editor editor = sharedPref.edit();
+    editor.putString(SHARED_PREF_LAST_TITLE, title);
+    editor.apply();
   }
 
   /**
@@ -349,6 +367,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onPostExecute(Void aVoid) {
+      startUp();
+    }
+  }
+
+  private void startUp() {
+    String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null);
+    if (savedTitle != null) {
+      populateMapFromTitle(savedTitle);
+    } else {
       Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
     }
   }
@@ -362,7 +389,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     ActivityCompat.requestPermissions(this,
         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-        permission.ACCESS_COARSE_LOCATION},
+            permission.ACCESS_COARSE_LOCATION},
         PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
   }
@@ -405,13 +432,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     } else {
       Criteria criteria = new Criteria();
       criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-      Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, true));
+      Location location = locationManager
+          .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
       if (location != null) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
             .target(new LatLng(location.getLatitude(),
                 location.getLongitude()))      // Sets the center of the map to location user
             .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
-            .bearing(BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
+            .bearing(
+                BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
             .tilt(TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
             .build();                   // Creates a CameraPosition from the builder
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
