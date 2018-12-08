@@ -293,7 +293,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             .position(coordinates)
             .title(location.getSiteName())
             .snippet(
-                location.getProduction().getTitle())); //TODO Snipper should be something else?
+                location.getProduction().getTitle()));
+        map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
         marker.setTag(location);
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
           @Override
