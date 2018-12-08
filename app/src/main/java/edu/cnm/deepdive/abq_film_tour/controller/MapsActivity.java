@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.Manifest.permission;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -70,6 +71,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private static final float ZOOM_LEVEL_NEAR_ME = 17;
   private static final float BEARING_LEVEL_NEAR_ME = 90;
   private static final float TILT_LEVEL_NEAR_ME = 40;
+  public final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
   //First result on google when I searched "city of albuquerque coordinates"
   private static final String START_LONG = "-106.6055534";
@@ -289,6 +291,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
   }
 
+
+
+
   public void populateMapFromTitle(String title) {
     map.clear();
     for (FilmLocation location : locations) {
@@ -383,97 +388,97 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     } else {
       Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
     }
-  }
 
-  private void getLocationPermission() {
-    /*
-     * Request location permission, so that we can get the location of the
-     * device. The result of the permission request is handled by a callback,
-     * onRequestPermissionsResult.
-     */
 
-    ActivityCompat.requestPermissions(this,
-        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-            permission.ACCESS_COARSE_LOCATION},
-        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+    private void getLocationPermission() {
+      /*
+       * Request location permission, so that we can get the location of the
+       * device. The result of the permission request is handled by a callback,
+       * onRequestPermissionsResult.
+       */
 
-  }
+      ActivityCompat.requestPermissions(this,
+          new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+              permission.ACCESS_COARSE_LOCATION},
+          PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
-  @Override
-  public void onRequestPermissionsResult(int requestCode,
-      String permissions[], int[] grantResults) {
-    switch (requestCode) {
-      case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-        // If request is cancelled, the result arrays are empty.
-        if (grantResults.length > 0
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
-              != PackageManager.PERMISSION_GRANTED
-              && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
-              != PackageManager.PERMISSION_GRANTED) {
-            //    do nothing. Permissions will always be granted here.
-            return;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+        String permissions[], int[] grantResults) {
+      switch (requestCode) {
+        case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+          // If request is cancelled, the result arrays are empty.
+          if (grantResults.length > 0
+              && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+              //    do nothing. Permissions will always be granted here.
+              return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                2000,
+                10,
+                locationListenerGPS);
+          } else {
+            // permission denied, boo!
+            Toast.makeText(this, R.string.cannot_enable_location,
+                Toast.LENGTH_LONG).show();
           }
-          locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-              2000,
-              10,
-              locationListenerGPS);
-        } else {
-          // permission denied, boo!
-          Toast.makeText(this, R.string.cannot_enable_location,
-              Toast.LENGTH_LONG).show();
         }
       }
     }
-  }
 
-  public void getDeviceLocation() {
-    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED
-        && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED) {
+    public void getDeviceLocation() {
+      LocationManager locationManager = (LocationManager) getSystemService(
+          Context.LOCATION_SERVICE);
+      if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
+          != PackageManager.PERMISSION_GRANTED
+          && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
+          != PackageManager.PERMISSION_GRANTED) {
 
-    } else {
-      Criteria criteria = new Criteria();
-      criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-      Location location = locationManager
-          .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
-      if (location != null) {
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-            .target(new LatLng(location.getLatitude(),
-                location.getLongitude()))      // Sets the center of the map to location user
-            .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
-            .bearing(
-                BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
-            .tilt(TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
-            .build();                   // Creates a CameraPosition from the builder
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-      }else{
-        Toast.makeText(this, R.string.null_location ,Toast.LENGTH_LONG).show();
+      } else {
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        Location location = locationManager
+            .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
+        if (location != null) {
+          CameraPosition cameraPosition = new CameraPosition.Builder()
+              .target(new LatLng(location.getLatitude(),
+                  location.getLongitude()))      // Sets the center of the map to location user
+              .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
+              .bearing(
+                  BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
+              .tilt(
+                  TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
+              .build();                   // Creates a CameraPosition from the builder
+          map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else {
+          Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
+        }
       }
     }
-  }
 
-  private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
+    private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
 
-    View marker = ((LayoutInflater) context.getSystemService(
-        Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
+      View marker = ((LayoutInflater) context.getSystemService(
+          Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
 
-    CircleImageView markerImage = (CircleImageView) marker.findViewById(R.id.user_dp);
-    markerImage.setImageResource(resource);
+      DisplayMetrics displayMetrics = new DisplayMetrics();
+      ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+      marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
+      marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+      marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+      marker.buildDrawingCache();
+      Bitmap bitmap = Bitmap.createBitmap(
+          marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+      Canvas canvas = new Canvas(bitmap);
+      marker.draw(canvas);
 
-    DisplayMetrics displayMetrics = new DisplayMetrics();
-    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-    marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
-    marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
-    marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
-    marker.buildDrawingCache();
-    Bitmap bitmap = Bitmap.createBitmap(
-        marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-    Canvas canvas = new Canvas(bitmap);
-    marker.draw(canvas);
-
-    return bitmap;
+      return bitmap;
+    }
   }
 }
