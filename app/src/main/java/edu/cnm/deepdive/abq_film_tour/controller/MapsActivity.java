@@ -7,21 +7,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.provider.Settings;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,12 +28,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -44,11 +39,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import de.hdodenhof.circleimageview.CircleImageView;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
-import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +61,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private static final String SHARED_PREF_LAST_TITLE = "last_title";
   private static final float ZOOM_LEVEL_INITIAL = 9;
   private static final float ZOOM_LEVEL_NEAR_ME = 17;
-  private static final float BEARING_LEVEL_NEAR_ME = 90;
+  private static final float BEARING_LEVEL_NEAR_ME = 0;
   private static final float TILT_LEVEL_NEAR_ME = 40;
   public final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
@@ -232,6 +225,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_all_near_me:
         getDeviceLocation();
+        //TODO change title on title bar to NEAR ME
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
@@ -305,18 +299,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   }
 
+  private boolean inBurque(LatLng userLatLng) {
+    double startLat = Double.valueOf(START_LAT);
+    double startLong = Double.valueOf(START_LONG);
+    int delta = calculateDistanceInKilometer(userLatLng.latitude,userLatLng.longitude,
+        startLat,startLong);
+   return (delta < 50);
+  }
+
   private void populateMapFromLocation(LatLng userLatLng) {
     map.clear();
     for (FilmLocation location : locations) {
-      if (true) { // TODO check if within bounds
+      double venueLat = Double.valueOf(location.getLatCoordinate());
+      double venueLng = Double.valueOf(location.getLongCoordinate());
+      int delta = calculateDistanceInKilometer(userLatLng.latitude,userLatLng.longitude,
+          venueLat,venueLng );
+      if (delta < 1) {
         createMapPin(location);
       }
     }
   }
 
+  public int calculateDistanceInKilometer(double userLat, double userLng,
+      double venueLat, double venueLng) {
+
+    double latDistance = Math.toRadians(userLat - venueLat);
+    double lngDistance = Math.toRadians(userLng - venueLng);
+
+    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+        + Math.cos(Math.toRadians(userLat)) * Math.cos(Math.toRadians(venueLat))
+        * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    int delta = (int) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
+    return delta;
+  }
+
   private void createMapPin(FilmLocation location) {
-    LatLng coordinates = new LatLng(Double.valueOf(location.getLongCoordinate()),
-        Double.valueOf(location.getLatCoordinate()));
+    LatLng coordinates = new LatLng(Double.valueOf(location.getLatCoordinate()),
+        Double.valueOf(location.getLongCoordinate()));
     Marker marker = map.addMarker(new MarkerOptions()
         .position(coordinates)
         .icon(BitmapDescriptorFactory.fromBitmap(
@@ -333,6 +353,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       startActivity(intent);
     });
   }
+
 
   private void saveSharedPreferences(String title) {
     SharedPreferences.Editor editor = sharedPref.edit();
@@ -400,9 +421,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     } else {
       Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
     }
+  }
 
 
-    private void getLocationPermission() {
+    private void getLocationPermission(){
       /*
        * Request location permission, so that we can get the location of the
        * device. The result of the permission request is handled by a callback,
@@ -415,6 +437,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -459,22 +482,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       if (location != null) {
         LatLng userLatLng = new LatLng(location.getLatitude(),
             location.getLongitude());
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-            .target(userLatLng)      // Sets the center of the map to location user
-            .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
-            .bearing(
-                BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
-            .tilt(TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
-            .build();                   // Creates a CameraPosition from the builder
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-        populateMapFromLocation(userLatLng);
-
+        if(inBurque(userLatLng) == false){
+          Toast.makeText(this, R.string.not_in_burque,
+              Toast.LENGTH_SHORT).show();
+        }else
+ {
+          CameraPosition cameraPosition = new CameraPosition.Builder()
+              .target(userLatLng)      // Sets the center of the map to location user
+              .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
+              .bearing(
+                  BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
+              .tilt(TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
+              .build();                   // Creates a CameraPosition from the builder
+          populateMapFromLocation(userLatLng);
+          map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
       }else{
         Toast.makeText(this, R.string.null_location ,Toast.LENGTH_LONG).show();
       }
     }
   }
+
+
 
     private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
 
@@ -495,4 +524,3 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       return bitmap;
     }
   }
-}
