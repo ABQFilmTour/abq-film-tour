@@ -62,7 +62,11 @@ DDL ***NOT READY***
 
 ### Licenses
 *Links to all applicable licenses.* <br/>
-***NOT READY***
+- [Apache License 2.0](LICENSE)
+- [Apache Commons for CSV](http://www.apache.org/licenses/LICENSE-2.0.txt)
+- [OMDb API](https://creativecommons.org/licenses/by-nc/4.0/)
+- [ABQ Data Disclaimer](http://www.cabq.gov/abq-data/abq-data-disclaimer-1)
+  This site provides applications using data that has been modified for use from its original source, www.cabq.gov, the official website of the City of Albuquerque. The City of Albuquerque makes no claims as to the content, accuracy, timeliness, or completeness of any of the data provided at this site. The data provided at this site is subject to change at any time. It is understood that the data provided at this site is being used at one’s own risk.- 
 
 ### Build instructions
 *A link to instructions for building the component.* <br/>
