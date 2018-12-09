@@ -92,15 +92,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
   /**
-   * Latitude coordinates for Albuquerque according to Google, I believe it's somewhere around Nob
-   * Hill.
+   * Latitude coordinates for Albuquerque according to Google, it's about 3rd and Central.
    */
-  private static final double BURQUE_LAT = 35.0853336;
+  private static final double BURQUE_LAT = 35.0844;
   /**
-   * Longitude coordinates for Albuquerque according to Google, I believe it's somewhere around Nob
-   * Hill.
+   * Longitude coordinates for Albuquerque according to Google, it's about 3rd and Central.
    */
-  private static final double BURQUE_LONG = -106.6055534;
+  private static final double BURQUE_LONG = -106.6504;
   /**
    * Bounds of the Albuquerque area to determine if the user is close enough to use the app.
    */
@@ -195,26 +193,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+    new GetProductionsTask().execute();
+    sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
     assert mapFragment != null;
     mapFragment.getMapAsync(this);
+
     ActionBar actionBar = getSupportActionBar();
     assert actionBar != null;
     actionBar.setLogo(R.drawable.toolbar_icon);
     actionBar.setDisplayUseLogoEnabled(true);
     actionBar.setDisplayShowHomeEnabled(true);
+
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     getLocationPermission();
     isLocationEnabled();
-    Criteria criteria = new Criteria();
-    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-    locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), //FIXME crashes on first run
-        2000, //BECCA Define magic value
-        1, //BECCA Define magic value
-        locationListenerGPS);
-    sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+  }
+
+  @Override
+  protected void onPostResume() {
+    super.onPostResume();
+    isLocationEnabled();
   }
 
   /**
@@ -294,11 +296,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
   }
 
-  @Override
-  protected void onPostResume() {
-    super.onPostResume();
-    isLocationEnabled();
-  }
+
 
   /**
    * BECCA Document code
@@ -362,6 +360,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * BECCA Document code.
    */
   private void nearMe(LatLng userLatLng) {
+    setTitle(getString(R.string.application_title));
     CameraPosition cameraPosition = new CameraPosition.Builder()
         .target(userLatLng)      // Sets the center of the map to location user
         .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
@@ -393,7 +392,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
     map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
     map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL_INITIAL));
-    new GetProductionsTask().execute();
   }
 
   @Override
@@ -406,7 +404,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_all_near_me:
         getDeviceLocation();
-        setTitle(getString(R.string.application_title));
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
@@ -532,7 +529,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           Toast.makeText(this, R.string.cannot_enable_location,
               Toast.LENGTH_LONG).show();
         }
-        break;
       }
     }
   }
