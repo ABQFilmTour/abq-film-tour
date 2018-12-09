@@ -2,7 +2,7 @@
 
 ### Aims
 *Your aims or motivations for selecting the given topic for your project. That is, why did you choose to develop this particular project, and why is this (at least potentially) a useful or interesting project?*<br />
-ABQ Film Tour is an Android app that uses city provided film permit data to populate a map of locations in the city featured in movies and television series such as "Breaking Bad" and "Better Call Saul". Additional locations and further information about such locations are user submitted. The goal is to facilitate a self-guided tour of these locations throughout the city for tourists or film enthusiasts.
+ABQ Film Tour is an Android app for tourists and film enthusiasts in the Albuquerque area. Users can find, submit, and discuss locations featured in locally filmed movies and television series such as "Breaking Bad" and "Better Call Saul".
 
 ### Functional inventory
 *A “functional inventory” for that repository—i.e. what functional components of the overall project are implemented by code in that repository?* <br/>
@@ -29,8 +29,10 @@ ABQ Film Tour is an Android app that uses city provided film permit data to popu
 ***NOT READY***
 
 ### External services
-*A list of the external services (including Google services such as Sign In, Calendar, Maps, etc.) consumed by the component.* <br/>
-***NOT READY***
+- Google Sign In
+- Google Maps
+- [OMDb API](http://www.omdbapi.com/)
+- http://data.cabq.gov/business/filmlocations/filmlocationsJSON_ALL Retrieved on 12/3/2018
 
 ### Aesthetic goals
 *For client side components, a list of aesthetic/cosmetic (not functional) improvements that you think would improve this component. This list should be ordered, with those that would give the most improvement (in your opinion) listed first.* <br/>
