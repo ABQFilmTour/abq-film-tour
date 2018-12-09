@@ -110,7 +110,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Extras key to pass a list of production titles into a selection dialog.
    */
-  private static final String TITLE_LIST_KEY = "titlesList";
+  static final String TITLE_LIST_KEY = "titlesList";
   /**
    * Extras tag to pass a location UUID String into a LocationActivity.
    */
@@ -118,7 +118,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Extras key to pass in a selection menu item.
    */
-  private static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
+  static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
   /**
    * Constant for the onRequestPermissionsResult callback.
    */
@@ -195,6 +195,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     setContentView(R.layout.activity_maps);
     new GetProductionsTask().execute();
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+    filmTourApplication.getAccount().getId();
 
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
