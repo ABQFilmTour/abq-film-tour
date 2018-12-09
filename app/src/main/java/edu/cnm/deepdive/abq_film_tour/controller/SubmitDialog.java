@@ -28,12 +28,30 @@ import edu.cnm.deepdive.abq_film_tour.R;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+/**
+ * Dialog fragment for users to upload and submit changes.
+ */
 public class SubmitDialog extends DialogFragment implements View.OnClickListener{
   private static final int RESULT_LOAD_IMAGE = 1;
 
+  /**
+   * The Uploaded image.
+   */
   ImageView uploadImage;
-  Button uploadImagebutton, registerButton;
-  EditText siteName, description;
+  /**
+   * Button to upload an image.
+   */
+  Button uploadImagebutton, /**
+   * Button to register.
+   */
+  registerButton;
+  /**
+   * Field to enter the name of the site location.
+   */
+  EditText siteName, /**
+   * Field to enter a short discription of the image.
+   */
+  description;
 
 
 
@@ -90,10 +108,26 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
 
   private class Register extends AsyncTask<Void, Void, Void>{
 
+    /**
+     * The Image that is being uploaded.
+     */
     Bitmap image;
+    /**
+     * The Site location name.
+     */
     String siteName;
+    /**
+     * Discription of the image.
+     */
     String description;
 
+    /**
+     * Instantiates a new Register.
+     *
+     * @param image the uploaded image
+     * @param siteName the site location name
+     * @param description the description of the image
+     */
     public Register(Bitmap image, String siteName, String description){
       this.image = image;
       this.siteName = siteName;

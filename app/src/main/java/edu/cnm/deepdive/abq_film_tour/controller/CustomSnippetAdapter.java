@@ -10,19 +10,26 @@ import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import org.w3c.dom.Text;
 
+/**
+ * CustomSnippetAdapter makes the snippets look pretty.
+ */
 public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
 
   private final View mSnippet;
   private Context context;
 
+  /**
+   * Instantiates a new Custom snippet adapter.
+   *
+   * @param context
+   */
   public CustomSnippetAdapter(Context context) {
-    context = context;
     mSnippet = LayoutInflater.from(context).inflate(R.layout.custom_info_snippet, null);
   }
 
   private void renderSnippetText(Marker marker, View view){
     String title = marker.getTitle();
-    TextView snippetTitle = (TextView) view.findViewById(R.id.snippet_title);
+    TextView snippetTitle = view.findViewById(R.id.snippet_title);
 
     FilmLocation location = (FilmLocation) marker.getTag();
 
@@ -30,7 +37,7 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
       snippetTitle.setText(title);
     }
     String snippet = marker.getTitle();
-    TextView snippetDescription = (TextView) view.findViewById(R.id.snippet_description);
+    TextView snippetDescription = view.findViewById(R.id.snippet_description);
 
     if (!snippet.equals("")) {
       snippetDescription.setText(location.getProduction().getTitle());
@@ -39,14 +46,15 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
 
 
   @Override
-  public View getInfoWindow(Marker marker) {
+  public View getInfoContents(Marker marker) {
     renderSnippetText(marker, mSnippet);
     return mSnippet;
   }
 
   @Override
-  public View getInfoContents(Marker marker) {
+  public View getInfoWindow(Marker marker) {
     renderSnippetText(marker, mSnippet);
     return mSnippet;
   }
+
 }

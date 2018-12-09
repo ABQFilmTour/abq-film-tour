@@ -20,4 +20,5 @@
   <string name="enable_location_settings">Your locations setting is not enabled. Please enabled it in settings menu.</string>
   <string name="cancel">Cancel</string>
   <string name="not_in_burque">You\'re currently not in the Albuquerque city limits.</string>
+  <string name="unable_to_signin">Unable to sign in</string>
 </resources>

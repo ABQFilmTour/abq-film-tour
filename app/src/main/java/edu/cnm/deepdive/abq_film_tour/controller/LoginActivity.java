@@ -15,6 +15,9 @@ import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 
 
+/**
+ * Uses Google Sign-In to allow users to login to application.
+ */
 public class LoginActivity extends AppCompatActivity {
 
   private static final int REQUEST_CODE = 1000;
@@ -51,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         FilmTourApplication.getInstance().setAccount(account);
         switchToMain();
       } catch (ApiException e) {
-        Toast.makeText(this, "Unable to sign in", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.unable_to_signin, Toast.LENGTH_LONG).show();
       }
     }
   }
