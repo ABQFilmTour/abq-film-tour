@@ -47,6 +47,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is the primary activity for the application. It implements Google Map functionality and
@@ -55,32 +58,107 @@ import java.util.List;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   //CONSTANTS
+  /**
+   * String type that refers to Television Production types.
+   */
   private static final String TYPE_SERIES = "series";
+  /**
+   * String type that refers to Film Production types.
+   */
   private static final String TYPE_MOVIE = "movie";
-  private static final String LOCATION_ID_KEY = "location_id_key";
+  /**
+   * Shared preferences tag to reference the last saved title.
+   */
   private static final String SHARED_PREF_LAST_TITLE = "last_title";
+  /**
+   * Initial zoom level for the map camera, should display a birds eye view of the ABQ area.
+   */
   private static final float ZOOM_LEVEL_INITIAL = 9;
+  /**
+   * Zoom level for the camera when "Near Me" is selected.
+   */
   private static final float ZOOM_LEVEL_NEAR_ME = 17;
+  /**
+   * Bearing level for hte camera when "Near Me" is selected, this skews the map direction so should
+   * be avoided.
+   */
   private static final float BEARING_LEVEL_NEAR_ME = 0;
+  /**
+   * Tilt level for the camera when "Near Me" is selected, looks really cool.
+   */
   private static final float TILT_LEVEL_NEAR_ME = 40;
-  private final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
-  private static final double BURQUE_LONG = -106.6055534;
+  /**
+   * BECCA ???
+   */
+  private static final double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
+  /**
+   * Latitude coordinates for Albuquerque according to Google, I believe it's somewhere around Nob
+   * Hill.
+   */
   private static final double BURQUE_LAT = 35.0853336;
-  private static final String TITLE_LIST_KEY = "titlesList";
-  private static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
-  private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
+  /**
+   * Longitude coordinates for Albuquerque according to Google, I believe it's somewhere around Nob
+   * Hill.
+   */
+  private static final double BURQUE_LONG = -106.6055534;
+  /**
+   * Bounds of the Albuquerque area to determine if the user is close enough to use the app.
+   */
   private static final int BURQUE_LIMITS = 50;
+  /**
+   * Range from the user location "Near me" should populate map markers.
+   */
   private static final double KM_RANGE_FROM_USER = 1.5;
+  /**
+   * Extras key to pass a list of production titles into a selection dialog.
+   */
+  private static final String TITLE_LIST_KEY = "titlesList";
+  /**
+   * Extras tag to pass a location UUID String into a LocationActivity.
+   */
+  private static final String LOCATION_ID_KEY = "location_id_key";
+  /**
+   * Extras key to pass in a selection menu item.
+   */
+  private static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
+  /**
+   * BECCA ???
+   */
+  private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
+
 
   //FIELDS
+  /**
+   * Object to reference the parent application.
+   */
   private FilmTourApplication filmTourApplication;
+  /**
+   * A list of movie titles to display in a ListView.
+   */
   private ArrayList<String> movieTitles;
+  /**
+   * A list of television titles to display in a ListView.
+   */
   private ArrayList<String> tvTitles;
+  /**
+   * A list of the FilmLocation objects retrieved from the backend.
+   */
   private List<FilmLocation> locations;
+  /**
+   * A list of the Production objects retrieved from the backend.
+   */
   private List<Production> productions;
+  /**
+   * The GoogleMap object for the activity.
+   */
   private GoogleMap map;
+  /**
+   * LocationManager object to reference the user location.
+   */
   private LocationManager locationManager;
-  private Context context;
+  /**
+   * SharedPreferences object
+   */
   private SharedPreferences sharedPref;
 
   /**
@@ -112,6 +190,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   };
 
+  @Override
+  protected void onCreate(Bundle savedInstanceState) throws SecurityException {
+    filmTourApplication = (FilmTourApplication) getApplication();
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_maps);
+    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        .findFragmentById(R.id.map);
+    assert mapFragment != null;
+    mapFragment.getMapAsync(this);
+    ActionBar actionBar = getSupportActionBar();
+    assert actionBar != null;
+    actionBar.setLogo(R.drawable.toolbar_icon);
+    actionBar.setDisplayUseLogoEnabled(true);
+    actionBar.setDisplayShowHomeEnabled(true);
+    // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+    locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    getLocationPermission();
+    isLocationEnabled();
+    Criteria criteria = new Criteria();
+    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+    locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), //FIXME crashes on first run
+        2000, //BECCA Define magic value
+        1, //BECCA Define magic value
+        locationListenerGPS);
+    sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+  }
+
   /**
    * BECCA Document code
    */
@@ -136,19 +241,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       populateMapFromTitle(savedTitle);
     } else {
       Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
+      setTitle(getString(R.string.application_title));
     }
   }
 
   /**
    * SAM Document code
-   * @param context
-   * @param resource
-   * @return
    */
   private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
 
-    View marker = ((LayoutInflater) context.getSystemService(
-        Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
+    View marker = ((LayoutInflater) Objects.requireNonNull(context.getSystemService(
+        Context.LAYOUT_INFLATER_SERVICE))).inflate(R.layout.custom_marker_layout, null);
 
     DisplayMetrics displayMetrics = new DisplayMetrics();
     ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -199,8 +302,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * BECCA Document code
-   * @param userLatLng
-   * @return
    */
   private boolean inBurque(LatLng userLatLng) {
     int delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
@@ -213,7 +314,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private void isLocationEnabled() {
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-      AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.AlertDialog);
+      AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialog);
       alertDialog.setTitle("Enable Location");
       alertDialog
           .setMessage(R.string.enable_location_settings);
@@ -242,8 +343,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     tvTitles = new ArrayList<>();
     for (Production production : productions) {
       if (production.getType() == null) {
-        //TODO Record somehow if null data is in the database
-        continue; // skip null data
+        // Log info and skip loop, could "continue;" but currently unnecessary. Unfamiliar with
+        // logs so I'm not sure where this is recorded.
+        Logger logger = Logger.getLogger(MapsActivity.class.getName());
+        logger.log(Level.WARNING, String.format(getString(R.string.log_null_production_type),
+            production.getId()));
       } else if (production.getType().equals(TYPE_SERIES)) {
         tvTitles.add(production.getTitle());
       } else if (production.getType().equals(TYPE_MOVIE)) {
@@ -254,7 +358,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Collections.sort(movieTitles);
   }
 
-  //BECCA Document code.
+  /**
+   * BECCA Document code.
+   */
   private void nearMe(LatLng userLatLng) {
     CameraPosition cameraPosition = new CameraPosition.Builder()
         .target(userLatLng)      // Sets the center of the map to location user
@@ -268,34 +374,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
   }
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) throws SecurityException {
-    filmTourApplication = (FilmTourApplication) getApplication();
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_maps);
-    new GetProductionsTask().execute();
-    sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.map);
-    assert mapFragment != null;
-    mapFragment.getMapAsync(this);
-    ActionBar actionBar = getSupportActionBar();
-    assert actionBar != null;
-    actionBar.setLogo(R.drawable.toolbar_icon);
-    actionBar.setDisplayUseLogoEnabled(true);
-    actionBar.setDisplayShowHomeEnabled(true);
-    // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-    context = this;
-    locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-    getLocationPermission();
-    isLocationEnabled();
-    Criteria criteria = new Criteria();
-    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-    locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true),
-        2000, //BECCA Define magic value
-        1, //BECCA Define magic value
-        locationListenerGPS);
-  }
+
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -306,15 +385,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Manipulates the map once available. This callback is triggered when the map is ready to be
-   * used. For this application, the map positions to
+   * used. For this application, the map positions to approximately central Albuquerque.
    */
   @Override
   public void onMapReady(GoogleMap googleMap) {
     map = googleMap;
-    new GetLocationsTask().execute();
     LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
     map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
     map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL_INITIAL));
+    new GetProductionsTask().execute();
   }
 
   @Override
@@ -327,7 +406,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_all_near_me:
         getDeviceLocation();
-        //TODO change title on title bar to NEAR ME
+        setTitle(getString(R.string.application_title));
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
@@ -360,7 +439,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * BECCA Document code
-   * @param userLatLng
    */
   private void populateMapFromLocation(LatLng userLatLng) {
     map.clear();
@@ -378,6 +456,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * This method calls the createMapMarker method on every FilmLocation in the locations field for
    * the MapsActivity that is not null (to filer out bunk data) and matches a given String title.
+   *
    * @param title a production title as a raw string.
    */
   void populateMapFromTitle(String title) {
@@ -435,25 +514,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * BECCA Document code
-   * @param requestCode
-   * @param permissions
-   * @param grantResults
    */
   @Override
   public void onRequestPermissionsResult(int requestCode,
-      @NonNull String permissions[], @NonNull int[] grantResults) {
+      @NonNull String permissions[], @NonNull int[] grantResults) throws SecurityException {
     switch (requestCode) {
       case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
         // If request is cancelled, the result arrays are empty.
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
-              != PackageManager.PERMISSION_GRANTED
-              && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
-              != PackageManager.PERMISSION_GRANTED) {
-            //    do nothing. Permissions will always be granted here.
-            return;
-          }
           locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
               2000,
               10,
@@ -463,6 +532,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           Toast.makeText(this, R.string.cannot_enable_location,
               Toast.LENGTH_LONG).show();
         }
+        break;
       }
     }
   }
@@ -471,25 +541,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * BECCA Document code
    */
   private void getDeviceLocation() throws SecurityException {
-    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-      Criteria criteria = new Criteria();
-      criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-      assert locationManager != null;
-      Location location = locationManager
-          .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
-      if (location != null) {
-        LatLng userLatLng = new LatLng(location.getLatitude(),
-            location.getLongitude());
-        if (!inBurque(userLatLng)) {
-          Toast.makeText(this, R.string.not_in_burque,
-              Toast.LENGTH_SHORT).show();
-        } else {
-          nearMe(userLatLng);
-        }
+    LocationManager locationManager = (LocationManager) getSystemService(
+        Context.LOCATION_SERVICE);
+    Criteria criteria = new Criteria();
+    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+    assert locationManager != null;
+    Location location = locationManager
+        .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
+    if (location != null) {
+      LatLng userLatLng = new LatLng(location.getLatitude(),
+          location.getLongitude());
+      if (!inBurque(userLatLng)) {
+        Toast.makeText(this, R.string.not_in_burque,
+            Toast.LENGTH_SHORT).show();
       } else {
-        Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
+        nearMe(userLatLng);
       }
+    } else {
+      Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
     }
+  }
 
   /**
    * Asynchronous task that retrieves the film locations from the server.
@@ -543,7 +614,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onPostExecute(Void aVoid) {
       super.onPostExecute(aVoid);
       populateTitlesList();
+      new GetLocationsTask().execute();
     }
   }
-
 }

@@ -21,4 +21,6 @@
   <string name="cancel">Cancel</string>
   <string name="not_in_burque">You\'re currently not in the Albuquerque city limits.</string>
   <string name="unable_to_signin">Unable to sign in</string>
+  <string name="application_title">Film Tour</string>
+  <string name="log_null_production_type">Production %s has a null type.</string>
 </resources>
