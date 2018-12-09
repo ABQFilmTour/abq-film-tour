@@ -79,7 +79,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final float ZOOM_LEVEL_NEAR_ME = 17;
   /**
-   * Bearing level for hte camera when "Near Me" is selected, this skews the map direction so should
+   * Bearing level for the camera when "Near Me" is selected, this skews the map direction so should
    * be avoided.
    */
   private static final float BEARING_LEVEL_NEAR_ME = 0;
@@ -88,7 +88,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final float TILT_LEVEL_NEAR_ME = 40;
   /**
-   * BECCA ???
+   * Constant of the average radius of the earth, used to find the distance between two coordinates.
    */
   private static final double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
   /**
@@ -120,7 +120,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
   /**
-   * BECCA ???
+   * Constant for the onRequestPermissionsResult callback.
    */
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
 
@@ -160,7 +160,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private SharedPreferences sharedPref;
 
   /**
-   * BECCA Document code.
+   * Location Listener object to find when user location changes
    */
   private LocationListener locationListenerGPS = new LocationListener() {
 
@@ -220,17 +220,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * BECCA Document code
-   */
-  private int calculateDistanceInKilometer(double userLat, double userLng,
+   * Calculates the distance as the crow flies in km between two coordinates
+   * given latitude and longitude. This method computes the central angle between the
+   * two coordinates using the Haversine formula then multiplies the angle by the
+   * average circumference of the Earth to solve for the arclength or great-circle
+   * distance between the two points. Note: this method is an approximation that
+   * assumes the Earth is a perfect sphere.
+   **/
+  private double calculateDistanceInKilometer(double userLat, double userLng,
       double venueLat, double venueLng) {
+    //converts degrees to radians
     double latDistance = Math.toRadians(userLat - venueLat);
     double lngDistance = Math.toRadians(userLng - venueLng);
+    // calculates a = hav(Theta) where Theta = central angle
     double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
         + Math.cos(Math.toRadians(userLat)) * Math.cos(Math.toRadians(venueLat))
         * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+    //takes inverse haversine to solve for central angle
     double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
+    //multiplies by r to solve for d
+    return (AVERAGE_RADIUS_OF_EARTH_KM * c);
   }
 
   /**
@@ -299,16 +308,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
   /**
-   * BECCA Document code
+   * Checks to see if user is inside Albuquerque city limits.
    */
   private boolean inBurque(LatLng userLatLng) {
-    int delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
+    double delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
         BURQUE_LAT, BURQUE_LONG);
     return (delta < BURQUE_LIMITS);
   }
 
   /**
-   * BECCA Document code.
+   * Checks to see if device's location is enabled.
    */
   private void isLocationEnabled() {
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -357,7 +366,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * BECCA Document code.
+   * Given the user's last known location, this method animates the map camera and zooms
+   * into the user's location and populates map pins of nearby filming locations.
    */
   private void nearMe(LatLng userLatLng) {
     setTitle(getString(R.string.application_title));
@@ -435,14 +445,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * BECCA Document code
+   * Draws map pins for all filming locations within a given distance of the user's location.
    */
   private void populateMapFromLocation(LatLng userLatLng) {
     map.clear();
     for (FilmLocation location : locations) {
       double venueLat = Double.valueOf(location.getLatCoordinate());
       double venueLng = Double.valueOf(location.getLongCoordinate());
-      int delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
+      double delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
           venueLat, venueLng);
       if (delta < KM_RANGE_FROM_USER) {
         createMapMarker(location);
@@ -494,14 +504,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * BECCA Document code
+   * Requests location permission of the user's device.
+   * The result of the permission request is handled by a callback,
+   * onRequestPermissionsResult.
    */
   private void getLocationPermission() {
-    /*
-     * Request location permission, so that we can get the location of the
-     * device. The result of the permission request is handled by a callback,
-     * onRequestPermissionsResult.
-     */
     ActivityCompat.requestPermissions(this,
         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
             permission.ACCESS_COARSE_LOCATION},
@@ -510,7 +517,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * BECCA Document code
+   * Handles the result of the permission request from getLocationPermission.
    */
   @Override
   public void onRequestPermissionsResult(int requestCode,
@@ -534,7 +541,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * BECCA Document code
+   * Gets the last known location of the device using the best provider possible. If the user
+   * is outside of Albuquerque city limits it will toast the user and not update the map to
+   * user's location.
    */
   private void getDeviceLocation() throws SecurityException {
     LocationManager locationManager = (LocationManager) getSystemService(
