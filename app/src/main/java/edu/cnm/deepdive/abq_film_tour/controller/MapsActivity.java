@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -63,14 +63,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private static final float ZOOM_LEVEL_NEAR_ME = 17;
   private static final float BEARING_LEVEL_NEAR_ME = 0;
   private static final float TILT_LEVEL_NEAR_ME = 40;
-  public final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
-
-  //First result on google when I searched "city of albuquerque coordinates"
-  private static final String START_LONG = "-106.6055534";
-  private static final String START_LAT = "35.0853336";
-  public static final String TITLE_LIST_KEY = "titlesList";
-  public static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
+  private final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
+  private static final double BURQUE_LONG = -106.6055534;
+  private static final double BURQUE_LAT = 35.0853336;
+  private static final String TITLE_LIST_KEY = "titlesList";
+  private static final String SELECTED_OPTIONS_MENU_ITEM_KEY = "selectedOptionMenuItem";
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
+  private static final int BURQUE_LIMITS = 50;
+  private static final double KM_RANGE_FROM_USER = 1.5;
 
   //FIELDS
   private FilmTourApplication filmTourApplication;
@@ -79,60 +79,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private List<FilmLocation> locations;
   private List<Production> productions;
   private GoogleMap map;
-  private SelectionDialog selectionDialog;
-  private SubmitDialog submitDialog;
-  private FusedLocationProviderClient fusedLocationProviderClient;
-  private Bundle arguments;
-
-  private static FilmLocation startLocation; //Should this be a FilmLocation? Only coordinates needed
-  LocationManager locationManager;
-  Context context;
-
+  private LocationManager locationManager;
+  private Context context;
   private SharedPreferences sharedPref;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    filmTourApplication = (FilmTourApplication) getApplication();
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_maps);
-    new GetProductionsTask().execute();
-    sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-    //CREATE START LOCATION TO POSITION CAMERA TO
-    startLocation = new FilmLocation();
-    startLocation.setLatCoordinate(START_LAT);
-    startLocation.setLongCoordinate(START_LONG);
-    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.map);
-    mapFragment.getMapAsync(this);
-
-    ActionBar actionBar = getSupportActionBar();
-    actionBar.setLogo(R.drawable.toolbar_icon);
-    actionBar.setDisplayUseLogoEnabled(true);
-    actionBar.setDisplayShowHomeEnabled(true);
-    // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-
-    context = this;
-    locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-    getLocationPermission();
-    isLocationEnabled();
-    if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED
-        && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED) {
-
-      return;
-    }
-    Criteria criteria = new Criteria();
-    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-    locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true),
-        2000,
-        1,
-        locationListenerGPS);
-
-  }
-
-  LocationListener locationListenerGPS = new LocationListener() {
+  /**
+   * BECCA Document code.
+   */
+  private LocationListener locationListenerGPS = new LocationListener() {
 
     @Override
     public void onLocationChanged(android.location.Location location) {
@@ -144,19 +98,98 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
+      // Do nothing.
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
+      // Do nothing.
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
+      // Do nothing.
     }
   };
+
+  /**
+   * BECCA Document code
+   */
+  private int calculateDistanceInKilometer(double userLat, double userLng,
+      double venueLat, double venueLng) {
+    double latDistance = Math.toRadians(userLat - venueLat);
+    double lngDistance = Math.toRadians(userLng - venueLng);
+    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+        + Math.cos(Math.toRadians(userLat)) * Math.cos(Math.toRadians(venueLat))
+        * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
+  }
+
+  /**
+   * This method checks if a title is in the local SharedPreferences. If there is, it starts with
+   * the data for that production, if not, it prompts the user to select a title.
+   */
+  private void checkForPastTitle() {
+    String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null);
+    if (savedTitle != null) {
+      populateMapFromTitle(savedTitle);
+    } else {
+      Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
+    }
+  }
+
+  /**
+   * SAM Document code
+   * @param context
+   * @param resource
+   * @return
+   */
+  private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
+
+    View marker = ((LayoutInflater) context.getSystemService(
+        Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
+
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
+    marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+    marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+    Bitmap bitmap = Bitmap.createBitmap(
+        marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    marker.draw(canvas);
+
+    return bitmap;
+  }
+
+  /**
+   * This method creates a map marker based on a given location, along with the snippet and
+   * onClickListener for the marker. The FilmLocation entity is attached as a tag for reference.
+   *
+   * @param location the FilmLocation to be associated with this marker, and where coordinates are
+   * retrieved from.
+   */
+  private void createMapMarker(FilmLocation location) {
+    LatLng coordinates = new LatLng(Double.valueOf(location.getLatCoordinate()),
+        Double.valueOf(location.getLongCoordinate()));
+    Marker marker = map.addMarker(new MarkerOptions()
+        .position(coordinates)
+        .icon(BitmapDescriptorFactory.fromBitmap(
+            createCustomMarker(MapsActivity.this, R.drawable.map_pin)))
+        .title(location.getSiteName())
+        .snippet(
+            location.getProduction().getTitle()));
+    map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
+    marker.setTag(location);
+    map.setOnInfoWindowClickListener(marker1 -> {
+      FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
+      Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
+      assert taggedLocation != null;
+      intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
+      startActivity(intent);
+    });
+  }
 
   @Override
   protected void onPostResume() {
@@ -164,6 +197,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     isLocationEnabled();
   }
 
+  /**
+   * BECCA Document code
+   * @param userLatLng
+   * @return
+   */
+  private boolean inBurque(LatLng userLatLng) {
+    int delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
+        BURQUE_LAT, BURQUE_LONG);
+    return (delta < BURQUE_LIMITS);
+  }
+
+  /**
+   * BECCA Document code.
+   */
   private void isLocationEnabled() {
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
       AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.AlertDialog);
@@ -186,7 +233,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   }
 
-
   /**
    * This method populates the "movie titles" and "series titles" lists to be displayed from the
    * SelectionDialog fragment.
@@ -196,7 +242,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     tvTitles = new ArrayList<>();
     for (Production production : productions) {
       if (production.getType() == null) {
-        //TODO Record if null data is in the database
+        //TODO Record somehow if null data is in the database
         continue; // skip null data
       } else if (production.getType().equals(TYPE_SERIES)) {
         tvTitles.add(production.getTitle());
@@ -208,6 +254,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Collections.sort(movieTitles);
   }
 
+  //BECCA Document code.
+  private void nearMe(LatLng userLatLng) {
+    CameraPosition cameraPosition = new CameraPosition.Builder()
+        .target(userLatLng)      // Sets the center of the map to location user
+        .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
+        .bearing(
+            BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
+        .tilt(
+            TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
+        .build();                   // Creates a CameraPosition from the builder
+    populateMapFromLocation(userLatLng);
+    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) throws SecurityException {
+    filmTourApplication = (FilmTourApplication) getApplication();
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_maps);
+    new GetProductionsTask().execute();
+    sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        .findFragmentById(R.id.map);
+    assert mapFragment != null;
+    mapFragment.getMapAsync(this);
+    ActionBar actionBar = getSupportActionBar();
+    assert actionBar != null;
+    actionBar.setLogo(R.drawable.toolbar_icon);
+    actionBar.setDisplayUseLogoEnabled(true);
+    actionBar.setDisplayShowHomeEnabled(true);
+    // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+    context = this;
+    locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    getLocationPermission();
+    isLocationEnabled();
+    Criteria criteria = new Criteria();
+    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+    locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true),
+        2000, //BECCA Define magic value
+        1, //BECCA Define magic value
+        locationListenerGPS);
+  }
+
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
@@ -215,9 +304,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     return true;
   }
 
+  /**
+   * Manipulates the map once available. This callback is triggered when the map is ready to be
+   * used. For this application, the map positions to
+   */
+  @Override
+  public void onMapReady(GoogleMap googleMap) {
+    map = googleMap;
+    new GetLocationsTask().execute();
+    LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
+    map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
+    map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL_INITIAL));
+  }
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    selectionDialog = new SelectionDialog();
+    SelectionDialog selectionDialog = new SelectionDialog();
     boolean handled = true;
     switch (item.getItemId()) {
       default:
@@ -229,7 +331,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
-        arguments = new Bundle();
+        Bundle arguments = new Bundle();
         arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY,
             getString(R.string.selected_options_series_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
@@ -246,7 +348,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.menu_submit:
-        submitDialog = new SubmitDialog();
+        SubmitDialog submitDialog = new SubmitDialog();
         submitDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.sign_out:
@@ -257,23 +359,54 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Manipulates the map once available. This callback is triggered when the map is ready to be
-   * used. This is where we can add markers or lines, add listeners or move the camera. In this
-   * case, we just add a marker near Sydney, Australia. If Google Play services is not installed on
-   * the device, the user will be prompted to install it inside the SupportMapFragment. This method
-   * will only be triggered once the user has installed Google Play services and returned to the
-   * app.
+   * BECCA Document code
+   * @param userLatLng
    */
-  @Override
-  public void onMapReady(GoogleMap googleMap) {
-    map = googleMap;
-    new PopulateMapPinsTask().execute();
-    LatLng startCoordinates = new LatLng(Double.valueOf(startLocation.getLatCoordinate()),
-        Double.valueOf(startLocation.getLongCoordinate()));
-    map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
-    map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL_INITIAL));
+  private void populateMapFromLocation(LatLng userLatLng) {
+    map.clear();
+    for (FilmLocation location : locations) {
+      double venueLat = Double.valueOf(location.getLatCoordinate());
+      double venueLng = Double.valueOf(location.getLongCoordinate());
+      int delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
+          venueLat, venueLng);
+      if (delta < KM_RANGE_FROM_USER) {
+        createMapMarker(location);
+      }
+    }
   }
 
+  /**
+   * This method calls the createMapMarker method on every FilmLocation in the locations field for
+   * the MapsActivity that is not null (to filer out bunk data) and matches a given String title.
+   * @param title a production title as a raw string.
+   */
+  void populateMapFromTitle(String title) {
+    map.clear();
+    for (FilmLocation location : locations) {
+      this.setTitle(title);
+      saveSharedPreferences(title);
+      if (location.getProduction().getTitle() != null && location.getProduction().getTitle()
+          .equals(title)) {
+        createMapMarker(location);
+      }
+    }
+  }
+
+  /**
+   * This method updates the local SharedPreferences with a given production title.
+   *
+   * @param title a production title as a raw string..
+   */
+  private void saveSharedPreferences(String title) {
+    SharedPreferences.Editor editor = sharedPref.edit();
+    editor.putString(SHARED_PREF_LAST_TITLE, title);
+    editor.apply();
+  }
+
+  /**
+   * This method signs the Google account out of the application and returns the user to the login
+   * activity.
+   */
   private void signOut() {
     FilmTourApplication app = FilmTourApplication.getInstance();
     app.getClient().signOut().addOnCompleteListener(this, (task) -> {
@@ -284,81 +417,105 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
   }
 
+  /**
+   * BECCA Document code
+   */
+  private void getLocationPermission() {
+    /*
+     * Request location permission, so that we can get the location of the
+     * device. The result of the permission request is handled by a callback,
+     * onRequestPermissionsResult.
+     */
+    ActivityCompat.requestPermissions(this,
+        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+            permission.ACCESS_COARSE_LOCATION},
+        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
+  }
 
-
-  public void populateMapFromTitle(String title) {
-    map.clear();
-    for (FilmLocation location : locations) {
-      this.setTitle(title);
-      saveSharedPreferences(title);
-      if (location.getProduction().getTitle() != null && location.getProduction().getTitle()
-          .equals(title)) {
-        createMapPin(location);
+  /**
+   * BECCA Document code
+   * @param requestCode
+   * @param permissions
+   * @param grantResults
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+      @NonNull String permissions[], @NonNull int[] grantResults) {
+    switch (requestCode) {
+      case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
+              != PackageManager.PERMISSION_GRANTED
+              && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
+              != PackageManager.PERMISSION_GRANTED) {
+            //    do nothing. Permissions will always be granted here.
+            return;
+          }
+          locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+              2000,
+              10,
+              locationListenerGPS);
+        } else {
+          // permission denied, boo!
+          Toast.makeText(this, R.string.cannot_enable_location,
+              Toast.LENGTH_LONG).show();
+        }
       }
     }
   }
 
-  private boolean inBurque(LatLng userLatLng) {
-    double startLat = Double.valueOf(START_LAT);
-    double startLong = Double.valueOf(START_LONG);
-    int delta = calculateDistanceInKilometer(userLatLng.latitude,userLatLng.longitude,
-        startLat,startLong);
-   return (delta < 50);
-  }
-
-  private void populateMapFromLocation(LatLng userLatLng) {
-    map.clear();
-    for (FilmLocation location : locations) {
-      double venueLat = Double.valueOf(location.getLatCoordinate());
-      double venueLng = Double.valueOf(location.getLongCoordinate());
-      int delta = calculateDistanceInKilometer(userLatLng.latitude,userLatLng.longitude,
-          venueLat,venueLng );
-      if (delta < 1) {
-        createMapPin(location);
+  /**
+   * BECCA Document code
+   */
+  private void getDeviceLocation() throws SecurityException {
+    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+      Criteria criteria = new Criteria();
+      criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+      assert locationManager != null;
+      Location location = locationManager
+          .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
+      if (location != null) {
+        LatLng userLatLng = new LatLng(location.getLatitude(),
+            location.getLongitude());
+        if (!inBurque(userLatLng)) {
+          Toast.makeText(this, R.string.not_in_burque,
+              Toast.LENGTH_SHORT).show();
+        } else {
+          nearMe(userLatLng);
+        }
+      } else {
+        Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
       }
     }
-  }
 
-  public int calculateDistanceInKilometer(double userLat, double userLng,
-      double venueLat, double venueLng) {
+  /**
+   * Asynchronous task that retrieves the film locations from the server.
+   */
+  private class GetLocationsTask extends AsyncTask<Void, Void, Void> {
 
-    double latDistance = Math.toRadians(userLat - venueLat);
-    double lngDistance = Math.toRadians(userLng - venueLng);
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+    }
 
-    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-        + Math.cos(Math.toRadians(userLat)) * Math.cos(Math.toRadians(venueLat))
-        * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
-    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    int delta = (int) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
-    return delta;
-  }
+    @Override
+    protected Void doInBackground(Void... voids) {
+      try {
+        //TODO Return locations rather than modify activity field.
+        locations = filmTourApplication.getService().getLocations().execute().body();
+      } catch (IOException e) {
+        //TODO Handle or don't.
+      }
+      return null;
+    }
 
-  private void createMapPin(FilmLocation location) {
-    LatLng coordinates = new LatLng(Double.valueOf(location.getLatCoordinate()),
-        Double.valueOf(location.getLongCoordinate()));
-    Marker marker = map.addMarker(new MarkerOptions()
-        .position(coordinates)
-        .icon(BitmapDescriptorFactory.fromBitmap(
-            createCustomMarker(MapsActivity.this, R.drawable.map_pin)))
-        .title(location.getSiteName())
-        .snippet(
-            location.getProduction().getTitle()));
-    map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
-    marker.setTag(location);
-    map.setOnInfoWindowClickListener(marker1 -> {
-      FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
-      Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
-      intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
-      startActivity(intent);
-    });
-  }
-
-
-  private void saveSharedPreferences(String title) {
-    SharedPreferences.Editor editor = sharedPref.edit();
-    editor.putString(SHARED_PREF_LAST_TITLE, title);
-    editor.apply();
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      checkForPastTitle();
+    }
   }
 
   /**
@@ -374,9 +531,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected Void doInBackground(Void... voids) {
       try {
+        //TODO Return locations rather than modify activity field.
         productions = filmTourApplication.getService().getProductions().execute().body();
       } catch (IOException e) {
-        e.printStackTrace();
+        //TODO Handle or don't.
       }
       return null;
     }
@@ -388,139 +546,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   }
 
-  /**
-   * Asynchronous task that retrieves the film locations from the server.
-   */
-  private class PopulateMapPinsTask extends AsyncTask<Void, Void, Void> {
-
-    @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-    }
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-      try {
-        locations = filmTourApplication.getService().getLocations().execute().body();
-      } catch (IOException e) {
-        //TODO Handle or don't.
-      }
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-      startUp();
-    }
-  }
-
-  private void startUp() {
-    String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null);
-    if (savedTitle != null) {
-      populateMapFromTitle(savedTitle);
-    } else {
-      Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
-    }
-  }
-
-
-    private void getLocationPermission(){
-      /*
-       * Request location permission, so that we can get the location of the
-       * device. The result of the permission request is handled by a callback,
-       * onRequestPermissionsResult.
-       */
-
-      ActivityCompat.requestPermissions(this,
-          new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-              permission.ACCESS_COARSE_LOCATION},
-          PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-        String permissions[], int[] grantResults) {
-      switch (requestCode) {
-        case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-          // If request is cancelled, the result arrays are empty.
-          if (grantResults.length > 0
-              && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-              //    do nothing. Permissions will always be granted here.
-              return;
-            }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                2000,
-                10,
-                locationListenerGPS);
-          } else {
-            // permission denied, boo!
-            Toast.makeText(this, R.string.cannot_enable_location,
-                Toast.LENGTH_LONG).show();
-          }
-        }
-      }
-    }
-
-  public void getDeviceLocation() {
-    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED
-        && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED) {
-        // Do nothing
-    } else {
-      Criteria criteria = new Criteria();
-      criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-      Location location = locationManager
-          .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
-      if (location != null) {
-        LatLng userLatLng = new LatLng(location.getLatitude(),
-            location.getLongitude());
-        if(inBurque(userLatLng) == false){
-          Toast.makeText(this, R.string.not_in_burque,
-              Toast.LENGTH_SHORT).show();
-        }else
- {
-          CameraPosition cameraPosition = new CameraPosition.Builder()
-              .target(userLatLng)      // Sets the center of the map to location user
-              .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
-              .bearing(
-                  BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
-              .tilt(TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
-              .build();                   // Creates a CameraPosition from the builder
-          populateMapFromLocation(userLatLng);
-          map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
-      }else{
-        Toast.makeText(this, R.string.null_location ,Toast.LENGTH_LONG).show();
-      }
-    }
-  }
-
-
-
-    private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
-
-      View marker = ((LayoutInflater) context.getSystemService(
-          Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
-
-
-    DisplayMetrics displayMetrics = new DisplayMetrics();
-    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-    marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
-    marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
-    marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
-    Bitmap bitmap = Bitmap.createBitmap(
-        marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-    Canvas canvas = new Canvas(bitmap);
-    marker.draw(canvas);
-
-      return bitmap;
-    }
-  }
+}
