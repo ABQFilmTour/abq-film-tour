@@ -19,7 +19,7 @@
   <string name="cannot_enable_location">Cannot enable location.</string>
   <string name="enable_location_settings">Your locations setting is not enabled. Please enabled it in settings menu.</string>
   <string name="cancel">Cancel</string>
-  <string name="not_in_burque">You\'re currently not in the Albuquerque city limits.</string>
+  <string name="not_in_burque">Oooeee you\'re not in Burque no more.</string>
   <string name="unable_to_signin">Unable to sign in</string>
   <string name="application_title">Film Tour</string>
   <string name="log_null_production_type">Production %s has a null type.</string>
