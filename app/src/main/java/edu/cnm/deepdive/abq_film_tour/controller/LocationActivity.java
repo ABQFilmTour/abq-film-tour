@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import edu.cnm.deepdive.abq_film_tour.R;
@@ -45,7 +44,7 @@ public class LocationActivity extends AppCompatActivity {
     assert extras != null;
     String locationID = extras.getString(LOCATION_ID_KEY);
 
-    locationImage = findViewById(R.id.image_view);
+    locationImage = findViewById(R.id.imageViewHeader);
     locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);
     locationImdb = findViewById(R.id.imdb_link_view);

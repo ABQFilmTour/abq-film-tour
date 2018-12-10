@@ -9,8 +9,11 @@
     -->
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
   <uses-feature android:name="android.hardware.location.gps"/>
 
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
   <application
     android:allowBackup="true"
@@ -20,8 +23,6 @@
     android:roundIcon="@mipmap/ic_filmtour_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
-
-
     <uses-library
       android:name="org.apache.http.legacy"
       android:required="false"/>
@@ -42,7 +43,8 @@
       android:name=".controller.MapsActivity"
       android:screenOrientation="portrait">
     </activity>
-    <activity android:name=".controller.LoginActivity"
+    <activity
+      android:name=".controller.LoginActivity"
       android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -50,13 +52,10 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name=".controller.LocationActivity"
+    <activity
+      android:name=".controller.LocationActivity"
       android:screenOrientation="portrait">
     </activity>
-
   </application>
-  
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 </manifest>

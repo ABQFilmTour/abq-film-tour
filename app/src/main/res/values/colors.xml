@@ -5,4 +5,6 @@
   <color name="colorTranparent">#59000000</color>
   <color name="colorAccent">#FC950D</color>
   <color name="dialogTextColor">#FFFFFF</color>
+  <color name="orangeTheme">#ff7326</color>
+  <color name="darkerTransparent">#B3000000</color>
 </resources>
