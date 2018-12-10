@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class CommentAdapter extends ArrayAdapter<UserComment> {
     text.append(" says ");
     text.append(getItem(position).getText());
     adaptedView.setText(text);
+    adaptedView.setBackgroundResource(R.drawable.round_border_black);
     return adaptedView;
   }
 

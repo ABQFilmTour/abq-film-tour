@@ -9,10 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
@@ -21,7 +19,6 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class LocationActivity extends AppCompatActivity {
@@ -32,7 +29,7 @@ public class LocationActivity extends AppCompatActivity {
   private TextView locationImdb;
   private TextView locationPlot;
   private TextView locationComments;
-
+  private ListView listView;
   private FilmLocation location;
   private Production production;
   private List<UserComment> userComments;
@@ -56,6 +53,10 @@ public class LocationActivity extends AppCompatActivity {
     locationProductionTitle = findViewById(R.id.production_title_view);
     locationImdb = findViewById(R.id.imdb_link_view);
     locationPlot = findViewById(R.id.plot_view);
+    listView = findViewById(R.id.comment_list_view);
+
+
+
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
   }
@@ -87,7 +88,7 @@ public class LocationActivity extends AppCompatActivity {
       String productionPlot = production.getPlot();
       locationPlot.setText(productionPlot);
 
-      ListView commentListView = findViewById(R.id.comments_list_view);
+      ListView commentListView = findViewById(R.id.comment_list_view);
       CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
       commentListView.setAdapter(commentAdapter);
 
