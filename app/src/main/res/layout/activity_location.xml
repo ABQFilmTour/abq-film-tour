@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +10,15 @@
   android:theme="@style/LocationActivityTheme"
   tools:context=".controller.LocationActivity">
 
-
+  <ScrollView
+    android:id="@+id/comment_scroll_view"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
+    >
+  <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
   <ImageView
     android:id="@+id/imageViewHeader"
     android:layout_width="0dp"
@@ -95,23 +105,14 @@
     android:layout_marginEnd="24dp"
     android:textAlignment="center"
     android:textColor="@color/colorPrimaryDark"
-    app:layout_constraintBottom_toTopOf="@id/comment_scroll_view"
+    app:layout_constraintBottom_toTopOf="@id/comments_view"
     app:layout_constraintEnd_toStartOf="@id/guidelineRight"
     app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
     app:layout_constraintTop_toBottomOf="@id/production_title_view"/>
 
-  <ScrollView
-    android:id="@+id/comment_scroll_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/plot_view">
 
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content">
+
+
       <TextView
         android:id="@+id/comments_view"
         android:layout_width="match_parent"
@@ -125,8 +126,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/plot_view"
         />
-    </LinearLayout>
-  </ScrollView>
+
+
 
   <android.support.constraint.Guideline
     android:id="@+id/guidelineLeft"
@@ -148,4 +149,6 @@
     app:constraint_referenced_ids="imageViewPoster,production_title_view"
     />
 
+  </android.support.constraint.ConstraintLayout>
+  </ScrollView>
 </android.support.constraint.ConstraintLayout>
