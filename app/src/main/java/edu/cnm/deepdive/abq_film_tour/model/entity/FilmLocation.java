@@ -81,6 +81,7 @@ public class FilmLocation {
    */
   @Expose
   private long shootDate;
+
   /**
    * Information about the shoot as provided by the city.
    */

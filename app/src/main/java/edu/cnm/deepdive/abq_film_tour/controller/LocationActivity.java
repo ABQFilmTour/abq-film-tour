@@ -6,7 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import edu.cnm.deepdive.abq_film_tour.R;
@@ -16,6 +18,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class LocationActivity extends AppCompatActivity {
@@ -49,7 +52,6 @@ public class LocationActivity extends AppCompatActivity {
     locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);
     locationImdb = findViewById(R.id.imdb_link_view);
-    locationComments = findViewById(R.id.comments_view);
     locationPlot = findViewById(R.id.plot_view);
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
@@ -61,6 +63,7 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected Void doInBackground(UUID... UUIDs) {
       try {
+
         location = filmTourApplication.getService().getFilmLocation(UUIDs[0]).execute().body();
         userComments = filmTourApplication.getService().getComments(UUIDs[0]).execute().body();
       } catch (IOException e) {
@@ -81,12 +84,9 @@ public class LocationActivity extends AppCompatActivity {
       String productionPlot = production.getPlot();
       locationPlot.setText(productionPlot);
 
-      //Example comment, testing to see if its getting the user and the comment
-      StringBuilder locationComment = new StringBuilder();
-      //locationComment.append(userComments.get(0).getUser().getGoogleName()); *TODO Server needs to be rebooted before I can get the username.
-      locationComment.append("USER: ");
-      locationComment.append(userComments.get(0).getText());
-      locationComments.setText(locationComment.toString());
+      ListView commentListView = findViewById(R.id.comments_list_view);
+      CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
+      commentListView.setAdapter(commentAdapter);
 
       locationImdb.setText(R.string.imdb_link);
       locationImdb.setOnClickListener(v -> {
