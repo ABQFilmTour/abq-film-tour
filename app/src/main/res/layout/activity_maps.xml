@@ -17,6 +17,15 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     tools:context=".controller.MapsActivity"/>
 
+  <ProgressBar
+    android:id="@+id/progress_spinner"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    android:layout_centerInParent="true"
+    android:indeterminateDrawable="@drawable/progress"
+    />
+
 </RelativeLayout>
 
 

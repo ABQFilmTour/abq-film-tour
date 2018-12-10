@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -88,7 +89,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final float TILT_LEVEL_NEAR_ME = 40;
   /**
-   * Constant of the average radius of the earth, used to find the distance between two coordinates.
+   * Constant of the average radius of the earth in km, used to find the distance between two coordinates.
    */
   private static final double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
   /**
@@ -100,11 +101,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final double BURQUE_LONG = -106.6504;
   /**
-   * Bounds of the Albuquerque area to determine if the user is close enough to use the app.
+   * Bounds of the Albuquerque area in km to determine if the user is close enough to use the app.
    */
   private static final int BURQUE_LIMITS = 50;
   /**
-   * Range from the user location "Near me" should populate map markers.
+   * Range in km from the user location "Near me" should populate map markers.
    */
   private static final double KM_RANGE_FROM_USER = 1.5;
   /**
@@ -158,6 +159,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * SharedPreferences object
    */
   private SharedPreferences sharedPref;
+  /**
+   * Progress bar, becomes visible if there is lag when map pins are being displayed.
+   */
+  private ProgressBar progressSpinner;
 
   /**
    * Location Listener object to find when user location changes
@@ -193,6 +198,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+    progressSpinner = findViewById(R.id.progress_spinner);
+    progressSpinner.setVisibility(View.VISIBLE);
+
     new GetProductionsTask().execute();
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -298,6 +306,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             location.getProduction().getTitle()));
     map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
     marker.setTag(location);
+    progressSpinner.setVisibility(View.GONE);
     map.setOnInfoWindowClickListener(marker1 -> {
       FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
       Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
@@ -383,6 +392,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         .build();                   // Creates a CameraPosition from the builder
     populateMapFromLocation(userLatLng);
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    
   }
 
 
@@ -450,7 +460,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Draws map pins for all filming locations within a given distance of the user's location.
    */
   private void populateMapFromLocation(LatLng userLatLng) {
-    map.clear();
+    progressSpinner.setVisibility(View.VISIBLE);
+  map.clear();
     for (FilmLocation location : locations) {
       double venueLat = Double.valueOf(location.getLatCoordinate());
       double venueLng = Double.valueOf(location.getLongCoordinate());
@@ -458,8 +469,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           venueLat, venueLng);
       if (delta < KM_RANGE_FROM_USER) {
         createMapMarker(location);
+        progressSpinner.setVisibility(View.GONE);
       }
     }
+
   }
 
   /**
