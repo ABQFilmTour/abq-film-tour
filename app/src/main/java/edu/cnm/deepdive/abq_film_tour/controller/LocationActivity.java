@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -87,6 +90,16 @@ public class LocationActivity extends AppCompatActivity {
       ListView commentListView = findViewById(R.id.comments_list_view);
       CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
       commentListView.setAdapter(commentAdapter);
+
+      commentListView.setOnTouchListener(new OnTouchListener() {
+        // Setting on Touch Listener for handling the touch inside ScrollView
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+          // Disallow the touch request for parent scroll on touch of child view
+          v.getParent().requestDisallowInterceptTouchEvent(true);
+          return false;
+        }
+      });
 
       locationImdb.setText(R.string.imdb_link);
       locationImdb.setOnClickListener(v -> {
