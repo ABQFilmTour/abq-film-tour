@@ -7,6 +7,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * This entity represents an individual film location. Its primary attributes are the site name and
+ * the lat and long coordinates, as well as the user and the production it is associated with. Some
+ * fields overlap with fields in the associated production as they were included with the city's
+ * data. In the event of a conflict the Production's information should take priority.
+ */
 @Entity(    foreignKeys =  {
     @ForeignKey(entity = User.class, parentColumns = "user_id",
         childColumns = "user_id", onDelete = ForeignKey.CASCADE),
@@ -15,142 +21,264 @@ import java.util.UUID;
 })
 public class FilmLocation {
 
+  /**
+   * The UUID id of the location as it was recieved from the backend server.
+   */
   @Expose
   private UUID id;
 
+  /**
+   * The date and time this location was submitted to the database.
+   */
   @Expose
   private Date created;
 
-  //These fields exist in the city data but are critical to the entity and should be the minimum
-  //requirements for submitted data.
-
+  /**
+   * The longitude coordinate for the location.
+   */
   @Expose
   private String longCoordinate;
 
+  /**
+   * The latitude coordinate for the location.
+   */
   @Expose
   private String latCoordinate;
 
-  //Even if a location may not necessarily have a site name, it probably should be required if this
-  //data will be displayed in a a table.
+  /**
+   * The name of this location.
+   */
   @Expose
   private String siteName;
 
-  //Film and series listed on imdb are 7 digit ids prefixed with "tt".
-  //can be accessed with www.omdbapi.com/
+  /**
+   * A 7 digit ID prefixed with "tt" to correspond with the production this location was filmed for
+   * in the IMDb.
+   */
   @Expose
   private String imdbId;
 
-  //These fields exist in the city data but can be pulled from the imdb ID and may not be necessary.
+  /**
+   * The title of the production associated with this entity.
+   */
   @Expose
   private String title;
 
+  /**
+   * The type of the production associated with this entity.
+   */
   @Expose
   private String type;
 
-  //These fields exist in the city data and may be useful, perhaps could be mentioned in a comment,
-  // but do not seem critically important.
+  /**
+   * The address this entity should be located at.
+   */
   @Expose
   private String address;
+
+  /**
+   * The date this entity was shot, in epoch date format.
+   */
   @Expose
   private long shootDate;
+  /**
+   * Information about the shoot as provided by the city.
+   */
   @Expose
   private String originalDetails;
 
+  /**
+   * The user who submitted this location.
+   */
   @Expose
   @SerializedName("googleUser")
   private User user;
 
+  /**
+   * The production associated with the filming at this location.
+   */
   @Expose
   private Production production;
 
+  /**
+   * Empty constructor for ROOM.
+   */
   public FilmLocation() {
 
   }
 
+  /**
+   * Retrieves the UUID.
+   * @return UUID.
+   */
   public UUID getId() {
     return id;
   }
 
+  /**
+   * Sets the UUID.
+   * @param id the UUID.
+   */
   public void setId(UUID id) {
     this.id = id;
   }
 
+  /**
+   * Returns the name of the location.
+   * @return the name of the location.
+   */
   public String getSiteName() {
     return siteName;
   }
 
+  /**
+   * Sets the name of the location.
+   * @param siteName the name of the location.
+   */
   public void setSiteName(String siteName) {
     this.siteName = siteName;
   }
 
+  /**
+   * Returns the IMDb ID of the production associated with this location.
+   * @return the IMDb ID of the production associated with this location.
+   */
   public String getImdbid() {
     return imdbId;
   }
 
+  /**
+   * Sets the IMDb id of the production associated with this location.
+   * @param imdbid the IMDb ID of the production associated with this location.
+   */
   public void setImdbid(String imdbid) {
     this.imdbId = imdbid;
   }
 
+  /**
+   * Returns the production associated with this location.
+   * @return the production associated with this location.
+   */
   public Production getProduction() {
     return production;
   }
 
+  /**
+   * Sets the production associated with this location.
+   * @param production the production associated with this location.
+   */
   public void setProduction(Production production) {
     this.production = production;
   }
 
+  /**
+   * Returns the title of the production associated with this location.
+   * @return the title of the production associated with this location.
+   */
   public String getTitle() {
     return title;
   }
 
+  /**
+   * Sets the title of the production associated with this location.
+   * @param title the production associated with this location.
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Returns the type of the production associated with this location.
+   * @return the type of the production associated with this location.
+   */
   public String getType() {
     return type;
   }
 
+  /**
+   * Sets the type of the the production associated with this location.
+   * @param type the type of the the production associated with this location.
+   */
   public void setType(String type) {
     this.type = type;
   }
 
+  /**
+   * Returns the provided address of the location.
+   * @return the provided address of the location.
+   */
   public String getAddress() {
     return address;
   }
 
+  /**
+   * Sets the provided address of the location.
+   * @param address the provided address of the location.
+   */
   public void setAddress(String address) {
     this.address = address;
   }
 
+  /**
+   * Returns the date of shooting in epoch date format.
+   * @return the date of shooting in epoch date format.
+   */
   public long getShootDate() {
     return shootDate;
   }
 
+  /**
+   * Sets the date of shooting in epoch date format.
+   * @param shootDate the date of shooting in epoch date format.
+   */
   public void setShootDate(long shootDate) {
     this.shootDate = shootDate;
   }
 
+  /**
+   * Returns city provided information about the time of shooting.
+   * @return city provided information about the time of shooting.
+   */
   public String getOriginalDetails() {
     return originalDetails;
   }
 
+  /**
+   * Sets information about the time of shooting.
+   * @param originalDetails information about the time of shooting.
+   */
   public void setOriginalDetails(String originalDetails) {
     this.originalDetails = originalDetails;
   }
 
+  /**
+   * Returns the longitude coordinate of the location.
+   * @return the longitude coordinate of the location.
+   */
   public String getLongCoordinate() {
     return longCoordinate;
   }
 
+  /**
+   * Sets the longitude coordinate of the location.
+   * @param longCoordinate the latitude coordinate of the location.
+   */
   public void setLongCoordinate(String longCoordinate) {
     this.longCoordinate = longCoordinate;
   }
 
+  /**
+   * Return the latitude coordinate of the location.
+   * @return the latitutde coordinate of the location.
+   */
   public String getLatCoordinate() {
     return latCoordinate;
   }
 
+  /**
+   * Sets the latitude coordinate of the location.
+   * @param latCoordinate the latitude coordinate of the location.
+   */
   public void setLatCoordinate(String latCoordinate) {
     this.latCoordinate = latCoordinate;
   }
