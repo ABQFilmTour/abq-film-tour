@@ -12,143 +12,148 @@
 
   <ScrollView
     android:id="@+id/comment_scroll_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    >
-  <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-  <ImageView
-    android:id="@+id/imageViewHeader"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:adjustViewBounds="true"
-    app:layout_constraintDimensionRatio="16:9"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:srcCompat="@drawable/bb_header_image"
-    />
-
-  <ImageView
-    android:id="@+id/imageViewPoster"
-    android:layout_width="0dp"
-    android:layout_height="150dp"
-    android:layout_marginBottom="8dp"
-    app:layout_constraintBottom_toBottomOf="@+id/imageViewHeader"
-    app:layout_constraintDimensionRatio="w,2:3"
-    app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
-    app:srcCompat="@drawable/bb_poster_image"/>
-
-  <TextView
-    android:id="@+id/location_title_view"
-    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="8dp"
-    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-    app:layout_constraintEnd_toStartOf="@+id/bookMarkButton"
-    app:layout_constraintStart_toEndOf="@+id/imageViewPoster"
-    app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
-    app:layout_constraintBottom_toTopOf="@id/imdb_link_view"
-    />
+    android:orientation="vertical"
+    >
 
-  <ImageButton
-    android:id="@+id/bookMarkButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:background="@android:drawable/list_selector_background"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
-    app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
-    app:srcCompat="@drawable/bookmark_icon"/>
+    <android.support.constraint.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
 
-  <TextView
-    android:id="@+id/imdb_link_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="8dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:textColor="#0000FF"
-    android:textSize="@dimen/small_text_size"
-    app:layout_constraintEnd_toStartOf="@id/bookMarkButton"
-    app:layout_constraintStart_toEndOf="@id/imageViewPoster"
-    app:layout_constraintTop_toBottomOf="@id/location_title_view"/>
-
-  <TextView
-    android:id="@+id/production_title_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:textAlignment="center"
-    android:textSize="@dimen/large_text_size"
-    android:textColor="@color/dialogTextColor"
-    app:layout_constraintEnd_toStartOf="@id/guidelineRight"
-    app:layout_constraintStart_toEndOf="@id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/imageViewPoster"
-    android:background="@color/colorPrimaryDark"/>
-
-  <TextView
-    android:id="@+id/plot_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginStart="24dp"
-    android:layout_marginEnd="24dp"
-    android:textAlignment="center"
-    android:textColor="@color/colorPrimaryDark"
-    app:layout_constraintBottom_toTopOf="@id/comments_view"
-    app:layout_constraintEnd_toStartOf="@id/guidelineRight"
-    app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/production_title_view"/>
-
-
-
-
-      <TextView
-        android:id="@+id/comments_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_border_black"
-        android:textAlignment="center"
-        android:textColor="@color/dialogTextColor"
-        android:textSize="@dimen/medium_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/plot_view"
+      <ImageView
+        android:id="@+id/imageViewHeader"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/bb_header_image"
         />
 
+      <ImageView
+        android:id="@+id/imageViewPoster"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewHeader"
+        app:layout_constraintDimensionRatio="w,2:3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
+        app:srcCompat="@drawable/bb_poster_image"/>
 
+      <TextView
+        android:id="@+id/location_title_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintEnd_toStartOf="@+id/bookMarkButton"
+        app:layout_constraintStart_toEndOf="@+id/imageViewPoster"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
+        app:layout_constraintBottom_toTopOf="@id/imdb_link_view"
+        />
 
-  <android.support.constraint.Guideline
-    android:id="@+id/guidelineLeft"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_begin="16dp"/>
-  <android.support.constraint.Guideline
-    android:id="@+id/guidelineRight"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_end="16dp"/>
-  <android.support.constraint.Barrier
-    android:id="@+id/barrier"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:barrierDirection="bottom"
-    app:constraint_referenced_ids="imageViewPoster,production_title_view"
-    />
+      <ImageButton
+        android:id="@+id/bookMarkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/list_selector_background"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
+        app:srcCompat="@drawable/bookmark_icon"/>
 
-  </android.support.constraint.ConstraintLayout>
+      <TextView
+        android:id="@+id/imdb_link_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:textColor="#0000FF"
+        android:textSize="@dimen/small_text_size"
+        app:layout_constraintEnd_toStartOf="@id/bookMarkButton"
+        app:layout_constraintStart_toEndOf="@id/imageViewPoster"
+        app:layout_constraintTop_toBottomOf="@id/location_title_view"
+        app:layout_constraintBottom_toTopOf="@id/production_title_view"/>
+
+      <TextView
+        android:id="@+id/production_title_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/colorPrimaryDark"
+        android:textAlignment="center"
+        android:textColor="@color/dialogTextColor"
+        android:textSize="@dimen/large_text_size"
+        app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+        app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@id/imageViewPoster"
+        app:layout_constraintBottom_toTopOf="@id/plot_view"/>
+
+      <TextView
+        android:id="@+id/plot_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toTopOf="@id/comments_list_view"
+        app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@id/production_title_view"/>
+
+      <ListView
+        android:id="@+id/comments_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+          android:id="@+id/comments_view"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@drawable/round_border_black"
+          android:textAlignment="center"
+          android:textColor="@color/dialogTextColor"
+          android:textSize="@dimen/medium_text_size"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/plot_view"
+          />
+
+      </ListView>
+      <android.support.constraint.Guideline
+        android:id="@+id/guidelineLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp"/>
+      <android.support.constraint.Guideline
+        android:id="@+id/guidelineRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp"/>
+      <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="imageViewPoster,production_title_view"
+        />
+
+    </android.support.constraint.ConstraintLayout>
+
   </ScrollView>
 </android.support.constraint.ConstraintLayout>
