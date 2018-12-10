@@ -74,7 +74,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Initial zoom level for the map camera, should display a birds eye view of the ABQ area.
    */
-  private static final float ZOOM_LEVEL_INITIAL = 9;
+  private static final float ZOOM_LEVEL_INITIAL = 11;
   /**
    * Zoom level for the camera when "Near Me" is selected.
    */
@@ -306,7 +306,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             location.getProduction().getTitle()));
     map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
     marker.setTag(location);
-    progressSpinner.setVisibility(View.GONE);
     map.setOnInfoWindowClickListener(marker1 -> {
       FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
       Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
@@ -392,7 +391,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         .build();                   // Creates a CameraPosition from the builder
     populateMapFromLocation(userLatLng);
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    
+
   }
 
 
@@ -425,7 +424,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         handled = super.onOptionsItemSelected(item);
         break;
       case R.id.menu_all_near_me:
+        progressSpinner.setVisibility(View.VISIBLE);
         getDeviceLocation();
+        progressSpinner.setVisibility(View.GONE);
+
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
@@ -469,7 +471,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           venueLat, venueLng);
       if (delta < KM_RANGE_FROM_USER) {
         createMapMarker(location);
-        progressSpinner.setVisibility(View.GONE);
       }
     }
 
@@ -606,6 +607,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onPostExecute(Void aVoid) {
       checkForPastTitle();
+      progressSpinner.setVisibility(View.GONE);
+
     }
   }
 
