@@ -8,7 +8,7 @@ import java.util.UUID;
 
 /**
  * This class will represent images submitted to the server to represent film locations.
- * It is currently only for planning purposes.
+ * It is currently under construction.
  */
 @Entity(
     foreignKeys = {

@@ -22,7 +22,7 @@ import java.util.UUID;
 public class FilmLocation {
 
   /**
-   * The UUID id of the location as it was recieved from the backend server.
+   * The UUID id of the location as it was received from the backend server.
    */
   @Expose
   private UUID id;
@@ -270,7 +270,7 @@ public class FilmLocation {
 
   /**
    * Return the latitude coordinate of the location.
-   * @return the latitutde coordinate of the location.
+   * @return the latitude coordinate of the location.
    */
   public String getLatCoordinate() {
     return latCoordinate;
