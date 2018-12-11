@@ -11,13 +11,29 @@ import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import java.util.List;
 
+/**
+ * The type Comment adapter extends {@link ArrayAdapter#ArrayAdapter(Context, int)}
+ */
 public class CommentAdapter extends ArrayAdapter<UserComment> {
 
+  /**
+   * Instantiates a new Comment adapter.
+   *
+   * @param context the context
+   * @param resource the resource
+   */
   public CommentAdapter(@NonNull Context context, int resource) {
     super(context, resource);
   }
 
-  public CommentAdapter(@NonNull Context context, int resource,
+  /**
+   * Instantiates a new Comment adapter.
+   *
+   * @param context the context
+   * @param resource the resource
+   * @param objects the objects
+   */
+  CommentAdapter(@NonNull Context context, int resource,
       @NonNull List<UserComment> objects) {
     super(context, resource, objects);
   }
