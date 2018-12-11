@@ -21,6 +21,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * The type Location activity takes the location layout and passes in the {@link TextView},
+ * {@link FilmLocation}, {@link Production}, and {@link UserComment}.
+ * it extends {@link AppCompatActivity#AppCompatActivity()}
+ */
 public class LocationActivity extends AppCompatActivity {
 
   private ImageView locationImage;
@@ -62,6 +67,10 @@ public class LocationActivity extends AppCompatActivity {
   }
 
 
+  /**
+   * The type Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment},
+   * and {@link LocationActivity} and tie them to a specific {@link FilmLocation}
+   */
   public class LocationTask extends AsyncTask<UUID, Void, Void> {
 
     @Override

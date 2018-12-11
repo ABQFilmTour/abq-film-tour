@@ -267,7 +267,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * SAM Document code
+   * Takes a custom drawable file and converts it to Bitmap. The BitmapDescriptorFactory.fromBitmap()
+   * method will use converted bitmap to create the custom marker for us.
+   * @param resource is always drawable.map_pin
    */
   private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
 
