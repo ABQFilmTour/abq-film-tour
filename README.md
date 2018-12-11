@@ -73,10 +73,10 @@ The minimum required Android API is 21. It has been successfully tested on emula
 
 [DDL](https://abqfilmtour.github.io/ABQFilmTourBackend/create.sql)
 
-[Javadocs for the frontend](docs/api/index.html)
+[Javadocs for the frontend](docs/api/index.html) <br />
 [Javadocs for the backend](https://abqfilmtour.github.io/ABQFilmTourBackend/docs/api/index.html)
 
-[REST documentation](https://abqfilmtour.github.io/ABQFilmTourBackend/docs/api/rest/api.html)
+[REST documentation](https://abqfilmtour.github.io/ABQFilmTourBackend/docs/rest/api.html)
 
 [Licenses](docs/Licenses.md)
 
