@@ -1,7 +1,5 @@
 As a tourist, I want to find nearby places to visit by seeing areas of the city near me that have been featured in television or film.
 
-As a tourist, I want to know that I am near a location I am interested in be recieving a notification.
-
 As a fan of a specific series or movie, I want to see locations featured by seeing an overall map with locations listed.
 
 As a fan of a specific series or movie, I want to find locations featured by navigating a textual list and getting details from there. 
