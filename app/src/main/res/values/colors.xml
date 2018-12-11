@@ -7,4 +7,5 @@
   <color name="dialogTextColor">#FFFFFF</color>
   <color name="orangeTheme">#ff7326</color>
   <color name="darkerTransparent">#B3000000</color>
+  <color name="lightgrey_edit_text_background">#D3D3D3</color>
 </resources>
