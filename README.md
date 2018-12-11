@@ -1,77 +1,86 @@
 # ABQ Film Tour
 
 ### Aims
-*Your aims or motivations for selecting the given topic for your project. That is, why did you choose to develop this particular project, and why is this (at least potentially) a useful or interesting project?*<br />
 ABQ Film Tour is an Android app for tourists and film enthusiasts in the Albuquerque area. Users can find, submit, and discuss locations featured in locally filmed movies and television series such as "Breaking Bad" and "Better Call Saul".
 
 ### Functional inventory
-*A “functional inventory” for that repository—i.e. what functional components of the overall project are implemented by code in that repository?* <br/>
-***NOT READY***
+https://github.com/ABQFilmTour/ABQFilmTour
+This is the repository for the client Android application that the end user will use.
+
+https://github.com/ABQFilmTour/ABQFilmTourBackend
+This is the repository for the server side backend REST API. It is a Spring Boot project using an Apache Derby database.
 
 ### Team
-*A team roster, showing members’ names and primary responsibilities in the project.* <br/>
-***NOT READY***
+**Joseph Scott Peterson**
+Backend engineer, set up and maintained the server, set up backend to frontend communication, activity stack management and shared preferences.
+
+**Samuel Andazola**
+Frontend developer, design manager, created custom logo, splash page, map pins and app theme, in charge of layout design, worked on controllers and repositories in backend.
+
+**Rebecca Farish**
+Frontend developer, mathematics consultant, responsible for Google authentication sign-in, device permissions, device location, and layout design, worked on controllers and repositories in backend.
 
 ### Web service
-*If the code in the repository implements a web service, list the primary endpoints of that service, with a server-relative URL for each. Additionally, if the component is currently hosted and running on an accessible server, include the host name of that server in this section.* <br/>
-***NOT READY***
+The REST API is hosted at jscpeterson.com.
+jscpeterson.com/rest/users/
+jscpeterson.com/rest/film_locations/
+jscpeterson.com/rest/film_locations/{location_id}/user_comments/
+jscpeterson.com/rest/film_locations/{location_id}/images/
 
 ### State of completion
-*A description of the current state of completion/readiness of this component, or your project as a whole. This should include a “hit list” of deficiencies: any unimplemented/incomplete elements, and known bugs, that would have to be implemented or corrected for a usable prototype (i.e. one that could be given to a skilled user for testing and feedback), ordered with the most urgent items first.* <br/>
-***NOT READY***
+The client authenticates the user with oauth2 authentication but we are still working on verification on the server side. We will also need to implement admin requests on the server so we can manipulate the data for moderation and adding new content. From the client the user can access the dataset but cannot post new content. The user can explore the map, filter locations by a production, and pull up location specific data. On the location screen we display text content specific to the location but are only displaying static drawables. The ability to post and retrieve images is the third major hurdle after security and being able to post submissions and comments. Other minor issues - submission should be disabled when no title is selected or otherwise handled. We are unaware of any severe bugs. 
+Highest priority hitlist:
+- Oauth2 verification on the server
+- Allow for admin requests to the server
+- Location submissions from the client
+- Comment submissions from the client
+- Image submission/retrieval
 
 ### Test platforms
-*A list of platforms (Java versions, Android APIs, OS versions, specific hardware, etc.) on which you’ve tested the submitted version of this component of your project, any hardware/software/orientation restrictions that you’re aware of. (This includes restrictions on device language, orientation, etc.)* <br/>
-***NOT READY***
+The minimum required Android API is 21. It has been successfully tested on emulators and phones running API 26, 27 and 28. Currently the app only runs in English and portrait orientation.
 
 ### Third-party libraries
-*A list of the 3rd-party libraries (i.e. anything beyond the Android standard and support libraries) used by the component.* <br/>
-***NOT READY***
+- Google Maps
+- Google Authentication
+- Retrofit
+- Apache CSV
+- Circle Image View
 
 ### External services
-- Google Sign In
-- Google Maps
-- [OMDb API](http://www.omdbapi.com/)
-- http://data.cabq.gov/business/filmlocations/filmlocationsJSON_ALL Retrieved on 12/3/2018
+-  Google Sign In
+-  Google Maps
+-  [OMDb API](http://www.omdbapi.com/)
+-  [City of Albuquerque public film locations](http://data.cabq.gov/business/filmlocations/filmlocationsJSON_ALL) Retrieved on 12/3/2018
 
 ### Aesthetic goals
-*For client side components, a list of aesthetic/cosmetic (not functional) improvements that you think would improve this component. This list should be ordered, with those that would give the most improvement (in your opinion) listed first.* <br/>
-***NOT READY***
+- Making user comment box more user friendly, display more information
+- Pull in IMDB poster and videos for location activity.
 
 ### Stretch goals
-*A list of functional stretch goals. These should be sorted either with those that would add the most utility at the top, or with those that would be the simplest to implement at the top.* <br/>
-***NOT READY***
+- Handle picking from multiple images on the UI
+- Request throttling
+- Using room to cache data so the app is still usable offline, 
+- Save bookmarked locations to shared preferences
+- A ‘create your own tour’ feature.
 
-### Wireframes and User Stories
-*Links to the most recent wireframes and up-to-date user stories for your project.* <br/>
-[Wireframes](https://xd.adobe.com/view/81f12600-75b1-4f07-7cc3-a86bc45dacf9-f7c0/) <br/>
-[User Stories](docs/UserStories.md) 
+### Relevant Links
 
-### ERD and DDL
-*Links to the up-to-date ERD and DDL for this component’s data model, unless the component doesn’t have it’s own database.* <br/>
-[ERD](docs/ERD.pdf) <br/>
-DDL ***NOT READY***
+[Wireframes](https://xd.adobe.com/view/81f12600-75b1-4f07-7cc3-a86bc45dacf9-f7c0/)
 
-### Javadocs
-*A link to generated Javadoc HTML pages in your repository (see below).* <br/>
-***NOT READY***
+[User Stories](docs/UserStories.md)
 
-### REST documentation
-*For components that implement REST-like web services, there should be a link to documentation of those services.* <br/>
-***NOT READY***
+[ERD](docs/ERD.pdf)
 
-### Licenses
-*Links to all applicable licenses.* <br/>
-- [Apache License 2.0](LICENSE)
-- [Apache Commons for CSV](http://www.apache.org/licenses/LICENSE-2.0.txt)
-- [OMDb API](https://creativecommons.org/licenses/by-nc/4.0/)
-- [ABQ Data Disclaimer](http://www.cabq.gov/abq-data/abq-data-disclaimer-1)
-  This site provides applications using data that has been modified for use from its original source, www.cabq.gov, the official website of the City of Albuquerque. The City of Albuquerque makes no claims as to the content, accuracy, timeliness, or completeness of any of the data provided at this site. The data provided at this site is subject to change at any time. It is understood that the data provided at this site is being used at one’s own risk.- 
+[DDL](docs/create.sql)
 
-### Build instructions
-*A link to instructions for building the component.* <br/>
-***NOT READY***
+[Javadocs for the frontend](docs/api/index.html)
+[Javadocs for the backend](https://abqfilmtour.github.io/ABQFilmTourBackend/docs/api/index.html)
 
-### Usage instructions
-*A link to basic instructions for using this component, or the project as a whole.* <br/>
-***NOT READY***
+[REST documentation](https://abqfilmtour.github.io/ABQFilmTourBackend/docs/rest/api.html)
+
+[Licenses](docs/Licenses.md)
+
+[Build Instructions](docs/BuildInstructions.md)
+
+[Usage Instructions](docs/UsageInstructions.md)
+
