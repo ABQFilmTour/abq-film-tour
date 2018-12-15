@@ -11,7 +11,7 @@ https://github.com/ABQFilmTour/ABQFilmTourBackend
 This is the repository for the server side backend REST API. It is a Spring Boot project using an Apache Derby database.
 
 ### Team
-**Joseph Scott Peterson**
+[**Joseph Scott Peterson**](jscpeterson.github.io)
 Backend engineer, set up and maintained the server, set up backend to frontend communication, activity stack management and shared preferences.
 
 **Samuel Andazola**
@@ -21,7 +21,7 @@ Frontend developer, design manager, created custom logo, splash page, map pins a
 Frontend developer, mathematics consultant, responsible for Google authentication sign-in, device permissions, device location, and layout design, worked on controllers and repositories in backend.
 
 ### Web service
-The REST API is hosted at jscpeterson.com.
+The REST API is hosted at jscpeterson.com. <br />
 jscpeterson.com/rest/users/
 jscpeterson.com/rest/film_locations/
 jscpeterson.com/rest/film_locations/{location_id}/user_comments/
@@ -84,3 +84,4 @@ The minimum required Android API is 21. It has been successfully tested on emula
 
 [Usage Instructions](docs/UsageInstructions.md)
 
+<sub>This site provides applications using data that has been modified for use from its original source, www.cabq.gov, the official website of the City of Albuquerque. The City of Albuquerque makes no claims as to the content, accuracy, timeliness, or completeness of any of the data provided at this site. The data provided at this site is subject to change at any time. It is understood that the data provided at this site is being used at one’s own risk.</sub>
