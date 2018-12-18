@@ -22,15 +22,15 @@ Frontend developer, mathematics consultant, responsible for Google authenticatio
 
 ### Web service
 The REST API is hosted at jscpeterson.com. <br />
-jscpeterson.com/rest/users/
-jscpeterson.com/rest/film_locations/
-jscpeterson.com/rest/film_locations/{location_id}/user_comments/
-jscpeterson.com/rest/film_locations/{location_id}/images/
+jscpeterson.com/rest/users/ <br />
+jscpeterson.com/rest/film_locations/ <br />
+jscpeterson.com/rest/film_locations/{location_id}/user_comments/ <br />
+jscpeterson.com/rest/film_locations/{location_id}/images/ <br />
 
 ### State of completion
 The client authenticates the user with oauth2 authentication but we are still working on verification on the server side. We will also need to implement admin requests on the server so we can manipulate the data for moderation and adding new content. From the client the user can access the dataset but cannot post new content. The user can explore the map, filter locations by a production, and pull up location specific data. On the location screen we display text content specific to the location but are only displaying static drawables. The ability to post and retrieve images is the third major hurdle after security and being able to post submissions and comments. Other minor issues - submission should be disabled when no title is selected or otherwise handled. We are unaware of any severe bugs. 
 Highest priority hitlist:
-- Oauth2 verification on the server
+- ~Oauth2 verification on the server~
 - Allow for admin requests to the server
 - Location submissions from the client
 - Comment submissions from the client
