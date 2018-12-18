@@ -17,7 +17,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FilmTourApplication extends Application {
 
   private static FilmTourApplication instance = null;
-
   private GoogleSignInClient client;
   private GoogleSignInAccount account;
   private Gson gson;
@@ -32,6 +31,7 @@ public class FilmTourApplication extends Application {
         GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestEmail()
         .requestId()
+        .requestIdToken(getString(R.string.client_id))
         .build();
     setupService();
     client = GoogleSignIn.getClient(this, options);

@@ -117,7 +117,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
      */
     String siteName;
     /**
-     * Discription of the image.
+     * Description of the image.
      */
     String description;
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -23,7 +24,7 @@ public interface Service {
    * @return the film location
    */
   @GET("rest/film_locations/{id}/")
-  Call<FilmLocation> getFilmLocation(@Path(value = "id") UUID id);
+  Call<FilmLocation> getFilmLocation(@Header("Authorization") String authorization, @Path(value = "id") UUID id);
 
   /**
    * Gets list of locations.
@@ -31,7 +32,7 @@ public interface Service {
    * @return the locations
    */
   @GET("rest/film_locations/")
-  Call<List<FilmLocation>> getLocations();
+  Call<List<FilmLocation>> getLocations(@Header("Authorization") String authorization);
 
   /**
    * Gets list of productions.
@@ -39,7 +40,7 @@ public interface Service {
    * @return the productions
    */
   @GET("rest/productions/")
-  Call<List<Production>> getProductions();
+  Call<List<Production>> getProductions(@Header("Authorization") String authorization);
 
   /**
    * Gets user comments.
@@ -48,7 +49,7 @@ public interface Service {
    * @return the comments
    */
   @GET("rest/film_locations/{id}/user_comments/")
-  Call<List<UserComment>> getComments(@Path(value = "id") UUID id);
+  Call<List<UserComment>> getComments(@Header("Authorization") String authorization, @Path(value = "id") UUID id);
 
   /**
    * Gets users.
@@ -56,6 +57,6 @@ public interface Service {
    * @return the users
    */
   @GET("rest/users/")
-  Call<List<User>> getUsers();
+  Call<List<User>> getUsers(@Header("Authorization") String authorization);
 
 }
