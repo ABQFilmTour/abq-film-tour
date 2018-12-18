@@ -78,7 +78,7 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected Void doInBackground(UUID... UUIDs) {
       try {
-
+        //TODO Handle more cleanly - separate call and requests so request code is logged
         location = filmTourApplication.getService().getFilmLocation(token, UUIDs[0]).execute().body();
         userComments = filmTourApplication.getService().getComments(token, UUIDs[0]).execute().body();
       } catch (IOException e) {

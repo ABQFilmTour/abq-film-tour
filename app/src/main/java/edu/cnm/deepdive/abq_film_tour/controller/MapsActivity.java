@@ -24,6 +24,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +52,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * This is the primary activity for the application. It implements Google Map functionality and
@@ -199,7 +202,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) throws SecurityException {
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
-    token = getString(R.string.oauth2_header, FilmTourApplication.getInstance().getAccount().getIdToken());
+    token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
     setContentView(R.layout.activity_maps);
     progressSpinner = findViewById(R.id.progress_spinner);
     progressSpinner.setVisibility(View.VISIBLE);
@@ -208,6 +211,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
     filmTourApplication.getAccount().getId();
+    FilmTourApplication.getInstance().getAccount().getId();
 
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
@@ -635,9 +639,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //TODO Get response object
         // TODO  Check if successful
         // TODO Return body
-        productions = filmTourApplication.getService().getProductions(token).execute().body();
+        Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
+        Response<List<Production>> response = call.execute();
+        if (response.isSuccessful()) {
+          productions = filmTourApplication.getService().getProductions(token).execute().body();
+        }
+        else {
+          Log.d("mapsactivity_token", token);
+          Log.d("mapsactivity", String.valueOf(response.code()));
+        }
       } catch (IOException e) {
-        //TODO Handle or don't.
+        Log.d("mapsactivity", e.getMessage());
       }
       return null;
     }
