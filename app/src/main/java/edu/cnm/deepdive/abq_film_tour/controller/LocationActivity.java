@@ -38,6 +38,7 @@ public class LocationActivity extends AppCompatActivity {
   private FilmLocation location;
   private Production production;
   private List<UserComment> userComments;
+  String token;
 
   private final String LOCATION_ID_KEY = "location_id_key";
 
@@ -48,6 +49,7 @@ public class LocationActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_location);
     filmTourApplication = (FilmTourApplication) getApplication();
+    token = getString(R.string.oauth2_header, FilmTourApplication.getInstance().getAccount().getIdToken());
 
     Bundle extras = getIntent().getExtras();
     assert extras != null;
@@ -77,8 +79,8 @@ public class LocationActivity extends AppCompatActivity {
     protected Void doInBackground(UUID... UUIDs) {
       try {
 
-        location = filmTourApplication.getService().getFilmLocation(UUIDs[0]).execute().body();
-        userComments = filmTourApplication.getService().getComments(UUIDs[0]).execute().body();
+        location = filmTourApplication.getService().getFilmLocation(token, UUIDs[0]).execute().body();
+        userComments = filmTourApplication.getService().getComments(token, UUIDs[0]).execute().body();
       } catch (IOException e) {
         System.out.println("IO exception thrown in LocationTask of LocationActivity.");
       }

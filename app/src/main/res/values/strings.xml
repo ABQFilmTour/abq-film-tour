@@ -5,9 +5,6 @@
   <string name="menu_film">Film</string>
   <string name="menu_television">Television</string>
   <string name="sign_out">Sign Out</string>
-
-  <!-- TODO: Remove or change this placeholder text -->
-  <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="base_url">https://jscpeterson.com</string>
   <string name="menu_submit">Submit</string>
   <string name="location_id_tag">locationID</string>
@@ -23,4 +20,6 @@
   <string name="unable_to_signin">Unable to sign in</string>
   <string name="application_title">Film Tour</string>
   <string name="log_null_production_type">Production %s has a null type.</string>
+  <string name="client_id">650840836337-o0r50gnee6g2h5bg9lkq7d4776bfvp9c.apps.googleusercontent.com</string>
+  <string name="oauth2_header">Bearer %s</string>
 </resources>

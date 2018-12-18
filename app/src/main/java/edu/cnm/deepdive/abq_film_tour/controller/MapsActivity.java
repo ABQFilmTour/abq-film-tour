@@ -164,6 +164,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private ProgressBar progressSpinner;
 
+  String token;
+
   /**
    * Location Listener object to find when user location changes
    */
@@ -197,6 +199,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) throws SecurityException {
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
+    token = getString(R.string.oauth2_header, FilmTourApplication.getInstance().getAccount().getIdToken());
     setContentView(R.layout.activity_maps);
     progressSpinner = findViewById(R.id.progress_spinner);
     progressSpinner.setVisibility(View.VISIBLE);
@@ -450,6 +453,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.menu_submit:
+        //TODO Disable when title is not selected
         SubmitDialog submitDialog = new SubmitDialog();
         submitDialog.show(getSupportFragmentManager(), "dialog");
         break;
@@ -546,8 +550,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-              2000,
-              10,
+              2000, //Milliseconds
+              10, //Distance
               locationListenerGPS);
         } else {
           // permission denied, boo!
@@ -599,7 +603,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected Void doInBackground(Void... voids) {
       try {
         //TODO Return locations rather than modify activity field.
-        locations = filmTourApplication.getService().getLocations().execute().body();
+        locations = filmTourApplication.getService().getLocations(token).execute().body();
       } catch (IOException e) {
         //TODO Handle or don't.
       }
@@ -628,7 +632,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected Void doInBackground(Void... voids) {
       try {
         //TODO Return locations rather than modify activity field.
-        productions = filmTourApplication.getService().getProductions().execute().body();
+        //TODO Get response object
+        // TODO  Check if successful
+        // TODO Return body
+        productions = filmTourApplication.getService().getProductions(token).execute().body();
       } catch (IOException e) {
         //TODO Handle or don't.
       }
