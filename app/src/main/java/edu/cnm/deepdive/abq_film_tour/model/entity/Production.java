@@ -56,6 +56,12 @@ public class Production {
   private String plot;
 
   /**
+   * The OMDB url of a poster image for the associated production.
+   */
+  @Expose
+  private String posterUrl;
+
+  /**
    * Returns the UUID of this production on the ABQ Film Tour server.
    * @return the UUID of this production on the ABQ Film Tour server.
    */
@@ -149,6 +155,14 @@ public class Production {
    */
   public void setPlot(String plot) {
     this.plot = plot;
+  }
+
+  public String getPosterUrl() {
+    return posterUrl;
+  }
+
+  public void setPosterUrl(String posterUrl) {
+    this.posterUrl = posterUrl;
   }
 
 }

@@ -12,6 +12,7 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
@@ -29,6 +30,7 @@ import java.util.UUID;
 public class LocationActivity extends AppCompatActivity {
 
   private ImageView locationImage;
+  private ImageView locationPosterImage;
   private TextView locationProductionTitle;
   private TextView locationTitle;
   private TextView locationImdb;
@@ -56,13 +58,12 @@ public class LocationActivity extends AppCompatActivity {
     String locationID = extras.getString(LOCATION_ID_KEY);
 
     locationImage = findViewById(R.id.imageViewHeader);
+    locationPosterImage = findViewById(R.id.imageViewPoster);
     locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);
     locationImdb = findViewById(R.id.imdb_link_view);
     locationPlot = findViewById(R.id.plot_view);
     listView = findViewById(R.id.comment_list_view);
-
-
 
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
@@ -114,6 +115,7 @@ public class LocationActivity extends AppCompatActivity {
       });
 
       locationImdb.setText(R.string.imdb_link);
+      Glide.with(LocationActivity.this).load(production.getPosterUrl()).into(locationPosterImage); //TODO Default image in case there's no poster?
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());
         System.out.println(production.getImdbID());

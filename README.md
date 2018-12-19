@@ -45,6 +45,7 @@ The minimum required Android API is 21. It has been successfully tested on emula
 - Retrofit
 - Apache CSV
 - Circle Image View
+- [Glide](http://bumptech.github.io/glide/)
 
 ### External services
 -  Google Sign In
