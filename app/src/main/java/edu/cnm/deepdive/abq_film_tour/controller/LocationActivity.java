@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,12 +13,15 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +33,7 @@ import java.util.UUID;
 public class LocationActivity extends AppCompatActivity {
 
   private ImageView locationImage;
+  private ImageView locationPosterImage;
   private TextView locationProductionTitle;
   private TextView locationTitle;
   private TextView locationImdb;
@@ -56,6 +61,7 @@ public class LocationActivity extends AppCompatActivity {
     String locationID = extras.getString(LOCATION_ID_KEY);
 
     locationImage = findViewById(R.id.imageViewHeader);
+    locationPosterImage = findViewById(R.id.imageViewPoster);
     locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);
     locationImdb = findViewById(R.id.imdb_link_view);
@@ -65,7 +71,7 @@ public class LocationActivity extends AppCompatActivity {
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
   }
-
+  
 
   /**
    * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment},
@@ -112,11 +118,11 @@ public class LocationActivity extends AppCompatActivity {
       });
 
       locationImdb.setText(R.string.imdb_link);
+      Picasso.get().load(production.getPosterUrl()).into(locationPosterImage); //TODO Avoid weird delay somehow
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());
         System.out.println(production.getImdbID());
-//        Uri locationImdb = Uri.parse("https://www.imdb.com/title/" + production.getImdbID());
-        Uri locationImdb = Uri.parse(production.getPosterUrl());
+        Uri locationImdb = Uri.parse("https://www.imdb.com/title/" + production.getImdbID());
         Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
         startActivity(intent);
       });

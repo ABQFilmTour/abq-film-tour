@@ -41,8 +41,8 @@
     app:layout_constraintBottom_toBottomOf="@+id/imageViewHeader"
     app:layout_constraintDimensionRatio="w,2:3"
     app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
-    app:srcCompat="@drawable/bb_poster_image"/>
+    app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"/>
+    <!--app:srcCompat="@drawable/bb_poster_image"-->
 
   <TextView
     android:id="@+id/location_title_view"
