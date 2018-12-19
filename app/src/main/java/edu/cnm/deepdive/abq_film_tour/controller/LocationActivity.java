@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -21,11 +22,13 @@ import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
- * The Location activity takes the location layout and passes in the {@link TextView},
- * {@link FilmLocation}, {@link Production}, and {@link UserComment}.
- * it extends {@link AppCompatActivity#AppCompatActivity()}
+ * The Location activity takes the location layout and passes in the {@link TextView}, {@link
+ * FilmLocation}, {@link Production}, and {@link UserComment}. it extends {@link
+ * AppCompatActivity#AppCompatActivity()}
  */
 public class LocationActivity extends AppCompatActivity {
 
@@ -40,7 +43,7 @@ public class LocationActivity extends AppCompatActivity {
   private FilmLocation location;
   private Production production;
   private List<UserComment> userComments;
-  String token;
+  private String token;
 
   private final String LOCATION_ID_KEY = "location_id_key";
 
@@ -51,7 +54,8 @@ public class LocationActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_location);
     filmTourApplication = (FilmTourApplication) getApplication();
-    token = getString(R.string.oauth2_header, FilmTourApplication.getInstance().getAccount().getIdToken());
+    token = getString(R.string.oauth2_header,
+        FilmTourApplication.getInstance().getAccount().getIdToken());
 
     Bundle extras = getIntent().getExtras();
     assert extras != null;
@@ -69,21 +73,32 @@ public class LocationActivity extends AppCompatActivity {
     new LocationTask().execute(locationUUID);
   }
 
-
   /**
-   * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment},
-   * and {@link LocationActivity} and tie them to a specific {@link FilmLocation}
+   * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment}, and {@link
+   * LocationActivity} and tie them to a specific {@link FilmLocation}
    */
   public class LocationTask extends AsyncTask<UUID, Void, Void> {
 
     @Override
     protected Void doInBackground(UUID... UUIDs) {
       try {
-        //TODO Handle more cleanly - separate call and requests so request code is logged
-        location = filmTourApplication.getService().getFilmLocation(token, UUIDs[0]).execute().body();
-        userComments = filmTourApplication.getService().getComments(token, UUIDs[0]).execute().body();
+        Call<FilmLocation> locationCall = filmTourApplication.getService()
+            .getFilmLocation(token, UUIDs[0]);
+        Call<List<UserComment>> commentCall = filmTourApplication.getService()
+            .getComments(token, UUIDs[0]);
+        Response<FilmLocation> locationCallResponse = locationCall.execute();
+        Response<List<UserComment>> commentCallResponse = commentCall.execute();
+        if (locationCallResponse.isSuccessful() && commentCallResponse.isSuccessful()) {
+          location = locationCallResponse.body();
+          userComments = commentCallResponse.body();
+        } else {
+          Log.d("LocationActivity", String.valueOf(locationCallResponse.code()));
+          Log.d("LocationActivity", String.valueOf(commentCallResponse.code()));
+          //TODO Alert dialog before closing?
+        }
       } catch (IOException e) {
-        System.out.println("IO exception thrown in LocationTask of LocationActivity.");
+        Log.d("LocationActivity", e.getMessage());
+        //TODO Alert dialog before closing?
       }
       return null;
     }
@@ -115,11 +130,12 @@ public class LocationActivity extends AppCompatActivity {
       });
 
       locationImdb.setText(R.string.imdb_link);
-      Glide.with(LocationActivity.this).load(production.getPosterUrl()).into(locationPosterImage); //TODO Default image in case there's no poster?
+      Glide.with(LocationActivity.this).load(production.getPosterUrl())
+          .into(locationPosterImage); //TODO Default image in case there's no poster?
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());
         System.out.println(production.getImdbID());
-        Uri locationImdb = Uri.parse("https://www.imdb.com/title/" + production.getImdbID());
+        Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
         Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
         startActivity(intent);
       });

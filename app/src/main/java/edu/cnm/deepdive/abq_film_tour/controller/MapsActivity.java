@@ -92,7 +92,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final float TILT_LEVEL_NEAR_ME = 40;
   /**
-   * Constant of the average radius of the earth in km, used to find the distance between two coordinates.
+   * Constant of the average radius of the earth in km, used to find the distance between two
+   * coordinates.
    */
   private static final double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
   /**
@@ -127,7 +128,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Constant for the onRequestPermissionsResult callback.
    */
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
-
 
   //FIELDS
   /**
@@ -166,8 +166,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Progress bar, becomes visible if there is lag when map pins are being displayed.
    */
   private ProgressBar progressSpinner;
-
-  String token;
+  /**
+   * Authentication token
+   */
+  private String token;
 
   /**
    * Location Listener object to find when user location changes
@@ -203,27 +205,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
+    if (token == null) { //Is this actually null or is it a null string?
+      //TODO Stale token? Handle here? maybe show an AlertDialog and signOut()
+    }
     setContentView(R.layout.activity_maps);
     progressSpinner = findViewById(R.id.progress_spinner);
     progressSpinner.setVisibility(View.VISIBLE);
-
     new GetProductionsTask().execute();
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
     filmTourApplication.getAccount().getId();
     FilmTourApplication.getInstance().getAccount().getId();
-
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
     assert mapFragment != null;
     mapFragment.getMapAsync(this);
-
     ActionBar actionBar = getSupportActionBar();
     assert actionBar != null;
     actionBar.setLogo(R.drawable.toolbar_icon);
     actionBar.setDisplayUseLogoEnabled(true);
     actionBar.setDisplayShowHomeEnabled(true);
-
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     getLocationPermission();
@@ -237,12 +237,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Calculates the distance as the crow flies in km between two coordinates
-   * given latitude and longitude. This method computes the central angle between the
-   * two coordinates using the Haversine formula then multiplies the angle by the
-   * average circumference of the Earth to solve for the arclength or great-circle
-   * distance between the two points. Note: this method is an approximation that
-   * assumes the Earth is a perfect sphere.
+   * Calculates the distance as the crow flies in km between two coordinates given latitude and
+   * longitude. This method computes the central angle between the two coordinates using the
+   * Haversine formula then multiplies the angle by the average circumference of the Earth to solve
+   * for the arclength or great-circle distance between the two points. Note: this method is an
+   * approximation that assumes the Earth is a perfect sphere.
    **/
   private double calculateDistanceInKilometer(double userLat, double userLng,
       double venueLat, double venueLng) {
@@ -276,6 +275,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Takes a custom drawable file and converts it to Bitmap. The BitmapDescriptorFactory.fromBitmap()
    * method will use converted bitmap to create the custom marker for us.
+   *
    * @param resource is always drawable.map_pin
    */
   private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
@@ -324,7 +324,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
   }
 
+  /**
+   * Gets the last known location of the device using the best provider possible. If the user is
+   * outside of Albuquerque city limits it will toast the user and not update the map to user's
+   * location.
+   */
+  private void getDeviceLocation() throws SecurityException {
+    LocationManager locationManager = (LocationManager) getSystemService(
+        Context.LOCATION_SERVICE);
+    Criteria criteria = new Criteria();
+    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+    assert locationManager != null;
+    Location location = locationManager
+        .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
+    if (location != null) {
+      LatLng userLatLng = new LatLng(location.getLatitude(),
+          location.getLongitude());
+      if (!inBurque(userLatLng)) {
+        Toast.makeText(this, R.string.not_in_burque,
+            Toast.LENGTH_SHORT).show();
+      } else {
+        nearMe(userLatLng);
+      }
+    } else {
+      Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
+    }
+  }
 
+  /**
+   * Requests location permission of the user's device. The result of the permission request is
+   * handled by a callback, onRequestPermissionsResult.
+   */
+  private void getLocationPermission() {
+    ActivityCompat.requestPermissions(this,
+        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+            permission.ACCESS_COARSE_LOCATION},
+        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+  }
 
   /**
    * Checks to see if user is inside Albuquerque city limits.
@@ -361,35 +397,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * This method populates the "movie titles" and "series titles" lists to be displayed from the
-   * SelectionDialog fragment.
-   */
-  private void populateTitlesList() {
-    movieTitles = new ArrayList<>();
-    tvTitles = new ArrayList<>();
-    for (Production production : productions) {
-      if (production.getType() == null) {
-        // Log info and skip loop, could "continue;" but currently unnecessary. Unfamiliar with
-        // logs so I'm not sure where this is recorded.
-        Logger logger = Logger.getLogger(MapsActivity.class.getName());
-        logger.log(Level.WARNING, String.format(getString(R.string.log_null_production_type),
-            production.getId()));
-      } else if (production.getType().equals(TYPE_SERIES)) {
-        tvTitles.add(production.getTitle());
-      } else if (production.getType().equals(TYPE_MOVIE)) {
-        movieTitles.add(production.getTitle());
-      }
-    }
-    Collections.sort(tvTitles);
-    Collections.sort(movieTitles);
-  }
-
-  /**
-   * Given the user's last known location, this method animates the map camera and zooms
-   * into the user's location and populates map pins of nearby filming locations.
+   * Given the user's last known location, this method animates the map camera and zooms into the
+   * user's location and populates map pins of nearby filming locations.
    */
   private void nearMe(LatLng userLatLng) {
-    setTitle(getString(R.string.application_title));
+    setTitle(getString(R.string.all_nearby_locations));
     CameraPosition cameraPosition = new CameraPosition.Builder()
         .target(userLatLng)      // Sets the center of the map to location user
         .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
@@ -402,8 +414,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
   }
-
-
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -436,7 +446,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         progressSpinner.setVisibility(View.VISIBLE);
         getDeviceLocation();
         progressSpinner.setVisibility(View.GONE);
-
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
@@ -469,11 +478,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
+   * Handles the result of the permission request from getLocationPermission.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+      @NonNull String permissions[], @NonNull int[] grantResults) throws SecurityException {
+    switch (requestCode) {
+      case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+              2000, //Milliseconds
+              10, //Distance
+              locationListenerGPS);
+        } else {
+          // permission denied, boo!
+          Toast.makeText(this, R.string.cannot_enable_location,
+              Toast.LENGTH_LONG).show();
+        }
+      }
+    }
+  }
+
+  /**
    * Draws map pins for all filming locations within a given distance of the user's location.
    */
   private void populateMapFromLocation(LatLng userLatLng) {
     progressSpinner.setVisibility(View.VISIBLE);
-  map.clear();
+    map.clear();
     for (FilmLocation location : locations) {
       double venueLat = Double.valueOf(location.getLatCoordinate());
       double venueLng = Double.valueOf(location.getLongCoordinate());
@@ -505,6 +538,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
+   * This method populates the "movie titles" and "series titles" lists to be displayed from the
+   * SelectionDialog fragment.
+   */
+  private void populateTitlesList() {
+    movieTitles = new ArrayList<>();
+    tvTitles = new ArrayList<>();
+    for (Production production : productions) {
+      if (production.getType() == null) {
+        // Log info and skip loop, could "continue;" but currently unnecessary. Unfamiliar with
+        // logs so I'm not sure where this is recorded.
+        Logger logger = Logger.getLogger(MapsActivity.class.getName());
+        logger.log(Level.WARNING, String.format(getString(R.string.log_null_production_type),
+            production.getId()));
+      } else if (production.getType().equals(TYPE_SERIES)) {
+        tvTitles.add(production.getTitle());
+      } else if (production.getType().equals(TYPE_MOVIE)) {
+        movieTitles.add(production.getTitle());
+      }
+    }
+    Collections.sort(tvTitles);
+    Collections.sort(movieTitles);
+  }
+
+  /**
    * This method updates the local SharedPreferences with a given production title.
    *
    * @param title a production title as a raw string..
@@ -530,66 +587,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Requests location permission of the user's device.
-   * The result of the permission request is handled by a callback,
-   * onRequestPermissionsResult.
+   * Asynchronous task that retrieves the productions from the server.
    */
-  private void getLocationPermission() {
-    ActivityCompat.requestPermissions(this,
-        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-            permission.ACCESS_COARSE_LOCATION},
-        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+  private class GetProductionsTask extends AsyncTask<Void, Void, Void> {
 
-  }
-
-  /**
-   * Handles the result of the permission request from getLocationPermission.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode,
-      @NonNull String permissions[], @NonNull int[] grantResults) throws SecurityException {
-    switch (requestCode) {
-      case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-        // If request is cancelled, the result arrays are empty.
-        if (grantResults.length > 0
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-              2000, //Milliseconds
-              10, //Distance
-              locationListenerGPS);
-        } else {
-          // permission denied, boo!
-          Toast.makeText(this, R.string.cannot_enable_location,
-              Toast.LENGTH_LONG).show();
-        }
-      }
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
     }
-  }
 
-  /**
-   * Gets the last known location of the device using the best provider possible. If the user
-   * is outside of Albuquerque city limits it will toast the user and not update the map to
-   * user's location.
-   */
-  private void getDeviceLocation() throws SecurityException {
-    LocationManager locationManager = (LocationManager) getSystemService(
-        Context.LOCATION_SERVICE);
-    Criteria criteria = new Criteria();
-    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-    assert locationManager != null;
-    Location location = locationManager
-        .getLastKnownLocation(locationManager.getBestProvider(criteria, true));
-    if (location != null) {
-      LatLng userLatLng = new LatLng(location.getLatitude(),
-          location.getLongitude());
-      if (!inBurque(userLatLng)) {
-        Toast.makeText(this, R.string.not_in_burque,
-            Toast.LENGTH_SHORT).show();
-      } else {
-        nearMe(userLatLng);
+    @Override
+    protected Void doInBackground(Void... voids) {
+      try {
+        Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
+        //ring ring
+        Response<List<Production>> response = call.execute();
+        //hello is this mister production list
+        if (response.isSuccessful()) {
+          //yes it is how can I help you
+          productions = response.body();
+        } else {
+          //no you have the wrong number or something sorry
+          Log.d("Token", token);
+          Log.d("MapsActivity", String.valueOf(response.code()));
+          //TODO Alert dialog before closing?
+          //TODO Load cached data if failed to reach server?
+        }
+      } catch (IOException e) {
+        //your call could not be completed as dialed please try again
+        Log.d("MapsActivity", e.getMessage());
+        //TODO Alert dialog before closing?
       }
-    } else {
-      Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      super.onPostExecute(aVoid);
+      populateTitlesList();
+      new GetLocationsTask().execute(); //we got the productions time to call for the locations
     }
   }
 
@@ -606,59 +642,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected Void doInBackground(Void... voids) {
       try {
-        //TODO Return locations rather than modify activity field.
-        locations = filmTourApplication.getService().getLocations(token).execute().body();
-      } catch (IOException e) {
-        //TODO Handle or don't.
-      }
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-      checkForPastTitle();
-      progressSpinner.setVisibility(View.GONE);
-
-    }
-  }
-
-  /**
-   * Asynchronous task that retrieves the productions from the server.
-   */
-  private class GetProductionsTask extends AsyncTask<Void, Void, Void> {
-
-    @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-    }
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-      try {
-        //TODO Return locations rather than modify activity field.
-        //TODO Get response object
-        // TODO  Check if successful
-        // TODO Return body
-        Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
-        Response<List<Production>> response = call.execute();
+        Call<List<FilmLocation>> call = filmTourApplication.getService().getLocations(token);
+        Response<List<FilmLocation>> response = call.execute();
         if (response.isSuccessful()) {
-          productions = filmTourApplication.getService().getProductions(token).execute().body();
-        }
-        else {
-          Log.d("mapsactivity_token", token);
-          Log.d("mapsactivity", String.valueOf(response.code()));
+          locations = response.body();
+        } else {
+          Log.d("MapsActivity", String.valueOf(response.code()));
+          //TODO Alert dialog before closing?
         }
       } catch (IOException e) {
-        Log.d("mapsactivity", e.getMessage());
+        Log.d("MapsActivity", e.getMessage());
+        //TODO Alert dialog before closing?
       }
       return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      super.onPostExecute(aVoid);
-      populateTitlesList();
-      new GetLocationsTask().execute();
+      checkForPastTitle(); //see what we've got in shared pref
+      progressSpinner.setVisibility(View.GONE); //all the work is done the spinner can go now
     }
   }
 }
