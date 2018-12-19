@@ -62,8 +62,6 @@ public class LocationActivity extends AppCompatActivity {
     locationPlot = findViewById(R.id.plot_view);
     listView = findViewById(R.id.comment_list_view);
 
-
-
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
   }
@@ -117,7 +115,8 @@ public class LocationActivity extends AppCompatActivity {
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());
         System.out.println(production.getImdbID());
-        Uri locationImdb = Uri.parse("https://www.imdb.com/title/" + production.getImdbID());
+//        Uri locationImdb = Uri.parse("https://www.imdb.com/title/" + production.getImdbID());
+        Uri locationImdb = Uri.parse(production.getPosterUrl());
         Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
         startActivity(intent);
       });

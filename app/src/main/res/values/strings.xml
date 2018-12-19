@@ -23,8 +23,8 @@
   <string name="client_id">650840836337-o0r50gnee6g2h5bg9lkq7d4776bfvp9c.apps.googleusercontent.com</string>
   <string name="oauth2_header">Bearer %s</string>
   <!--Use this URL for the live server-->
-  <string name="base_url">https://jscpeterson.com/</string>
+  <!--<string name="base_url">https://jscpeterson.com/</string>-->
   <!--Use this URL for debugging a local host-->
-  <!--<string name="base_url">http://10.0.2.2:8080/</string>-->
+  <string name="base_url">http://10.0.2.2:8080/</string>
 
 </resources>
