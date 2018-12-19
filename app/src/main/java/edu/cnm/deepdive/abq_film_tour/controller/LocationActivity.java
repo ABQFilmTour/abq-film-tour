@@ -111,7 +111,7 @@ public class LocationActivity extends AppCompatActivity {
       String locationText = location.getSiteName();
       locationSiteName.setText(locationText);
       String productionTitle = production.getTitle();
-      locationProductionTitle.setText(productionTitle); 
+      locationProductionTitle.setText(productionTitle);
       String productionPlot = production.getPlot();
       locationPlot.setText(productionPlot);
 

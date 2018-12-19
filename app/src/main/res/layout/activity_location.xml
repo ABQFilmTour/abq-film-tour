@@ -112,22 +112,8 @@
     app:layout_constraintEnd_toStartOf="@id/guidelineRight"
     app:layout_constraintStart_toEndOf="@id/guidelineLeft"
     app:layout_constraintTop_toBottomOf="@id/plot_view"
+    app:layout_constraintBottom_toTopOf="@id/comment_text_input"
     android:background="@color/colorPrimaryDark"/>
-
-
-
-      <ListView
-        android:id="@+id/comment_list_view"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="24dp"
-        android:textAlignment="center"
-        android:textColor="@color/dialogTextColor"
-        android:textSize="@dimen/medium_text_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_sitename_view"/>
-
 
   <android.support.constraint.Guideline
     android:id="@+id/guidelineLeft"
@@ -151,6 +137,7 @@
 
 
       <android.support.design.widget.TextInputLayout
+        android:id="@+id/comment_text_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -158,7 +145,8 @@
         app:helperTextEnabled="false"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@+id/comment_list_view">
+        app:layout_constraintTop_toBottomOf="@id/location_sitename_view"
+        app:layout_constraintBottom_toTopOf="@+id/comment_list_view">
 
         <EditText
           android:id="@+id/register_description"
@@ -170,6 +158,18 @@
           android:textColor="@color/dialogTextColor"/>
 
       </android.support.design.widget.TextInputLayout>
+
+      <ListView
+        android:id="@+id/comment_list_view"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        android:textAlignment="center"
+        android:textColor="@color/dialogTextColor"
+        android:textSize="@dimen/medium_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comment_text_input"/>
 
     </android.support.constraint.ConstraintLayout>
 
