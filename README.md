@@ -11,7 +11,7 @@ https://github.com/ABQFilmTour/ABQFilmTourBackend
 This is the repository for the server side backend REST API. It is a Spring Boot project using an Apache Derby database.
 
 ### Team
-[**Joseph Scott Peterson**](jscpeterson.github.io)
+[**Joseph Scott Peterson**](https://jscpeterson.github.io)
 Backend engineer, set up and maintained the server, set up backend to frontend communication, activity stack management and shared preferences.
 
 **Samuel Andazola**
