@@ -1,7 +1,6 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,15 +12,13 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,7 +68,7 @@ public class LocationActivity extends AppCompatActivity {
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
   }
-  
+
 
   /**
    * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment},
@@ -118,7 +115,7 @@ public class LocationActivity extends AppCompatActivity {
       });
 
       locationImdb.setText(R.string.imdb_link);
-      Picasso.get().load(production.getPosterUrl()).into(locationPosterImage); //TODO Avoid weird delay somehow
+      Glide.with(LocationActivity.this).load(production.getPosterUrl()).into(locationPosterImage); //TODO Default image in case there's no poster?
       locationImdb.setOnClickListener(v -> {
         System.out.println(production.getTitle());
         System.out.println(production.getImdbID());

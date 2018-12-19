@@ -4,6 +4,7 @@ ABQFilmTour is licensed under [Apache License 2.0](LICENSE)
 
 ABQFilmTour uses the following:
 
+- [Glide License](https://github.com/bumptech/glide/blob/master/LICENSE)
 - Apache Commons for CSV licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 - OMDB API licensed under [Creative Commons license](https://creativecommons.org/licenses/by-nc/4.0/)
 - Albuquerque City Data -This site provides applications using data that has been modified for use from its 
