@@ -52,6 +52,13 @@ public class UserComment {
   private String text;
 
   /**
+   * Flag to verify that a comment has been approved by an admin and can be displayed if security
+   * is tightened. Probably unnecessary for now, but better to have if we implement later.
+   */
+  @Expose
+  private boolean approved;
+
+  /**
    * Returns the UUID of this comment on the server.
    * @return the UUID of this comment on the server.
    */
@@ -131,4 +138,11 @@ public class UserComment {
     this.text = text;
   }
 
+  public boolean isApproved() {
+    return approved;
+  }
+
+  public void setApproved(boolean approved) {
+    this.approved = approved;
+  }
 }

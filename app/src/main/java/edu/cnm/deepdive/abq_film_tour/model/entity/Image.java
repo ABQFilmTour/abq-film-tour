@@ -57,6 +57,13 @@ public class Image {
   private String url;
 
   /**
+   * Flag to verify that an image has been approved by an admin and can be displayed if security
+   * is tightened. Probably unnecessary for now, but better to have if we implement later.
+   */
+  @Expose
+  private boolean approved;
+
+  /**
    * Returns the UUID of this image on the server.
    * @return the UUID of this image on the server.
    */
@@ -152,4 +159,11 @@ public class Image {
     this.url = url;
   }
 
+  public boolean isApproved() {
+    return approved;
+  }
+
+  public void setApproved(boolean approved) {
+    this.approved = approved;
+  }
 }

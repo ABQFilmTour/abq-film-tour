@@ -32,5 +32,6 @@
   <string name="error_io">Failed to reach server.</string>
   <string name="error_stale_token">Possible stale token. Try reinstalling your app.</string>
   <string name="error_default">Unknown error</string>
+  <string name="exit_alert_dialog">Exit</string>
 
 </resources>

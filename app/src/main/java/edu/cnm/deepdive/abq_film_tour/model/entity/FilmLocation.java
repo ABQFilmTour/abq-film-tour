@@ -102,6 +102,13 @@ public class FilmLocation {
   private Production production;
 
   /**
+   * Flag to verify that a location has been approved by an admin and can be displayed if security
+   * is tightened.
+   */
+  @Expose
+  private boolean approved;
+
+  /**
    * Empty constructor for ROOM.
    */
   public FilmLocation() {
@@ -284,4 +291,19 @@ public class FilmLocation {
     this.latCoordinate = latCoordinate;
   }
 
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public boolean isApproved() {
+    return approved;
+  }
+
+  public void setApproved(boolean approved) {
+    this.approved = approved;
+  }
 }

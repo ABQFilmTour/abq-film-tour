@@ -86,7 +86,7 @@ public class LocationActivity extends AppCompatActivity {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
-        .setPositiveButton("Exit", (dialog, which) -> System.exit(STATUS_CODE_ERROR));
+        .setPositiveButton(R.string.exit_alert_dialog, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
     AlertDialog alert = alertDialog.create();
     alert.show();
   }

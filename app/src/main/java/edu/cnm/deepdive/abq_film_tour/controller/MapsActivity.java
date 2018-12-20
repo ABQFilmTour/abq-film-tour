@@ -524,6 +524,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     progressSpinner.setVisibility(View.VISIBLE);
     map.clear();
     for (FilmLocation location : locations) {
+      if (!location.isApproved()) continue;
       double venueLat = Double.valueOf(location.getLatCoordinate());
       double venueLng = Double.valueOf(location.getLongCoordinate());
       double delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
@@ -543,9 +544,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   void populateMapFromTitle(String title) {
     map.clear();
+    this.setTitle(title);
+    saveSharedPreferences(title);
     for (FilmLocation location : locations) {
-      this.setTitle(title);
-      saveSharedPreferences(title);
+      System.out.println(location.isApproved());
+      if (!location.isApproved()) continue;
       if (location.getProduction().getTitle() != null && location.getProduction().getTitle()
           .equals(title)) {
         createMapMarker(location);
@@ -631,7 +634,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           Log.d("Token", token);
           Log.d("MapsActivity", String.valueOf(response.code()));
           errorMessage = getString(R.string.error_http, response.code());
-          if (response.code() == 500) {
+          if (response.code() == 401) {
             errorMessage = getString(R.string.error_stale_token);
           }
           //TODO Load cached data if failed to reach server?

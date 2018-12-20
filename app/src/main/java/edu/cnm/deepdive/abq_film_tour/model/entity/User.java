@@ -37,6 +37,19 @@ public class User {
   private String gmailAddress;
 
   /**
+   * Flag to check if a user is banned from using the app.
+   */
+  @Expose
+  private boolean banned;
+
+  /**
+   * Reason for a ban, if this has a value but banned is false it can be displayed to the user at
+   * startup as a warning.
+   */
+  @Expose
+  private String banReason;
+
+  /**
    * Returns the UUID associated with this user.
    * @return the UUID associated with this user.
    */
@@ -98,6 +111,22 @@ public class User {
    */
   public void setGmailAddress(String gmailAddress) {
     this.gmailAddress = gmailAddress;
+  }
+
+  public boolean isBanned() {
+    return banned;
+  }
+
+  public void setBanned(boolean banned) {
+    this.banned = banned;
+  }
+
+  public String getBanReason() {
+    return banReason;
+  }
+
+  public void setBanReason(String banReason) {
+    this.banReason = banReason;
   }
 
 }
