@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/docs/api" />
+    <option name="OTHER_OPTIONS" value="-link https://docs.oracle.com/javase/8/docs/api/ -linkoffline https://developer.android.com/reference C:\android\sdk\docs\reference -bootclasspath &quot;C:\Program Files\Java\jdk1.8.0_181\jre\lib\rt.jar&quot;;C:\android\sdk\platforms\android-21\android.jar -link https://google.github.io/gson/apidocs/ -link http://square.github.io/retrofit/2.x/converter-gson/ -link http://square.github.io/retrofit/2.x/retrofit/ -link https://square.github.io/okhttp/3.x/okhttp/ " />
+  </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
     <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />

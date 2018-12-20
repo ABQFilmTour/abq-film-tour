@@ -27,11 +27,30 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
     mSnippet = LayoutInflater.from(context).inflate(R.layout.custom_info_snippet, null);
   }
 
+
+//
+//  public double howFarAway();{
+//    double venueLat = Double.valueOf(location.getLatCoordinate());
+//    double venueLng = Double.valueOf(location.getLongCoordinate());
+//    double delta = MapsActivity.calculateDistanceInKilometer(userLatLng.latitude,
+//        userLatLng.longitude,
+//        venueLat, venueLng);
+//    return delta;
+//
+//  }
+
+
   private void renderSnippetText(Marker marker, View view){
     String title = marker.getTitle();
     TextView snippetTitle = view.findViewById(R.id.snippet_title);
-
     FilmLocation location = (FilmLocation) marker.getTag();
+    double venueLat = Double.valueOf(location.getLatCoordinate());
+    double venueLng = Double.valueOf(location.getLongCoordinate());
+//    double delta = MapsActivity.calculateDistanceInKilometer(userLatLng.latitude,
+//        userLatLng.longitude,
+//        venueLat, venueLng);
+
+
 
     if (!title.equals("")){
       snippetTitle.setText(title);

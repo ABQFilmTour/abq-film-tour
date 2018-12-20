@@ -185,7 +185,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       double latitude = location.getLatitude();
       double longitude = location.getLongitude();
       String msg = "New Latitude: " + latitude + "New Longitude: " + longitude;
-      //Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -245,7 +244,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * for the arclength or great-circle distance between the two points. Note: this method is an
    * approximation that assumes the Earth is a perfect sphere.
    **/
-  private double calculateDistanceInKilometer(double userLat, double userLng,
+  public static double calculateDistanceInKilometer(double userLat, double userLng,
       double venueLat, double venueLng) {
     //converts degrees to radians
     double latDistance = Math.toRadians(userLat - venueLat);
@@ -393,10 +392,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private void isLocationEnabled() {
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
       AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialog);
-      alertDialog.setTitle("Enable Location");
+      alertDialog.setTitle(R.string.enable_loc);
       alertDialog
           .setMessage(R.string.enable_location_settings);
-      alertDialog.setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
+      alertDialog.setPositiveButton(R.string.loc_settings, new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
           Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
           startActivity(intent);
@@ -426,7 +425,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         .tilt(
             TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
         .build();                   // Creates a CameraPosition from the builder
-    populateMapFromLocation(userLatLng);
+//    populateMapFromLocation(userLatLng);
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
   }
