@@ -36,8 +36,8 @@ public class LocationActivity extends AppCompatActivity {
 
   private ImageView locationImage;
   private ImageView locationPosterImage;
+  private TextView locationSiteName;
   private TextView locationProductionTitle;
-  private TextView locationTitle;
   private TextView locationImdb;
   private TextView locationPlot;
   private TextView locationComments;
@@ -67,8 +67,8 @@ public class LocationActivity extends AppCompatActivity {
 
     locationImage = findViewById(R.id.imageViewHeader);
     locationPosterImage = findViewById(R.id.imageViewPoster);
-    locationTitle = findViewById(R.id.location_title_view);
     locationProductionTitle = findViewById(R.id.production_title_view);
+    locationSiteName = findViewById(R.id.location_sitename_view);
     locationImdb = findViewById(R.id.imdb_link_view);
     locationPlot = findViewById(R.id.plot_view);
     listView = findViewById(R.id.comment_list_view);
@@ -126,7 +126,42 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostExecute(Boolean successfulQuery) {
+    protected void onPostExecute(Void aVoid) {
+      super.onPostExecute(aVoid);
+      String pathId = location.getId().toString();
+      production = location.getProduction();
+      String locationText = location.getSiteName();
+      locationSiteName.setText(locationText);
+      String productionTitle = production.getTitle();
+      locationProductionTitle.setText(productionTitle);
+      String productionPlot = production.getPlot();
+      locationPlot.setText(productionPlot);
+
+      ListView commentListView = findViewById(R.id.comment_list_view);
+      CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
+      commentListView.setAdapter(commentAdapter);
+
+      commentListView.setOnTouchListener(new OnTouchListener() {
+        // Setting on Touch Listener for handling the touch inside ScrollView
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+          // Disallow the touch request for parent scroll on touch of child view
+          v.getParent().requestDisallowInterceptTouchEvent(true);
+          return false;
+        }
+      });
+
+      locationImdb.setText(R.string.imdb_link);
+      Glide.with(LocationActivity.this).load(production.getPosterUrl())
+          .into(locationPosterImage); //TODO Default image in case there's no poster?
+      locationImdb.setOnClickListener(v -> {
+        System.out.println(production.getTitle());
+        System.out.println(production.getImdbID());
+        Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
+        Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
+        startActivity(intent);
+      });
+      protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
         super.onPostExecute(successfulQuery);
         String pathId = location.getId().toString();
