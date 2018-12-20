@@ -1,5 +1,7 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -46,6 +48,8 @@ public class LocationActivity extends AppCompatActivity {
   private String token;
 
   private final String LOCATION_ID_KEY = "location_id_key";
+  private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
+  private static final int STATUS_CODE_ERROR = 1;
 
   private FilmTourApplication filmTourApplication;
 
@@ -74,13 +78,30 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   /**
-   * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment}, and {@link
-   * LocationActivity} and tie them to a specific {@link FilmLocation}
+   * Creates an alert dialog with a given error message and closes the program, used for cleaner
+   * exception handling.
+   * @param errorMessage a String message to display to the user.
    */
-  public class LocationTask extends AsyncTask<UUID, Void, Void> {
+  public void exitWithAlertDialog(String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+    alertDialog.setMessage(errorMessage)
+        .setCancelable(false)
+        .setPositiveButton("Exit", (dialog, which) -> System.exit(STATUS_CODE_ERROR));
+    AlertDialog alert = alertDialog.create();
+    alert.show();
+  }
+
+  /**
+   * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment}, and {@link
+   * LocationActivity} and tie them to a specific {@link FilmLocation} Returns a boolean if the query was successful, displays an alert dialog and exits the app if not.
+   */
+  public class LocationTask extends AsyncTask<UUID, Void, Boolean> {
+
+    private String errorMessage = getString(R.string.error_default);
 
     @Override
-    protected Void doInBackground(UUID... UUIDs) {
+    protected Boolean doInBackground(UUID... UUIDs) {
+      boolean successfulQuery = false;
       try {
         Call<FilmLocation> locationCall = filmTourApplication.getService()
             .getFilmLocation(token, UUIDs[0]);
@@ -91,16 +112,17 @@ public class LocationActivity extends AppCompatActivity {
         if (locationCallResponse.isSuccessful() && commentCallResponse.isSuccessful()) {
           location = locationCallResponse.body();
           userComments = commentCallResponse.body();
+          successfulQuery = true;
         } else {
-          Log.d("LocationActivity", String.valueOf(locationCallResponse.code()));
-          Log.d("LocationActivity", String.valueOf(commentCallResponse.code()));
-          //TODO Alert dialog before closing?
+          Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(locationCallResponse.code()));
+          Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(commentCallResponse.code()));
+          //TODO Make new error string format for both response codes
         }
       } catch (IOException e) {
-        Log.d("LocationActivity", e.getMessage());
-        //TODO Alert dialog before closing?
+        Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, e.getMessage());
+        errorMessage = getString(R.string.error_io);
       }
-      return null;
+      return successfulQuery;
     }
 
     @Override
@@ -139,6 +161,45 @@ public class LocationActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
         startActivity(intent);
       });
+      protected void onPostExecute(Boolean successfulQuery) {
+      if (successfulQuery) {
+        super.onPostExecute(successfulQuery);
+        String pathId = location.getId().toString();
+        production = location.getProduction();
+        String locationText = location.getSiteName();
+        locationTitle.setText(locationText);
+        String productionTitle = production.getTitle();
+        locationProductionTitle.setText(productionTitle);
+        String productionPlot = production.getPlot();
+        locationPlot.setText(productionPlot);
+
+        ListView commentListView = findViewById(R.id.comment_list_view);
+        CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
+        commentListView.setAdapter(commentAdapter);
+
+        commentListView.setOnTouchListener(new OnTouchListener() {
+          // Setting on Touch Listener for handling the touch inside ScrollView
+          @Override
+          public boolean onTouch(View v, MotionEvent event) {
+            // Disallow the touch request for parent scroll on touch of child view
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
+          }
+        });
+
+        locationImdb.setText(R.string.imdb_link);
+        Glide.with(LocationActivity.this).load(production.getPosterUrl())
+            .into(locationPosterImage); //TODO Default image in case there's no poster?
+        locationImdb.setOnClickListener(v -> {
+          System.out.println(production.getTitle());
+          System.out.println(production.getImdbID());
+          Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
+          Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
+          startActivity(intent);
+        });
+      } else {
+        exitWithAlertDialog(errorMessage);
+      }
     }
   }
 }
