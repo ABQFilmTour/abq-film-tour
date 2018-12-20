@@ -45,7 +45,7 @@
     <!--app:srcCompat="@drawable/bb_poster_image"-->
 
   <TextView
-    android:id="@+id/location_title_view"
+    android:id="@+id/production_title_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
@@ -81,10 +81,26 @@
     android:textSize="@dimen/small_text_size"
     app:layout_constraintEnd_toStartOf="@id/bookMarkButton"
     app:layout_constraintStart_toEndOf="@id/imageViewPoster"
-    app:layout_constraintTop_toBottomOf="@id/location_title_view"/>
+    app:layout_constraintTop_toBottomOf="@id/production_title_view"
+    app:layout_constraintBottom_toTopOf="@id/plot_view"/>
+
+      <TextView
+        android:id="@+id/plot_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+        app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@id/imdb_link_view"
+        app:layout_constraintBottom_toTopOf="@id/location_sitename_view"/>
 
   <TextView
-    android:id="@+id/production_title_view"
+    android:id="@+id/location_sitename_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="24dp"
@@ -95,36 +111,9 @@
     android:textColor="@color/dialogTextColor"
     app:layout_constraintEnd_toStartOf="@id/guidelineRight"
     app:layout_constraintStart_toEndOf="@id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/imageViewPoster"
+    app:layout_constraintTop_toBottomOf="@id/plot_view"
+    app:layout_constraintBottom_toTopOf="@id/comment_text_input"
     android:background="@color/colorPrimaryDark"/>
-
-  <TextView
-    android:id="@+id/plot_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginStart="24dp"
-    android:layout_marginEnd="24dp"
-    android:textAlignment="center"
-    android:textColor="@color/colorPrimaryDark"
-    app:layout_constraintBottom_toTopOf="@id/comment_list_view"
-    app:layout_constraintEnd_toStartOf="@id/guidelineRight"
-    app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/production_title_view"/>
-
-      <ListView
-        android:id="@+id/comment_list_view"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="24dp"
-        android:textAlignment="center"
-        android:textColor="@color/dialogTextColor"
-        android:textSize="@dimen/medium_text_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/plot_view"/>
-
 
   <android.support.constraint.Guideline
     android:id="@+id/guidelineLeft"
@@ -143,11 +132,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:barrierDirection="bottom"
-    app:constraint_referenced_ids="imageViewPoster,production_title_view"
+    app:constraint_referenced_ids="imageViewPoster,location_sitename_view"
     />
 
 
       <android.support.design.widget.TextInputLayout
+        android:id="@+id/comment_text_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -155,7 +145,8 @@
         app:helperTextEnabled="false"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@+id/comment_list_view">
+        app:layout_constraintTop_toBottomOf="@id/location_sitename_view"
+        app:layout_constraintBottom_toTopOf="@+id/comment_list_view">
 
         <EditText
           android:id="@+id/register_description"
@@ -167,6 +158,18 @@
           android:textColor="@color/dialogTextColor"/>
 
       </android.support.design.widget.TextInputLayout>
+
+      <ListView
+        android:id="@+id/comment_list_view"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        android:textAlignment="center"
+        android:textColor="@color/dialogTextColor"
+        android:textSize="@dimen/medium_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comment_text_input"/>
 
     </android.support.constraint.ConstraintLayout>
 
