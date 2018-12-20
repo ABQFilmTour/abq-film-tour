@@ -46,6 +46,7 @@ public class LocationActivity extends AppCompatActivity {
   private String token;
 
   private final String LOCATION_ID_KEY = "location_id_key";
+  private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
 
   private FilmTourApplication filmTourApplication;
 
@@ -92,8 +93,8 @@ public class LocationActivity extends AppCompatActivity {
           location = locationCallResponse.body();
           userComments = commentCallResponse.body();
         } else {
-          Log.d("LocationActivity", String.valueOf(locationCallResponse.code()));
-          Log.d("LocationActivity", String.valueOf(commentCallResponse.code()));
+          Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(locationCallResponse.code()));
+          Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(commentCallResponse.code()));
 
         }
       } catch (IOException e) {

@@ -131,6 +131,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
   public static final int STATUS_CODE_ERROR = 1;
+  private static final String ERROR_LOG_TAG_MAPS_ACTIVITY = "MapsActivity";
 
   //FIELDS
   /**
@@ -325,7 +326,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     });
   }
 
-
+  /**
+   * Creates an alert dialog with a given error message and closes the program, used for cleaner
+   * exception handling.
+   * @param errorMessage a String message to display to the user.
+   */
+  public void exitWithAlertDialog(String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+    alertDialog.setMessage(errorMessage)
+        .setCancelable(false)
+        .setPositiveButton("Exit", (dialog, which) -> System.exit(STATUS_CODE_ERROR));
+    AlertDialog alert = alertDialog.create();
+    alert.show();
+  }
 
   /**
    * Gets the last known location of the device using the best provider possible. If the user is
@@ -590,23 +603,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling.
-   * @param errorMessage a String message to display to the user.
-   */
-  public void exitWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
-    alertDialog.setMessage(errorMessage)
-        .setCancelable(false)
-        .setPositiveButton("Exit", (dialog, which) -> System.exit(STATUS_CODE_ERROR));
-    AlertDialog alert = alertDialog.create();
-    alert.show();
-  }
-
-  /**
-   * Asynchronous task that retrieves the productions from the server.
+   * Asynchronous task that retrieves the productions from the server. Returns a boolean if the query was successful, displays an alert dialog and exits the app if not.
    */
   private class GetProductionsTask extends AsyncTask<Void, Void, Boolean> {
+
+    private String errorMessage = getString(R.string.error_default);
 
     @Override
     protected void onPreExecute() {
@@ -629,12 +630,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           //no you have the wrong number or something sorry
           Log.d("Token", token);
           Log.d("MapsActivity", String.valueOf(response.code()));
+          errorMessage = getString(R.string.error_http, response.code());
+          if (response.code() == 500) {
+            errorMessage = getString(R.string.error_stale_token);
+          }
           //TODO Load cached data if failed to reach server?
         }
       } catch (IOException e) {
         //your call could not be completed as dialed please try again
         Log.d("MapsActivity", e.getMessage());
-        filmTourApplication.exitWithAlertDialog(getString(R.string.error_io));
+        errorMessage = getString(R.string.error_io);
       }
       return successfulQuery;
     }
@@ -647,15 +652,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         new GetLocationsTask().execute(); //we got the productions time to call for the locations
       }
       else {
-        exitWithAlertDialog("Failed");
+        exitWithAlertDialog(errorMessage);
       }
     }
   }
 
   /**
-   * Asynchronous task that retrieves the film locations from the server.
+   * Asynchronous task that retrieves the film locations from the server. Returns a boolean if the query was successful, displays an alert dialog and exits the app if not.
    */
-  private class GetLocationsTask extends AsyncTask<Void, Void, Void> {
+  private class GetLocationsTask extends AsyncTask<Void, Void, Boolean> {
+
+    private String errorMessage = getString(R.string.error_default);
 
     @Override
     protected void onPreExecute() {
@@ -663,27 +670,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Boolean doInBackground(Void... voids) {
+      Boolean successfulQuery = false;
       try {
         Call<List<FilmLocation>> call = filmTourApplication.getService().getLocations(token);
         Response<List<FilmLocation>> response = call.execute();
         if (response.isSuccessful()) {
           locations = response.body();
+          successfulQuery = true;
         } else {
-          Log.d("MapsActivity", String.valueOf(response.code()));
-          filmTourApplication.exitWithAlertDialog(String.format(getString(R.string.error_http), response.code()));
+          Log.d(ERROR_LOG_TAG_MAPS_ACTIVITY, String.valueOf(response.code()));
         }
       } catch (IOException e) {
-        Log.d("MapsActivity", e.getMessage());
-        filmTourApplication.exitWithAlertDialog(getString(R.string.error_io));
+        Log.d(ERROR_LOG_TAG_MAPS_ACTIVITY, e.getMessage());
       }
-      return null;
+      return successfulQuery;
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-      checkForPastTitle(); //see what we've got in shared pref
-      progressSpinner.setVisibility(View.GONE); //all the work is done the spinner can go now
+    protected void onPostExecute(Boolean successfulQuery) {
+      if (successfulQuery) {
+        checkForPastTitle(); //see what we've got in shared pref
+        progressSpinner.setVisibility(View.GONE); //all the work is done the spinner can go now
+      } else {
+        exitWithAlertDialog(errorMessage);
+      }
     }
   }
 }

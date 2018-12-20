@@ -52,18 +52,6 @@ public class FilmTourApplication extends Application {
   }
 
   /**
-   * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling.
-   * @param errorMessage a String message to display to the user.
-   */
-  public void exitWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder builder = new Builder(this, R.style.AlertDialog);
-    builder.setMessage(errorMessage)
-        .setCancelable(false)
-        .setPositiveButton("Exit", (dialog, which) -> System.exit(STATUS_CODE_ERROR));
-  }
-
-  /**
    * Gets instance.
    *
    * @return the instance
