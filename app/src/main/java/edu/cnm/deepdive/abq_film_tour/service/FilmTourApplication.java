@@ -1,5 +1,7 @@
 package edu.cnm.deepdive.abq_film_tour.service;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Application;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -16,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class FilmTourApplication extends Application {
 
+  private static final int STATUS_CODE_ERROR = 1;
   private static FilmTourApplication instance = null;
   private GoogleSignInClient client;
   private GoogleSignInAccount account;
@@ -46,6 +49,18 @@ public class FilmTourApplication extends Application {
         .build();
     service = retrofit.create(Service.class);
 //    apiKey = BuildConfig.API_KEY;
+  }
+
+  /**
+   * Creates an alert dialog with a given error message and closes the program, used for cleaner
+   * exception handling.
+   * @param errorMessage a String message to display to the user.
+   */
+  public void exitWithAlertDialog(String errorMessage) {
+    AlertDialog.Builder builder = new Builder(this, R.style.AlertDialog);
+    builder.setMessage(errorMessage)
+        .setCancelable(false)
+        .setPositiveButton("Exit", (dialog, which) -> System.exit(STATUS_CODE_ERROR));
   }
 
   /**

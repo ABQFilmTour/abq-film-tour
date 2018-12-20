@@ -3,8 +3,10 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 import android.Manifest.permission;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -128,6 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Constant for the onRequestPermissionsResult callback.
    */
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
+  public static final int STATUS_CODE_ERROR = 1;
 
   //FIELDS
   /**
@@ -205,9 +208,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
-    if (token == null) { //Is this actually null or is it a null string?
-      //TODO Stale token? Handle here? maybe show an AlertDialog and signOut()
-    }
+    //TODO refresh token to ensure it isn't stale
     setContentView(R.layout.activity_maps);
     progressSpinner = findViewById(R.id.progress_spinner);
     progressSpinner.setVisibility(View.VISIBLE);
@@ -323,6 +324,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       startActivity(intent);
     });
   }
+
+
 
   /**
    * Gets the last known location of the device using the best provider possible. If the user is
@@ -587,9 +590,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
+   * Creates an alert dialog with a given error message and closes the program, used for cleaner
+   * exception handling.
+   * @param errorMessage a String message to display to the user.
+   */
+  public void exitWithAlertDialog(String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+    alertDialog.setMessage(errorMessage)
+        .setCancelable(false)
+        .setPositiveButton("Exit", (dialog, which) -> System.exit(STATUS_CODE_ERROR));
+    AlertDialog alert = alertDialog.create();
+    alert.show();
+  }
+
+  /**
    * Asynchronous task that retrieves the productions from the server.
    */
-  private class GetProductionsTask extends AsyncTask<Void, Void, Void> {
+  private class GetProductionsTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPreExecute() {
@@ -597,7 +614,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Boolean doInBackground(Void... voids) {
+      Boolean successfulQuery = false;
       try {
         Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
         //ring ring
@@ -606,26 +624,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (response.isSuccessful()) {
           //yes it is how can I help you
           productions = response.body();
+          successfulQuery = true;
         } else {
           //no you have the wrong number or something sorry
           Log.d("Token", token);
           Log.d("MapsActivity", String.valueOf(response.code()));
-          //TODO Alert dialog before closing?
           //TODO Load cached data if failed to reach server?
         }
       } catch (IOException e) {
         //your call could not be completed as dialed please try again
         Log.d("MapsActivity", e.getMessage());
-        //TODO Alert dialog before closing?
+        filmTourApplication.exitWithAlertDialog(getString(R.string.error_io));
       }
-      return null;
+      return successfulQuery;
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-      super.onPostExecute(aVoid);
-      populateTitlesList();
-      new GetLocationsTask().execute(); //we got the productions time to call for the locations
+    protected void onPostExecute(Boolean successfulQuery) {
+      super.onPostExecute(successfulQuery);
+      if (successfulQuery) {
+        populateTitlesList();
+        new GetLocationsTask().execute(); //we got the productions time to call for the locations
+      }
+      else {
+        exitWithAlertDialog("Failed");
+      }
     }
   }
 
@@ -648,11 +671,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           locations = response.body();
         } else {
           Log.d("MapsActivity", String.valueOf(response.code()));
-          //TODO Alert dialog before closing?
+          filmTourApplication.exitWithAlertDialog(String.format(getString(R.string.error_http), response.code()));
         }
       } catch (IOException e) {
         Log.d("MapsActivity", e.getMessage());
-        //TODO Alert dialog before closing?
+        filmTourApplication.exitWithAlertDialog(getString(R.string.error_io));
       }
       return null;
     }

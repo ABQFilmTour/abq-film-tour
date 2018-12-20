@@ -94,7 +94,7 @@ public class LocationActivity extends AppCompatActivity {
         } else {
           Log.d("LocationActivity", String.valueOf(locationCallResponse.code()));
           Log.d("LocationActivity", String.valueOf(commentCallResponse.code()));
-          //TODO Alert dialog before closing?
+
         }
       } catch (IOException e) {
         Log.d("LocationActivity", e.getMessage());
