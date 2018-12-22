@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
     if (account != null) {
       FilmTourApplication.getInstance().setAccount(account);
-      checkUser();
+      switchToMain();
     }
   }
 
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
         GoogleSignInAccount account = task.getResult(ApiException.class);
         FilmTourApplication.getInstance().setAccount(account);
-        checkUser();
+        switchToMain();
       } catch (ApiException e) {
         Toast.makeText(this, R.string.unable_to_signin, Toast.LENGTH_LONG).show();
       }
@@ -83,13 +83,4 @@ public class LoginActivity extends AppCompatActivity {
     }.start();
   }
 
-  private void checkUser() {
-    //TODO See if the user is already in the database and/or if they are banned
-    //TODO If they are not in the database, create an entry
-    //TODO If they are banned, kick their ass out
-    switchToMain();
-  }
-
 }
-
-

@@ -30,8 +30,7 @@
     app:layout_constraintDimensionRatio="16:9"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:srcCompat="@drawable/mg_2390_small"
-    />
+    app:srcCompat="@drawable/mg_2390_small"/>
 
   <ImageView
     android:id="@+id/imageViewPoster"

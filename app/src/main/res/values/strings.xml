@@ -29,11 +29,13 @@
   <string name="imdb_url">https://www.imdb.com/title/</string>
   <string name="all_nearby_locations">All Nearby Locations</string>
   <string name="error_http">HTTP error code %d</string>
-  <string name="error_io">Failed to reach server.</string>
+  <string name="error_io">Failed to reach server. Check your network connection.</string>
   <string name="error_stale_token">Possible stale token. Try reinstalling your app.</string>
   <string name="error_default">Unknown error</string>
   <string name="exit_alert_dialog">Exit</string>
   <string name="loc_settings">Location Settings</string>
   <string name="enable_loc">Enable Location</string>
+  <string name="error_unauthorized">Failed to authorize. Try reinstalling your app.</string>
+  <string name="error_forbidden">You are forbidden from using this service.</string>
 
 </resources>

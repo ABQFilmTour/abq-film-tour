@@ -208,6 +208,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
+    Log.d("Token", token);
     //TODO refresh token to ensure it isn't stale
     setContentView(R.layout.activity_maps);
     progressSpinner = findViewById(R.id.progress_spinner);
@@ -546,7 +547,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     this.setTitle(title);
     saveSharedPreferences(title);
     for (FilmLocation location : locations) {
-      System.out.println(location.isApproved());
       if (!location.isApproved()) continue;
       if (location.getProduction().getTitle() != null && location.getProduction().getTitle()
           .equals(title)) {
@@ -630,11 +630,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           successfulQuery = true;
         } else {
           //no you have the wrong number or something sorry
-          Log.d("Token", token);
           Log.d("MapsActivity", String.valueOf(response.code()));
           errorMessage = getString(R.string.error_http, response.code());
           if (response.code() == 401) {
-            errorMessage = getString(R.string.error_stale_token);
+            errorMessage = getString(R.string.error_unauthorized);
+          }
+          else if (response.code() == 403) {
+            errorMessage = getString(R.string.error_forbidden);
           }
           //TODO Load cached data if failed to reach server?
         }
