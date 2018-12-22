@@ -64,6 +64,8 @@ import retrofit2.Response;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   //CONSTANTS
+  static final int HTTP_UNAUTHORIZED = 401;
+  static final int HTTP_FORBIDDEN = 403;
   /**
    * String type that refers to Television Production types.
    */
@@ -328,14 +330,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling.
+   * exception handling. Ideal for 403, explicitly tells the user to GTFO.
    * @param errorMessage a String message to display to the user.
    */
   public void exitWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
-        .setPositiveButton("Exit", (dialog, which) -> System.exit(STATUS_CODE_ERROR));
+        .setPositiveButton(R.string.alert_exit, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
     AlertDialog alert = alertDialog.create();
     alert.show();
   }
@@ -605,6 +607,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
+   * Creates an alert dialog with a given error message and signs out, used for cleaner
+   * exception handling. Ideal for 401 as it invites the user to try to sign in again.
+   * @param errorMessage a String message to display to the user.
+   */
+  public void signOutWithAlertDialog(String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+    alertDialog.setMessage(errorMessage)
+        .setCancelable(false)
+        .setPositiveButton(R.string.alert_signout, (dialog, which) -> signOut());
+    AlertDialog alert = alertDialog.create();
+    alert.show();
+  }
+
+  /**
    * Asynchronous task that retrieves the productions from the server. Returns a boolean if the query was successful, displays an alert dialog and exits the app if not.
    */
   private class GetProductionsTask extends AsyncTask<Void, Void, Boolean> {
@@ -632,10 +648,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           //no you have the wrong number or something sorry
           Log.d("MapsActivity", String.valueOf(response.code()));
           errorMessage = getString(R.string.error_http, response.code());
-          if (response.code() == 401) {
+          if (response.code() == HTTP_UNAUTHORIZED) {
+            //TODO sign out instead of exit
             errorMessage = getString(R.string.error_unauthorized);
           }
-          else if (response.code() == 403) {
+          else if (response.code() == HTTP_FORBIDDEN) {
+            //TODO Figure out how to retrieve the error description (it contains ban info)
             errorMessage = getString(R.string.error_forbidden);
           }
           //TODO Load cached data if failed to reach server?
@@ -655,7 +673,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         populateTitlesList();
         new GetLocationsTask().execute(); //we got the productions time to call for the locations
       }
-      else {
+      else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
+        signOutWithAlertDialog(errorMessage);
+        } else {
         exitWithAlertDialog(errorMessage);
       }
     }

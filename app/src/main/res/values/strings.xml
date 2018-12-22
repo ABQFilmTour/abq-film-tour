@@ -35,7 +35,9 @@
   <string name="exit_alert_dialog">Exit</string>
   <string name="loc_settings">Location Settings</string>
   <string name="enable_loc">Enable Location</string>
-  <string name="error_unauthorized">Failed to authorize. Try reinstalling your app.</string>
+  <string name="error_unauthorized">Failed to authorize. Try signing back in again or reinstalling your app.</string>
   <string name="error_forbidden">You are forbidden from using this service.</string>
+  <string name="alert_signout">Sign Out</string>
+  <string name="alert_exit">Exit</string>
 
 </resources>
