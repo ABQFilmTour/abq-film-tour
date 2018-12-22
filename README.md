@@ -31,7 +31,7 @@ jscpeterson.com/rest/film_locations/{location_id}/images/ <br />
 The client authenticates the user with oauth2 authentication but we are still working on verification on the server side. We will also need to implement admin requests on the server so we can manipulate the data for moderation and adding new content. From the client the user can access the dataset but cannot post new content. The user can explore the map, filter locations by a production, and pull up location specific data. On the location screen we display text content specific to the location but are only displaying static drawables. The ability to post and retrieve images is the third major hurdle after security and being able to post submissions and comments. Other minor issues - submission should be disabled when no title is selected or otherwise handled. We are unaware of any severe bugs. 
 Highest priority hitlist:
 - ~Oauth2 verification on the server~
-- Allow for admin requests to the server
+- ~Allow for admin requests to the server~
 - Location submissions from the client
 - Comment submissions from the client
 - Image submission/retrieval
@@ -55,7 +55,7 @@ The minimum required Android API is 21. It has been successfully tested on emula
 
 ### Aesthetic goals
 - Making user comment box more user friendly, display more information
-- Pull in IMDB poster and videos for location activity.
+- ~Pull in IMDB poster for location activity.~
 
 ### Stretch goals
 - Handle picking from multiple images on the UI
