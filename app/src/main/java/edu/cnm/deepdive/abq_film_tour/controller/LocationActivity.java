@@ -79,21 +79,53 @@ public class LocationActivity extends AppCompatActivity {
 
   /**
    * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling.
+   * exception handling. Ideal for 403, explicitly tells the user to GTFO.
+   *
    * @param errorMessage a String message to display to the user.
    */
   public void exitWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
-        .setPositiveButton(R.string.exit_alert_dialog, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
+        .setPositiveButton(R.string.alert_exit, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
     AlertDialog alert = alertDialog.create();
     alert.show();
   }
 
   /**
+   * This method signs the Google account out of the application and returns the user to the login
+   * activity.
+   */
+  private void signOut() {
+    FilmTourApplication app = FilmTourApplication.getInstance();
+    app.getClient().signOut().addOnCompleteListener(this, (task) -> {
+      app.setAccount(null);
+      Intent intent = new Intent(this, LoginActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(intent);
+    });
+  }
+
+  /**
+   * Creates an alert dialog with a given error message and signs out, used for cleaner exception
+   * handling. Ideal for 401 as it invites the user to try to sign in again.
+   *
+   * @param errorMessage a String message to display to the user.
+   */
+  public void signOutWithAlertDialog(String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+    alertDialog.setMessage(errorMessage)
+        .setCancelable(false)
+        .setPositiveButton(R.string.alert_signout, (dialog, which) -> signOut());
+    AlertDialog alert = alertDialog.create();
+    alert.show();
+  }
+
+
+  /**
    * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment}, and {@link
-   * LocationActivity} and tie them to a specific {@link FilmLocation} Returns a boolean if the query was successful, displays an alert dialog and exits the app if not.
+   * LocationActivity} and tie them to a specific {@link FilmLocation} Returns a boolean if the
+   * query was successful, displays an alert dialog and exits the app if not.
    */
   public class LocationTask extends AsyncTask<UUID, Void, Boolean> {
 
@@ -162,6 +194,8 @@ public class LocationActivity extends AppCompatActivity {
           Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
           startActivity(intent);
         });
+      } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
+        signOutWithAlertDialog(errorMessage);
       } else {
         exitWithAlertDialog(errorMessage);
       }

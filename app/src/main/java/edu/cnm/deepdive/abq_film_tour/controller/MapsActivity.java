@@ -331,6 +331,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Creates an alert dialog with a given error message and closes the program, used for cleaner
    * exception handling. Ideal for 403, explicitly tells the user to GTFO.
+   *
    * @param errorMessage a String message to display to the user.
    */
   public void exitWithAlertDialog(String errorMessage) {
@@ -428,7 +429,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         .tilt(
             TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
         .build();                   // Creates a CameraPosition from the builder
-//    populateMapFromLocation(userLatLng);
+    populateMapFromLocation(userLatLng);
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
   }
@@ -526,7 +527,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     progressSpinner.setVisibility(View.VISIBLE);
     map.clear();
     for (FilmLocation location : locations) {
-      if (!location.isApproved()) continue;
+      if (!location.isApproved()) {
+        continue;
+      }
       double venueLat = Double.valueOf(location.getLatCoordinate());
       double venueLng = Double.valueOf(location.getLongCoordinate());
       double delta = calculateDistanceInKilometer(userLatLng.latitude, userLatLng.longitude,
@@ -549,7 +552,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     this.setTitle(title);
     saveSharedPreferences(title);
     for (FilmLocation location : locations) {
-      if (!location.isApproved()) continue;
+      if (!location.isApproved()) {
+        continue;
+      }
       if (location.getProduction().getTitle() != null && location.getProduction().getTitle()
           .equals(title)) {
         createMapMarker(location);
@@ -607,8 +612,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Creates an alert dialog with a given error message and signs out, used for cleaner
-   * exception handling. Ideal for 401 as it invites the user to try to sign in again.
+   * Creates an alert dialog with a given error message and signs out, used for cleaner exception
+   * handling. Ideal for 401 as it invites the user to try to sign in again.
+   *
    * @param errorMessage a String message to display to the user.
    */
   public void signOutWithAlertDialog(String errorMessage) {
@@ -621,7 +627,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Asynchronous task that retrieves the productions from the server. Returns a boolean if the query was successful, displays an alert dialog and exits the app if not.
+   * Asynchronous task that retrieves the productions from the server. Returns a boolean if the
+   * query was successful, displays an alert dialog and exits the app if not.
    */
   private class GetProductionsTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -651,8 +658,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           if (response.code() == HTTP_UNAUTHORIZED) {
             //TODO sign out instead of exit
             errorMessage = getString(R.string.error_unauthorized);
-          }
-          else if (response.code() == HTTP_FORBIDDEN) {
+          } else if (response.code() == HTTP_FORBIDDEN) {
             //TODO Figure out how to retrieve the error description (it contains ban info)
             errorMessage = getString(R.string.error_forbidden);
           }
@@ -672,17 +678,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       if (successfulQuery) {
         populateTitlesList();
         new GetLocationsTask().execute(); //we got the productions time to call for the locations
-      }
-      else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
+      } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
         signOutWithAlertDialog(errorMessage);
-        } else {
+      } else {
         exitWithAlertDialog(errorMessage);
       }
     }
   }
 
   /**
-   * Asynchronous task that retrieves the film locations from the server. Returns a boolean if the query was successful, displays an alert dialog and exits the app if not.
+   * Asynchronous task that retrieves the film locations from the server. Returns a boolean if the
+   * query was successful, displays an alert dialog and exits the app if not.
    */
   private class GetLocationsTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -716,6 +722,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       if (successfulQuery) {
         checkForPastTitle(); //see what we've got in shared pref
         progressSpinner.setVisibility(View.GONE); //all the work is done the spinner can go now
+      } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
+        signOutWithAlertDialog(errorMessage);
       } else {
         exitWithAlertDialog(errorMessage);
       }

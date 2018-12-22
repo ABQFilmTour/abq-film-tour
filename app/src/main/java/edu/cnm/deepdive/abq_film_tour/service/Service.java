@@ -42,6 +42,9 @@ public interface Service {
   @GET("rest/productions/")
   Call<List<Production>> getProductions(@Header("Authorization") String authorization);
 
+  @GET("rest/productions/{id}/")
+  Call<String> getPosterUrl(@Header("Authorization") String authorization, @Path(value = "id") UUID id);
+
   /**
    * Gets user comments.
    *
