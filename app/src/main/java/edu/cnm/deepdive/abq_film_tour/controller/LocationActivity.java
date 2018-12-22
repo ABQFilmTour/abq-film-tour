@@ -11,10 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
@@ -46,6 +49,8 @@ public class LocationActivity extends AppCompatActivity {
   private Production production;
   private List<UserComment> userComments;
   private String token;
+  private ImageButton bookmarkButton;
+  private MapsActivity parentMap;
 
   private final String LOCATION_ID_KEY = "location_id_key";
   private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
@@ -65,8 +70,8 @@ public class LocationActivity extends AppCompatActivity {
     assert extras != null;
     String locationID = extras.getString(LOCATION_ID_KEY);
 
-    locationImage = findViewById(R.id.imageViewHeader);
-    locationPosterImage = findViewById(R.id.imageViewPoster);
+    locationImage = findViewById(R.id.image_view_header);
+    locationPosterImage = findViewById(R.id.image_view_poster);
     locationProductionTitle = findViewById(R.id.production_title_view);
     locationSiteName = findViewById(R.id.location_sitename_view);
     locationImdb = findViewById(R.id.imdb_link_view);
@@ -199,6 +204,12 @@ public class LocationActivity extends AppCompatActivity {
       } else {
         exitWithAlertDialog(errorMessage);
       }
+
+      bookmarkButton = findViewById(R.id.bookmark_button);
+      bookmarkButton.setOnClickListener(v -> {
+        //TODO Find a way to pass information back to the MapsActivity to indicate that this is bookmarked.
+      });
+
     }
   }
 }

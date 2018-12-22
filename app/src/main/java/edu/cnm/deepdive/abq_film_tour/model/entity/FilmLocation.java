@@ -109,6 +109,11 @@ public class FilmLocation {
   private boolean approved;
 
   /**
+   * Indicates whether or not the user has bookmarked this location.
+   */
+  private boolean bookmarked;
+
+  /**
    * Empty constructor for ROOM.
    */
   public FilmLocation() {
@@ -306,4 +311,17 @@ public class FilmLocation {
   public void setApproved(boolean approved) {
     this.approved = approved;
   }
+
+  public boolean isBookmarked() {
+    return bookmarked;
+  }
+
+  public void setBookmarked(boolean bookmarked) {
+    this.bookmarked = bookmarked;
+  }
+
+  public void toggleBookmarked() {
+    this.bookmarked = !this.bookmarked;
+  }
+
 }

@@ -23,7 +23,7 @@
       android:layout_height="wrap_content">
 
   <ImageView
-    android:id="@+id/imageViewHeader"
+    android:id="@+id/image_view_header"
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:adjustViewBounds="true"
@@ -33,14 +33,14 @@
     app:srcCompat="@drawable/mg_2390_small"/>
 
   <ImageView
-    android:id="@+id/imageViewPoster"
+    android:id="@+id/image_view_poster"
     android:layout_width="0dp"
     android:layout_height="150dp"
     android:layout_marginBottom="8dp"
-    app:layout_constraintBottom_toBottomOf="@+id/imageViewHeader"
+    app:layout_constraintBottom_toBottomOf="@+id/image_view_header"
     app:layout_constraintDimensionRatio="w,2:3"
     app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"/>
+    app:layout_constraintTop_toBottomOf="@+id/image_view_header"/>
     <!--app:srcCompat="@drawable/bb_poster_image"-->
 
   <TextView
@@ -51,20 +51,20 @@
     android:layout_marginStart="16dp"
     android:layout_marginEnd="8dp"
     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-    app:layout_constraintEnd_toStartOf="@+id/bookMarkButton"
-    app:layout_constraintStart_toEndOf="@+id/imageViewPoster"
-    app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
+    app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
+    app:layout_constraintStart_toEndOf="@+id/image_view_poster"
+    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
     app:layout_constraintBottom_toTopOf="@id/imdb_link_view"
     />
 
   <ImageButton
-    android:id="@+id/bookMarkButton"
+    android:id="@+id/bookmark_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:background="@android:drawable/list_selector_background"
     app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
-    app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
+    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
     app:srcCompat="@drawable/bookmark_icon"/>
 
   <TextView
@@ -78,8 +78,8 @@
     android:focusable="true"
     android:textColor="#0000FF"
     android:textSize="@dimen/small_text_size"
-    app:layout_constraintEnd_toStartOf="@id/bookMarkButton"
-    app:layout_constraintStart_toEndOf="@id/imageViewPoster"
+    app:layout_constraintEnd_toStartOf="@id/bookmark_button"
+    app:layout_constraintStart_toEndOf="@id/image_view_poster"
     app:layout_constraintTop_toBottomOf="@id/production_title_view"
     app:layout_constraintBottom_toTopOf="@id/plot_view"/>
 
@@ -131,7 +131,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:barrierDirection="bottom"
-    app:constraint_referenced_ids="imageViewPoster,location_sitename_view"
+    app:constraint_referenced_ids="image_view_poster,location_sitename_view"
     />
 
 

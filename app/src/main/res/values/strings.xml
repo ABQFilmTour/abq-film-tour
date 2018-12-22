@@ -39,5 +39,7 @@
   <string name="error_forbidden">You are forbidden from using this service.</string>
   <string name="alert_signout">Sign Out</string>
   <string name="alert_exit">Exit</string>
+  <string name="menu_bookmarks">Bookmarks</string>
+  <string name="create_your_own_tour">Create Your Own Tour</string>
 
 </resources>

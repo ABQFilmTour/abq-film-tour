@@ -489,6 +489,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SubmitDialog submitDialog = new SubmitDialog();
         submitDialog.show(getSupportFragmentManager(), "dialog");
         break;
+      case R.id.menu_bookmarks:
+        progressSpinner.setVisibility(View.VISIBLE);
+        Toast.makeText(this, "This will display all the locations you have bookmarked. Not yet implemented.", Toast.LENGTH_LONG).show();
+        populateMapFromBookmarks();
+        //TODO Save bookmarks in sharedpref
+        progressSpinner.setVisibility(View.GONE);
+        break;
       case R.id.sign_out:
         signOut();
         break;
@@ -521,10 +528,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
+   * Draws map pins for all filming locations that the user has flagged as bookmarked.
+   */
+  private void populateMapFromBookmarks() {
+    map.clear();
+    this.setTitle(getString(R.string.create_your_own_tour));
+    for (FilmLocation location : locations) {
+      if (!location.isApproved()) {
+        continue;
+      }
+      if (location.isBookmarked()) {
+        createMapMarker(location);
+      }
+    }
+  }
+
+  /**
    * Draws map pins for all filming locations within a given distance of the user's location.
    */
   private void populateMapFromLocation(LatLng userLatLng) {
-    progressSpinner.setVisibility(View.VISIBLE);
     map.clear();
     for (FilmLocation location : locations) {
       if (!location.isApproved()) {
