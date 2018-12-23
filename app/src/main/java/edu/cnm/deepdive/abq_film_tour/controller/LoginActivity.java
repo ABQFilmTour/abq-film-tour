@@ -21,6 +21,11 @@ import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 public class LoginActivity extends AppCompatActivity {
 
   private static final int REQUEST_CODE = 1000;
+  /**
+   * Time in milliseconds that the splash screen displays before sending the user to the
+   * MapsActivity.
+   */
+  private static final int SPLASH_DELAY_TIME = 2000;
 
   private SignInButton signIn;
 
@@ -69,18 +74,15 @@ public class LoginActivity extends AppCompatActivity {
     new Thread() {
       public void run() {
         try {
-          sleep(2000);
+          sleep(SPLASH_DELAY_TIME);
         } catch (InterruptedException e) {
           // Do nothing
         } finally {
           Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
           startActivity(intent);
-
         }
       }
     }.start();
   }
-
 }

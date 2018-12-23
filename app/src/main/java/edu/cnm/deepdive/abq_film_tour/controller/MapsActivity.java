@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -52,8 +50,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -64,8 +60,14 @@ import retrofit2.Response;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   //CONSTANTS
-  static final int HTTP_UNAUTHORIZED = 401;
-  static final int HTTP_FORBIDDEN = 403;
+  /**
+   * HTTP status code for Unauthorized (something messed up trying to authorize your request, try again?)
+   */
+  private static final int HTTP_UNAUTHORIZED = 401;
+  /**
+   * HTTP status code for Forbidden (we got your request just fine and think you should go away)
+   */
+  private static final int HTTP_FORBIDDEN = 403;
   /**
    * String type that refers to Television Production types.
    */
@@ -132,7 +134,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Constant for the onRequestPermissionsResult callback.
    */
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
-  public static final int STATUS_CODE_ERROR = 1;
+  /**
+   * Status code returned by the program if it closes with an error.
+   */
+  private static final int STATUS_CODE_ERROR = 1;
+  /**
+   * Log tag for this activity.
+   */
   private static final String ERROR_LOG_TAG_MAPS_ACTIVITY = "MapsActivity";
 
   //FIELDS
@@ -215,6 +223,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     setContentView(R.layout.activity_maps);
     progressSpinner = findViewById(R.id.progress_spinner);
     progressSpinner.setVisibility(View.VISIBLE);
+    //TODO Block the user from interacting with the UI while the spinner is doing its thing. Attempting anything from the options menu while data is loading will throw an exception.
     new GetProductionsTask().execute();
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     filmTourApplication.getAccount().getId();
@@ -330,7 +339,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling. Ideal for 403, explicitly tells the user to GTFO.
+   * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
    *
    * @param errorMessage a String message to display to the user.
    */
@@ -399,17 +408,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       alertDialog.setTitle(R.string.enable_loc);
       alertDialog
           .setMessage(R.string.enable_location_settings);
-      alertDialog.setPositiveButton(R.string.loc_settings, new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-          startActivity(intent);
-        }
+      alertDialog.setPositiveButton(R.string.loc_settings, (dialog, which) -> {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
       });
-      alertDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          dialog.cancel();
-        }
-      });
+      alertDialog.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel());
       AlertDialog alert = alertDialog.create();
       alert.show();
     }
@@ -422,13 +425,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private void nearMe(LatLng userLatLng) {
     setTitle(getString(R.string.all_nearby_locations));
     CameraPosition cameraPosition = new CameraPosition.Builder()
-        .target(userLatLng)      // Sets the center of the map to location user
-        .zoom(ZOOM_LEVEL_NEAR_ME)                   // Sets the zoom
-        .bearing(
-            BEARING_LEVEL_NEAR_ME)                // Sets the orientation of the camera to east
-        .tilt(
-            TILT_LEVEL_NEAR_ME)                   // Sets the tilt of the camera to 30 degrees
-        .build();                   // Creates a CameraPosition from the builder
+        .target(userLatLng) // Sets the center of the map to location user
+        .zoom(ZOOM_LEVEL_NEAR_ME) // Sets the zoom
+        .bearing(BEARING_LEVEL_NEAR_ME) // Sets the orientation of the camera to east
+        .tilt(TILT_LEVEL_NEAR_ME) // Sets the tilt of the camera to 30 degrees
+        .build(); // Creates a CameraPosition from the builder
     populateMapFromLocation(userLatLng);
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
@@ -455,7 +456,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    SelectionDialog selectionDialog = new SelectionDialog();
+    SelectionDialog selectionDialog;
     boolean handled = true;
     switch (item.getItemId()) {
       default:
@@ -593,11 +594,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     tvTitles = new ArrayList<>();
     for (Production production : productions) {
       if (production.getType() == null) {
-        // Log info and skip loop, could "continue;" but currently unnecessary. Unfamiliar with
-        // logs so I'm not sure where this is recorded.
-        Logger logger = Logger.getLogger(MapsActivity.class.getName());
-        logger.log(Level.WARNING, String.format(getString(R.string.log_null_production_type),
-            production.getId()));
+        // This occurrence should probably be logged somehow. For now, doing nothing is fine.
       } else if (production.getType().equals(TYPE_SERIES)) {
         tvTitles.add(production.getTitle());
       } else if (production.getType().equals(TYPE_MOVIE)) {
@@ -639,7 +636,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    *
    * @param errorMessage a String message to display to the user.
    */
-  public void signOutWithAlertDialog(String errorMessage) {
+  private void signOutWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
@@ -663,7 +660,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-      Boolean successfulQuery = false;
+      boolean successfulQuery = false;
       try {
         Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
         //ring ring
@@ -675,10 +672,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           successfulQuery = true;
         } else {
           //no you have the wrong number or something sorry
-          Log.d("MapsActivity", String.valueOf(response.code()));
+          Log.d(ERROR_LOG_TAG_MAPS_ACTIVITY, String.valueOf(response.code()));
           errorMessage = getString(R.string.error_http, response.code());
           if (response.code() == HTTP_UNAUTHORIZED) {
-            //TODO sign out instead of exit
             errorMessage = getString(R.string.error_unauthorized);
           } else if (response.code() == HTTP_FORBIDDEN) {
             //TODO Figure out how to retrieve the error description (it contains ban info)
@@ -688,7 +684,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
       } catch (IOException e) {
         //your call could not be completed as dialed please try again
-        Log.d("MapsActivity", e.getMessage());
+        Log.d(ERROR_LOG_TAG_MAPS_ACTIVITY, e.getMessage());
         errorMessage = getString(R.string.error_io);
       }
       return successfulQuery;
@@ -723,7 +719,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-      Boolean successfulQuery = false;
+      boolean successfulQuery = false;
       try {
         Call<List<FilmLocation>> call = filmTourApplication.getService().getLocations(token);
         Response<List<FilmLocation>> response = call.execute();

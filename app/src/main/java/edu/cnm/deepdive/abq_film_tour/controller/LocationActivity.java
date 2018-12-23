@@ -11,13 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
@@ -60,16 +58,19 @@ public class LocationActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
+    //Sets up the activity and required fields
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_location);
     filmTourApplication = (FilmTourApplication) getApplication();
     token = getString(R.string.oauth2_header,
         FilmTourApplication.getInstance().getAccount().getIdToken());
 
+    //Gets info passed from the MapsActivity
     Bundle extras = getIntent().getExtras();
     assert extras != null;
     String locationID = extras.getString(LOCATION_ID_KEY);
 
+    //Sets up layout IDs
     locationImage = findViewById(R.id.image_view_header);
     locationPosterImage = findViewById(R.id.image_view_poster);
     locationProductionTitle = findViewById(R.id.production_title_view);
@@ -78,13 +79,14 @@ public class LocationActivity extends AppCompatActivity {
     locationPlot = findViewById(R.id.plot_view);
     listView = findViewById(R.id.comment_list_view);
 
+    //Queries the database
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
   }
 
   /**
    * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling. Ideal for 403, explicitly tells the user to GTFO.
+   * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
    *
    * @param errorMessage a String message to display to the user.
    */
@@ -126,7 +128,6 @@ public class LocationActivity extends AppCompatActivity {
     alert.show();
   }
 
-
   /**
    * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment}, and {@link
    * LocationActivity} and tie them to a specific {@link FilmLocation} Returns a boolean if the
@@ -140,12 +141,14 @@ public class LocationActivity extends AppCompatActivity {
     protected Boolean doInBackground(UUID... UUIDs) {
       boolean successfulQuery = false;
       try {
+        //Retrieve the info from the server
         Call<FilmLocation> locationCall = filmTourApplication.getService()
             .getFilmLocation(token, UUIDs[0]);
         Call<List<UserComment>> commentCall = filmTourApplication.getService()
             .getComments(token, UUIDs[0]);
         Response<FilmLocation> locationCallResponse = locationCall.execute();
         Response<List<UserComment>> commentCallResponse = commentCall.execute();
+        //Assign info to local values if it came through correctly
         if (locationCallResponse.isSuccessful() && commentCallResponse.isSuccessful()) {
           location = locationCallResponse.body();
           userComments = commentCallResponse.body();
@@ -166,7 +169,8 @@ public class LocationActivity extends AppCompatActivity {
     protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
         super.onPostExecute(successfulQuery);
-        String pathId = location.getId().toString();
+
+        //Setup basic textviews.
         production = location.getProduction();
         String locationText = location.getSiteName();
         locationSiteName.setText(locationText);
@@ -175,6 +179,24 @@ public class LocationActivity extends AppCompatActivity {
         String productionPlot = production.getPlot();
         locationPlot.setText(productionPlot);
 
+        //Setup IMDB link
+        locationImdb.setText(R.string.imdb_link);
+        locationImdb.setOnClickListener(v -> {
+          Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
+          Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
+          startActivity(intent);
+        });
+
+        //Load poster image
+        Glide.with(LocationActivity.this).load(production.getPosterUrl())
+            .into(locationPosterImage); //TODO Default image in case there's no poster?
+
+        bookmarkButton = findViewById(R.id.bookmark_button);
+        bookmarkButton.setOnClickListener(v -> {
+          //TODO Find a way to pass information back to the MapsActivity to indicate that this is bookmarked.
+        });
+
+        //Setup comments
         ListView commentListView = findViewById(R.id.comment_list_view);
         CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
         commentListView.setAdapter(commentAdapter);
@@ -189,27 +211,11 @@ public class LocationActivity extends AppCompatActivity {
           }
         });
 
-        locationImdb.setText(R.string.imdb_link);
-        Glide.with(LocationActivity.this).load(production.getPosterUrl())
-            .into(locationPosterImage); //TODO Default image in case there's no poster?
-        locationImdb.setOnClickListener(v -> {
-          System.out.println(production.getTitle());
-          System.out.println(production.getImdbID());
-          Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
-          Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
-          startActivity(intent);
-        });
       } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
         signOutWithAlertDialog(errorMessage);
       } else {
         exitWithAlertDialog(errorMessage);
       }
-
-      bookmarkButton = findViewById(R.id.bookmark_button);
-      bookmarkButton.setOnClickListener(v -> {
-        //TODO Find a way to pass information back to the MapsActivity to indicate that this is bookmarked.
-      });
-
     }
   }
 }

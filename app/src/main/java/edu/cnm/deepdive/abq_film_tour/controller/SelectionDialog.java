@@ -55,6 +55,7 @@ public class SelectionDialog extends DialogFragment {
     selectionListView.setAdapter(adapter);
     selectionListView.setVisibility(View.VISIBLE);
     selectionListView.setOnItemClickListener((parent, view1, position, id) -> {
+      //Passes selected title back to parent activity
       System.out.println(titles.get(position));
       String selectedTitle = (String) titles.get(position);
       parentMap.populateMapFromTitle(selectedTitle);
@@ -71,7 +72,7 @@ public class SelectionDialog extends DialogFragment {
     params.width = LayoutParams.MATCH_PARENT;
     params.height = LayoutParams.MATCH_PARENT;
     final Drawable d = new ColorDrawable(Color.BLACK);
-    d.setAlpha(50);
+    d.setAlpha(50); //FIXME what is this magic value?
     getDialog().getWindow().setBackgroundDrawable(d);
     getDialog().getWindow().setAttributes(params);
     super.onResume();
