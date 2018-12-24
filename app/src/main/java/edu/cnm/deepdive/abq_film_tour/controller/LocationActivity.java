@@ -3,11 +3,14 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,14 +19,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -48,11 +55,13 @@ public class LocationActivity extends AppCompatActivity {
   private List<UserComment> userComments;
   private String token;
   private ImageButton bookmarkButton;
-  private MapsActivity parentMap;
+  private SharedPreferences sharedPref;
+  private Set<String> bookmarks;
 
   private final String LOCATION_ID_KEY = "location_id_key";
   private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
   private static final int STATUS_CODE_ERROR = 1;
+  private static final String SHARED_PREF_BOOKMARKS = "bookmarks";
 
   private FilmTourApplication filmTourApplication;
 
@@ -64,6 +73,10 @@ public class LocationActivity extends AppCompatActivity {
     filmTourApplication = (FilmTourApplication) getApplication();
     token = getString(R.string.oauth2_header,
         FilmTourApplication.getInstance().getAccount().getIdToken());
+
+    //Assigns bookmarks to set stored in SharedPref, creates a new HashSet if not available
+    sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+    bookmarks = sharedPref.getStringSet(SHARED_PREF_BOOKMARKS, new HashSet<>());
 
     //Gets info passed from the MapsActivity
     Bundle extras = getIntent().getExtras();
@@ -84,13 +97,20 @@ public class LocationActivity extends AppCompatActivity {
     new LocationTask().execute(locationUUID);
   }
 
+  @Override
+  protected void onStop() {
+    super.onStop();
+    //Saves bookmarks to shared preferences when activity is no longer visible.
+    saveBookmarksToSharedPref(bookmarks);
+  }
+
   /**
    * Creates an alert dialog with a given error message and closes the program, used for cleaner
    * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
    *
    * @param errorMessage a String message to display to the user.
    */
-  public void exitWithAlertDialog(String errorMessage) {
+  private void exitWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
@@ -119,13 +139,19 @@ public class LocationActivity extends AppCompatActivity {
    *
    * @param errorMessage a String message to display to the user.
    */
-  public void signOutWithAlertDialog(String errorMessage) {
+  private void signOutWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
         .setPositiveButton(R.string.alert_signout, (dialog, which) -> signOut());
     AlertDialog alert = alertDialog.create();
     alert.show();
+  }
+
+  private void saveBookmarksToSharedPref(Set<String> bookmarks) {
+    SharedPreferences.Editor editor = sharedPref.edit();
+    editor.putStringSet(SHARED_PREF_BOOKMARKS, bookmarks);
+    editor.apply();
   }
 
   /**
@@ -188,12 +214,28 @@ public class LocationActivity extends AppCompatActivity {
         });
 
         //Load poster image
+        //A connection to https://img.omdbapi.com/ was leaked. Did you forget to close a response body?
         Glide.with(LocationActivity.this).load(production.getPosterUrl())
-            .into(locationPosterImage); //TODO Default image in case there's no poster?
+              .into(locationPosterImage);
+          //TODO Default image in case there's no poster?
+//        Load failed for https://img.omdbapi.com/?i=tt1252367&h=600&apikey=2f9b95cb with size [200x300]
+//        class com.bumptech.glide.load.engine.GlideException: Failed to load resource
+//        There was 1 cause:
+//        java.io.FileNotFoundException(https://img.omdbapi.com/?i=tt1252367&h=600&apikey=2f9b95cb)
+//        call GlideException#logRootCauses(String) for more detail
+//        Cause (1 of 1): class com.bumptech.glide.load.engine.GlideException: Fetching data failed, class java.io.InputStream, REMOTE
 
+        //Setup bookmark button
         bookmarkButton = findViewById(R.id.bookmark_button);
         bookmarkButton.setOnClickListener(v -> {
-          //TODO Find a way to pass information back to the MapsActivity to indicate that this is bookmarked.
+          String locationId = location.getId().toString();
+          if (bookmarks.contains(locationId)) {
+            bookmarks.remove(locationId);
+            Toast.makeText(LocationActivity.this, "Bookmark removed.", Toast.LENGTH_SHORT).show();
+          } else {
+            bookmarks.add(locationId);
+            Toast.makeText(LocationActivity.this, "Bookmark added.", Toast.LENGTH_SHORT).show();
+          }
         });
 
         //Setup comments

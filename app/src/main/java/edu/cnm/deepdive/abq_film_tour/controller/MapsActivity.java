@@ -48,8 +48,10 @@ import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -80,6 +82,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Shared preferences tag to reference the last saved title.
    */
   private static final String SHARED_PREF_LAST_TITLE = "last_title";
+  /**
+   * Shared preferences tag to reference a set of bookmarked location IDs.
+   */
+  private static final String SHARED_PREF_BOOKMARKS = "bookmarks";
   /**
    * Initial zoom level for the map camera, should display a birds eye view of the ABQ area.
    */
@@ -184,6 +190,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Authentication token
    */
   private String token;
+  private Set<String> bookmarks;
 
   /**
    * Location Listener object to find when user location changes
@@ -194,7 +201,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(android.location.Location location) {
       double latitude = location.getLatitude();
       double longitude = location.getLongitude();
-      String msg = "New Latitude: " + latitude + "New Longitude: " + longitude;
     }
 
     @Override
@@ -249,6 +255,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     isLocationEnabled();
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    //Assigns bookmarks to set stored in SharedPref, creates a new HashSet if not available
+    bookmarks = sharedPref.getStringSet(SHARED_PREF_BOOKMARKS, new HashSet<>());
+  }
+
   /**
    * Calculates the distance as the crow flies in km between two coordinates given latitude and
    * longitude. This method computes the central angle between the two coordinates using the
@@ -273,12 +286,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * This method checks if a title is in the local SharedPreferences. If there is, it starts with
-   * the data for that production, if not, it prompts the user to select a title.
+   * the data for that production, if not, it prompts the user to select a title. If the user
+   * selected their "Create Your Own Tour" last, it loads the bookmarked data.
    */
   private void checkForPastTitle() {
     String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null);
     if (savedTitle != null) {
-      populateMapFromTitle(savedTitle);
+      if (savedTitle.equals(SHARED_PREF_BOOKMARKS)) {
+        //Hopefully, nobody ever films a movie or series in Albuquerque titled "Bookmarks".
+        populateMapFromBookmarks();
+      } else {
+        populateMapFromTitle(savedTitle);
+      }
     } else {
       Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
       setTitle(getString(R.string.application_title));
@@ -492,9 +511,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_bookmarks:
         progressSpinner.setVisibility(View.VISIBLE);
-        Toast.makeText(this, "This will display all the locations you have bookmarked. Not yet implemented.", Toast.LENGTH_LONG).show();
         populateMapFromBookmarks();
-        //TODO Save bookmarks in sharedpref
         progressSpinner.setVisibility(View.GONE);
         break;
       case R.id.sign_out:
@@ -529,7 +546,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Draws map pins for all filming locations that the user has flagged as bookmarked.
+   * Draws map pins for all filming locations that the user has saved in the bookmarks sharedpref
+   * String set.
    */
   private void populateMapFromBookmarks() {
     map.clear();
@@ -538,10 +556,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       if (!location.isApproved()) {
         continue;
       }
-      if (location.isBookmarked()) {
+      if (bookmarks.contains(location.getId().toString())) {
         createMapMarker(location);
       }
     }
+    saveTitleToSharedPreferences(SHARED_PREF_BOOKMARKS);
   }
 
   /**
@@ -573,7 +592,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   void populateMapFromTitle(String title) {
     map.clear();
     this.setTitle(title);
-    saveSharedPreferences(title);
+    saveTitleToSharedPreferences(title);
     for (FilmLocation location : locations) {
       if (!location.isApproved()) {
         continue;
@@ -610,7 +629,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    *
    * @param title a production title as a raw string..
    */
-  private void saveSharedPreferences(String title) {
+  private void saveTitleToSharedPreferences(String title) {
     SharedPreferences.Editor editor = sharedPref.edit();
     editor.putString(SHARED_PREF_LAST_TITLE, title);
     editor.apply();
