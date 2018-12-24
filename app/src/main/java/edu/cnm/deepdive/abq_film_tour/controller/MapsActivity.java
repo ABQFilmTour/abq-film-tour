@@ -481,6 +481,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       default:
         handled = super.onOptionsItemSelected(item);
         break;
+      case R.id.menu_all_locations:
+        populateMapFromAll();
+        break;
       case R.id.menu_all_near_me:
         progressSpinner.setVisibility(View.VISIBLE);
         getDeviceLocation();
@@ -543,6 +546,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
       }
     }
+  }
+
+  /**
+   * Populates the map with every map pin stored in the database.
+   */
+  private void populateMapFromAll() {
+    map.clear();
+    progressSpinner.setVisibility(View.VISIBLE);
+    this.setTitle(getString(R.string.all_locations));
+    for (FilmLocation location : locations) {
+      createMapMarker(location);
+    }
+    progressSpinner.setVisibility(View.GONE);
   }
 
   /**

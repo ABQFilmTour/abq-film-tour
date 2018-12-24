@@ -4,6 +4,10 @@
 
 
   <item
+    android:id="@+id/menu_all_locations"
+    android:title="@string/menu_all_locations"
+    app:showAsAction="never"/>
+  <item
     android:id="@+id/menu_all_near_me"
     android:title="@string/menu_all_near_me"
     app:showAsAction="never"/>
@@ -16,12 +20,12 @@
     android:title="@string/menu_television"
     app:showAsAction="never" />
   <item
-    android:id="@+id/menu_submit"
-    android:title="@string/menu_submit"
-    app:showAsAction="never"/>
-  <item
     android:id="@+id/menu_bookmarks"
     android:title="@string/menu_bookmarks"
+    app:showAsAction="never"/>
+  <item
+    android:id="@+id/menu_submit"
+    android:title="@string/menu_submit"
     app:showAsAction="never"/>
   <item
     android:id="@+id/sign_out"

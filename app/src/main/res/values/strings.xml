@@ -27,7 +27,7 @@
   <string name="client_id">650840836337-o0r50gnee6g2h5bg9lkq7d4776bfvp9c.apps.googleusercontent.com</string>
   <string name="oauth2_header">Bearer %s</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>
-  <string name="all_nearby_locations">All Nearby Locations</string>
+  <string name="all_nearby_locations">Nearby Locations</string>
   <string name="error_http">HTTP error code %d</string>
   <string name="error_io">Failed to reach server. Check your network connection.</string>
   <string name="error_stale_token">Possible stale token. Try reinstalling your app.</string>
@@ -41,5 +41,7 @@
   <string name="alert_exit">Exit</string>
   <string name="menu_bookmarks">Bookmarks</string>
   <string name="create_your_own_tour">Create Your Own Tour</string>
+  <string name="all_locations">All Locations</string>
+  <string name="menu_all_locations">All Locations</string>
 
 </resources>
