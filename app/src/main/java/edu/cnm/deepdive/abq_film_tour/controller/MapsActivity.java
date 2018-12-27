@@ -376,7 +376,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * outside of Albuquerque city limits it will toast the user and not update the map to user's
    * location.
    */
-  private void getDeviceLocation() throws SecurityException {
+  private LatLng getDeviceLocation() throws SecurityException {
     LocationManager locationManager = (LocationManager) getSystemService(
         Context.LOCATION_SERVICE);
     Criteria criteria = new Criteria();
@@ -391,11 +391,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, R.string.not_in_burque,
             Toast.LENGTH_SHORT).show();
       } else {
-        nearMe(userLatLng);
+        return userLatLng;
       }
     } else {
       Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
     }
+    //If the code makes it here, a location has not been successfully returned.
+    //Returns a 0,0 LatLng instead of null to avoid a null pointer.
+    return new LatLng(0, 0);
   }
 
   /**
@@ -477,6 +480,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   public boolean onOptionsItemSelected(MenuItem item) {
     SelectionDialog selectionDialog;
     boolean handled = true;
+    LatLng location;
     switch (item.getItemId()) {
       default:
         handled = super.onOptionsItemSelected(item);
@@ -486,7 +490,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_all_near_me:
         progressSpinner.setVisibility(View.VISIBLE);
-        getDeviceLocation();
+        location = getDeviceLocation();
+        if (location.latitude == 0 & location.longitude == 0) {
+          // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
+        } else {
+          nearMe(location);
+        }
         progressSpinner.setVisibility(View.GONE);
         break;
       case R.id.menu_television:
@@ -508,9 +517,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
       case R.id.menu_submit:
-        //TODO Disable when title is not selected
-        SubmitDialog submitDialog = new SubmitDialog();
-        submitDialog.show(getSupportFragmentManager(), "dialog");
+        location = getDeviceLocation();
+        if (location.latitude == 0 & location.longitude == 0) {
+          // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
+        } else {
+          //TODO Pass location data into submitDialog arguments.
+          SubmitDialog submitDialog = new SubmitDialog();
+          submitDialog.show(getSupportFragmentManager(), "dialog");
+        }
         break;
       case R.id.menu_bookmarks:
         progressSpinner.setVisibility(View.VISIBLE);
