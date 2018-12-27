@@ -425,6 +425,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Checks to see if device's location is enabled.
    */
   private void isLocationEnabled() {
+    //FIXME Alert dialog pops up like three times
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
       AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialog);
       alertDialog.setTitle(R.string.enable_loc);
