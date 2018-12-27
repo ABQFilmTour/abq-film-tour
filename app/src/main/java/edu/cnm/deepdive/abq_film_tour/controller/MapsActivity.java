@@ -148,6 +148,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Log tag for this activity.
    */
   private static final String ERROR_LOG_TAG_MAPS_ACTIVITY = "MapsActivity";
+  /**
+   * Reference key for the user's latitude.
+   */
+  static final String USER_LOCATION_LAT_KEY = "userLocationLat";
+  /**
+   * Reference key for the user's longitude.
+   */
+  static final String USER_LOCATION_LONG_KEY = "userLocationLong";
 
   //FIELDS
   /**
@@ -482,6 +490,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     SelectionDialog selectionDialog;
     boolean handled = true;
     LatLng location;
+    Bundle arguments = new Bundle();
     switch (item.getItemId()) {
       default:
         handled = super.onOptionsItemSelected(item);
@@ -501,7 +510,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
-        Bundle arguments = new Bundle();
         arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY,
             getString(R.string.selected_options_series_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
@@ -510,7 +518,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_film:
         selectionDialog = new SelectionDialog();
-        arguments = new Bundle();
         arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY,
             getString(R.string.selected_options_films_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, movieTitles);
@@ -522,8 +529,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location.latitude == 0 & location.longitude == 0) {
           // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
         } else {
-          //TODO Pass location data into submitDialog arguments.
           SubmitDialog submitDialog = new SubmitDialog();
+          arguments.putDouble(USER_LOCATION_LAT_KEY, location.latitude);
+          arguments.putDouble(USER_LOCATION_LONG_KEY, location.longitude);
+          submitDialog.setArguments(arguments);
           submitDialog.show(getSupportFragmentManager(), "dialog");
         }
         break;

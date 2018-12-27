@@ -1,7 +1,8 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
-
 import static android.app.Activity.RESULT_OK;
+import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.USER_LOCATION_LAT_KEY;
+import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.USER_LOCATION_LONG_KEY;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,7 +25,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import com.google.android.gms.maps.model.LatLng;
 import edu.cnm.deepdive.abq_film_tour.R;
+import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
@@ -84,7 +87,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
 
   @Override
   public void onClick(View v) {
-
+    FilmLocation newLocation = new FilmLocation();
     switch (v.getId()){
       case R.id.upload_image_btn:
         Intent galleryIntenet = new Intent(Intent.ACTION_PICK,
@@ -93,6 +96,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
         break;
       case R.id.register:
         Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
+        //TODO POST a new Location with an associated GoogleId
         break;
     }
   }
@@ -104,6 +108,11 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
       Uri selectedImage = data.getData();
       uploadImage.setImageURI(selectedImage);
     }
+  }
+
+  public LatLng getUserLocation() {
+    assert getArguments() != null;
+    return new LatLng(getArguments().getDouble(USER_LOCATION_LAT_KEY), getArguments().getDouble(USER_LOCATION_LONG_KEY));
   }
 
   private class Register extends AsyncTask<Void, Void, Void>{
