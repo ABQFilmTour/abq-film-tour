@@ -16,7 +16,7 @@
   <string name="startup_select_title">Select a title from the drop down menu to get started!</string>
   <string name="selected_options_films_title">FILMS</string>
   <string name="selected_options_series_title">TV SHOW</string>
-  <string name="null_location">We\'re having trouble finding your location… Walk around and try again.</string>
+  <string name="null_location">Your location could not be retrieved. Check if you have Location turned on for your device.</string>
   <string name="cannot_enable_location">Cannot enable location.</string>
   <string name="enable_location_settings">Your locations setting is not enabled. Please enable it in settings menu.</string>
   <string name="cancel">Cancel</string>
