@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -65,6 +66,8 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   private SharedPreferences sharedPref;
   private Production production;
 
+  private TextInputLayout siteNameInput;
+  private TextInputLayout descriptionInput;
 
 
   @Nullable
@@ -82,14 +85,13 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     View view = inflater.inflate(R.layout.submit_fragment, null, false);
 
     uploadImage = view.findViewById(R.id.upload_image);
-
     uploadImagebutton = view.findViewById(R.id.upload_image_btn);
     registerButton = view.findViewById(R.id.register);
-
     registerButton.setText(String.format("Submit for %s", production.getTitle()));
-
     uploadImagebutton.setOnClickListener(this);
     registerButton.setOnClickListener(this);
+    siteNameInput = view.findViewById(R.id.sitename_input);
+    descriptionInput = view.findViewById(R.id.description_input);
 
     return  view;
   }
@@ -113,8 +115,13 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
         startActivityForResult(galleryIntenet, RESULT_LOAD_IMAGE);
         break;
       case R.id.register:
-        Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
-        //TODO POST a new Location with an associated GoogleId
+//        Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
+        FilmLocationSubmitTask task = new FilmLocationSubmitTask(
+            siteNameInput.getEditText().getText().toString(),
+            descriptionInput.getEditText().getText().toString(),
+            getUserLocation(),
+            production);
+        task.execute();
         break;
     }
   }
@@ -133,7 +140,48 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     return new LatLng(getArguments().getDouble(USER_LOCATION_LAT_KEY), getArguments().getDouble(USER_LOCATION_LONG_KEY));
   }
 
-  private class Register extends AsyncTask<Void, Void, Void>{
+  private class FilmLocationSubmitTask extends AsyncTask<Void, Void, Void> {
+
+    String siteName;
+    String description;
+    LatLng location;
+    Production production;
+    FilmLocation newFilmLocation;
+
+    public FilmLocationSubmitTask(String siteName, String description, LatLng location, Production production) {
+      this.siteName = siteName;
+      this.description = description;
+      this.location = location;
+      this.production = production;
+    }
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+      newFilmLocation = new FilmLocation();
+      newFilmLocation.setSiteName(this.siteName);
+      newFilmLocation.setLatCoordinate(String.valueOf(this.location.latitude));
+      newFilmLocation.setLongCoordinate(String.valueOf(this.location.longitude));
+      newFilmLocation.setProduction(production);
+      //TODO Get user info
+      //TODO Create user comment with description info
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+      //TODO Post new location
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      super.onPostExecute(aVoid);
+      //TODO Inform the user the result of the submission and dismiss.
+    }
+
+  }
+
+  private class ImageUploadTask extends AsyncTask<Void, Void, Void>{
 
     /**
      * The Image that is being uploaded.
@@ -152,14 +200,9 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
      * Instantiates a new Register.
      *
      * @param image the uploaded image
-     * @param siteName the site location name
-     * @param description the description of the image
      */
-    public Register(Bitmap image, String siteName, String description){
+    public ImageUploadTask(Bitmap image){
       this.image = image;
-      this.siteName = siteName;
-      this.description = description;
-
     }
 
     @Override
