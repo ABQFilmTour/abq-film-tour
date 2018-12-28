@@ -96,6 +96,11 @@ public class FilmLocation {
   private User user;
 
   /**
+   * The Google ID of the user who submitted this location.
+   */
+  private String googleId;
+
+  /**
    * The production associated with the filming at this location.
    */
   @Expose
@@ -324,4 +329,11 @@ public class FilmLocation {
     this.bookmarked = !this.bookmarked;
   }
 
+  public String getGoogleId() {
+    return googleId;
+  }
+
+  public void setGoogleId(String googleId) {
+    this.googleId = googleId;
+  }
 }

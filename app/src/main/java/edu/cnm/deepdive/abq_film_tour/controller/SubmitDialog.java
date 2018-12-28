@@ -30,12 +30,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
+import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Dialog fragment for users to upload and submit changes.
@@ -65,9 +70,11 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   private MapsActivity parentMap;
   private SharedPreferences sharedPref;
   private Production production;
+  private String token;
 
   private TextInputLayout siteNameInput;
   private TextInputLayout descriptionInput;
+  private FilmTourApplication filmTourApplication;
 
 
   @Nullable
@@ -75,6 +82,9 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     parentMap = (MapsActivity) getActivity();
+    assert parentMap != null;
+    filmTourApplication = (FilmTourApplication) parentMap.getApplication();
+    token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
     sharedPref = PreferenceManager.getDefaultSharedPreferences(parentMap);
     String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null); //This may not even be necessary?
     if (savedTitle == null || savedTitle.equals(SHARED_PREF_BOOKMARKS)) {
@@ -140,7 +150,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     return new LatLng(getArguments().getDouble(USER_LOCATION_LAT_KEY), getArguments().getDouble(USER_LOCATION_LONG_KEY));
   }
 
-  private class FilmLocationSubmitTask extends AsyncTask<Void, Void, Void> {
+  private class FilmLocationSubmitTask extends AsyncTask<Void, Void, Boolean> {
 
     String siteName;
     String description;
@@ -163,20 +173,37 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
       newFilmLocation.setLatCoordinate(String.valueOf(this.location.latitude));
       newFilmLocation.setLongCoordinate(String.valueOf(this.location.longitude));
       newFilmLocation.setProduction(production);
-      //TODO Get user info
+      newFilmLocation.setGoogleId(filmTourApplication.getAccount().getId());
       //TODO Create user comment with description info
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-      //TODO Post new location
-      return null;
+    protected Boolean doInBackground(Void... voids) {
+      Boolean successfulQuery = false;
+      Call<FilmLocation> locationCall = filmTourApplication.getService()
+          .postFilmLocation(token, newFilmLocation);
+      try {
+        Response<FilmLocation> response = locationCall.execute();
+        if (response.isSuccessful()) {
+          successfulQuery = true;
+        }
+      } catch (IOException e) {
+        //TODO Handle error
+        e.printStackTrace();
+      }
+      return successfulQuery;
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-      super.onPostExecute(aVoid);
-      //TODO Inform the user the result of the submission and dismiss.
+    protected void onPostExecute(Boolean successfulQuery) {
+      super.onPostExecute(successfulQuery);
+      if (successfulQuery) {
+        Toast.makeText(parentMap, "Post submitted!", Toast.LENGTH_SHORT).show();
+        dismiss();
+      } else {
+        Toast.makeText(parentMap, "Something went wrong", Toast.LENGTH_SHORT).show();
+        dismiss();
+      }
     }
 
   }
