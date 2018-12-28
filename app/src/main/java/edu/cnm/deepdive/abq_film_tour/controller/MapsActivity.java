@@ -81,11 +81,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Shared preferences tag to reference the last saved title.
    */
-  private static final String SHARED_PREF_LAST_TITLE = "last_title";
+  static final String SHARED_PREF_LAST_TITLE = "last_title";
   /**
    * Shared preferences tag to reference a set of bookmarked location IDs.
    */
-  private static final String SHARED_PREF_BOOKMARKS = "bookmarks";
+  static final String SHARED_PREF_BOOKMARKS = "bookmarks";
   /**
    * Initial zoom level for the map camera, should display a birds eye view of the ABQ area.
    */
@@ -232,7 +232,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
-    Log.d("Token", token);
+    Log.d("Token", token); //TODO Remove this when there's a better way to retrieve token
     //TODO refresh token to ensure it isn't stale
     setContentView(R.layout.activity_maps);
     progressSpinner = findViewById(R.id.progress_spinner);
@@ -370,7 +370,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    *
    * @param errorMessage a String message to display to the user.
    */
-  public void exitWithAlertDialog(String errorMessage) {
+  private void exitWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
@@ -418,6 +418,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
             permission.ACCESS_COARSE_LOCATION},
         PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+  }
+
+  /**
+   * Retrieves a locally saved Production from the title in shared preferences (assuming it exists).
+   * This way a production can be retrieved without having to call the database again.
+   * @return a production matching a given title
+   */
+  Production getProductionFromSavedTitle() {
+    String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null);
+    assert savedTitle != null;
+    assert !(savedTitle.equals(SHARED_PREF_BOOKMARKS));
+    for (Production production : productions) {
+      if (production.getTitle() == null) {
+        //Necessary check, there's still some bad data, this will avoid a null pointer from screwing things up for now
+        continue;
+      }
+      if (production.getTitle().equals(savedTitle)) {
+        return production;
+      }
+    }
+    return null; // Code should not reach this point unless a title somehow is not available.
   }
 
   /**
@@ -524,7 +545,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
+      case R.id.menu_bookmarks:
+        progressSpinner.setVisibility(View.VISIBLE);
+        if (bookmarks.isEmpty()) {
+          Toast.makeText(this, getString(R.string.menu_no_bookmarks), Toast.LENGTH_LONG).show();
+        } else {
+        populateMapFromBookmarks();
+        }
+        progressSpinner.setVisibility(View.GONE);
+        break;
       case R.id.menu_submit:
+        String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null);
+        if (savedTitle == null || savedTitle.equals(SHARED_PREF_BOOKMARKS)) {
+          Toast.makeText(this, R.string.menu_no_savedtitle, Toast.LENGTH_LONG).show();
+          break;
+        }
         location = getDeviceLocation();
         if (location.latitude == 0 & location.longitude == 0) {
           // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
@@ -535,11 +570,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           submitDialog.setArguments(arguments);
           submitDialog.show(getSupportFragmentManager(), "dialog");
         }
-        break;
-      case R.id.menu_bookmarks:
-        progressSpinner.setVisibility(View.VISIBLE);
-        populateMapFromBookmarks();
-        progressSpinner.setVisibility(View.GONE);
         break;
       case R.id.sign_out:
         signOut();

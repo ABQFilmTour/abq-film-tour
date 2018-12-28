@@ -43,5 +43,7 @@
   <string name="create_your_own_tour">Create Your Own Tour</string>
   <string name="all_locations">All Locations</string>
   <string name="menu_all_locations">All Locations</string>
+  <string name="menu_no_bookmarks">You have no bookmarks saved. Select the bookmark button on an existing location to create your own tour.</string>
+  <string name="menu_no_savedtitle">Select an existing title from Films or TV Shows to submit your location to.</string>
 
 </resources>
