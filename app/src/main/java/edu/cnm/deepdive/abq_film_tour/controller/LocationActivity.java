@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
@@ -28,10 +32,12 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -162,6 +168,7 @@ public class LocationActivity extends AppCompatActivity {
   public class LocationTask extends AsyncTask<UUID, Void, Boolean> {
 
     private String errorMessage = getString(R.string.error_default);
+    BitmapDrawable poster;
 
     @Override
     protected Boolean doInBackground(UUID... UUIDs) {
@@ -174,6 +181,7 @@ public class LocationActivity extends AppCompatActivity {
             .getComments(token, UUIDs[0]);
         Response<FilmLocation> locationCallResponse = locationCall.execute();
         Response<List<UserComment>> commentCallResponse = commentCall.execute();
+
         //Assign info to local values if it came through correctly
         if (locationCallResponse.isSuccessful() && commentCallResponse.isSuccessful()) {
           location = locationCallResponse.body();
@@ -188,6 +196,7 @@ public class LocationActivity extends AppCompatActivity {
         Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, e.getMessage());
         errorMessage = getString(R.string.error_io);
       }
+
       return successfulQuery;
     }
 
@@ -195,7 +204,6 @@ public class LocationActivity extends AppCompatActivity {
     protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
         super.onPostExecute(successfulQuery);
-
         //Setup basic textviews.
         production = location.getProduction();
         String locationText = location.getSiteName();
@@ -214,16 +222,15 @@ public class LocationActivity extends AppCompatActivity {
         });
 
         //Load poster image
-        //A connection to https://img.omdbapi.com/ was leaked. Did you forget to close a response body?
-        Glide.with(LocationActivity.this).load(production.getPosterUrl())
+        //TODO This is the "lazy method" to add an authorization header, there's a cleaner method using Modules.
+        GlideUrl urlWithLazyHeader = new GlideUrl(String.format(getString(R.string.poster_url_format), getString(R.string.base_url), production.getId()),
+            new LazyHeaders.Builder()
+            .addHeader("Authorization", token)
+            .build());
+        Glide.with(LocationActivity.this)
+              .load(urlWithLazyHeader)
               .into(locationPosterImage);
-          //TODO Default image in case there's no poster?
-//        Load failed for https://img.omdbapi.com/?i=tt1252367&h=600&apikey=2f9b95cb with size [200x300]
-//        class com.bumptech.glide.load.engine.GlideException: Failed to load resource
-//        There was 1 cause:
-//        java.io.FileNotFoundException(https://img.omdbapi.com/?i=tt1252367&h=600&apikey=2f9b95cb)
-//        call GlideException#logRootCauses(String) for more detail
-//        Cause (1 of 1): class com.bumptech.glide.load.engine.GlideException: Fetching data failed, class java.io.InputStream, REMOTE
+        //TODO Default image in case there's no poster?
 
         //Setup bookmark button
         bookmarkButton = findViewById(R.id.bookmark_button);

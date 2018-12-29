@@ -1,8 +1,8 @@
 <resources>
   <!--Use this URL for the live server-->
-  <!--<string name="base_url">https://jscpeterson.com/</string>-->
+  <string name="base_url">https://jscpeterson.com/</string>
   <!--Use this URL for debugging a local host-->
-  <string name="base_url">http://10.0.2.2:8080/</string>
+  <!--<string name="base_url">http://10.0.2.2:8080/</string>-->
 
   <string name="app_name">abq-film-tour</string>
   <string name="title_activity_maps">Film Tour</string>
@@ -45,5 +45,6 @@
   <string name="menu_all_locations">All Locations</string>
   <string name="menu_no_bookmarks">You have no bookmarks saved. Select the bookmark button on an existing location to create your own tour.</string>
   <string name="menu_no_savedtitle">Select an existing title from Films or TV Shows to submit your location to.</string>
+  <string name="poster_url_format">%srest/productions/%s/poster</string>
 
 </resources>

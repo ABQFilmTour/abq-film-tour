@@ -117,7 +117,6 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
 
   @Override
   public void onClick(View v) {
-    FilmLocation newLocation = new FilmLocation();
     switch (v.getId()){
       case R.id.upload_image_btn:
         Intent galleryIntenet = new Intent(Intent.ACTION_PICK,
