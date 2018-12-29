@@ -147,13 +147,12 @@
         app:layout_constraintTop_toBottomOf="@id/location_sitename_view"
         app:layout_constraintBottom_toTopOf="@+id/comment_list_view">
 
-        <EditText
-          android:id="@+id/register_description"
+        <Button
+          android:id="@+id/register_review_button"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="@drawable/round_border_black"
-          android:hint="Your Comment"
-          android:maxEms="100"
+          android:hint="Your Review"
           android:textColor="@color/dialogTextColor"/>
 
       </android.support.design.widget.TextInputLayout>

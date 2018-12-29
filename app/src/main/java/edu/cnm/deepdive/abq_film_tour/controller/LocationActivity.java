@@ -16,7 +16,9 @@ import android.util.ArraySet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -61,6 +63,7 @@ public class LocationActivity extends AppCompatActivity {
   private List<UserComment> userComments;
   private String token;
   private ImageButton bookmarkButton;
+  private Button yourReviewButton;
   private SharedPreferences sharedPref;
   private Set<String> bookmarks;
 
@@ -97,6 +100,7 @@ public class LocationActivity extends AppCompatActivity {
     locationImdb = findViewById(R.id.imdb_link_view);
     locationPlot = findViewById(R.id.plot_view);
     listView = findViewById(R.id.comment_list_view);
+    bookmarkButton = findViewById(R.id.bookmark_button);
 
     //Queries the database
     UUID locationUUID = UUID.fromString(locationID);
@@ -233,7 +237,6 @@ public class LocationActivity extends AppCompatActivity {
         //TODO Default image in case there's no poster?
 
         //Setup bookmark button
-        bookmarkButton = findViewById(R.id.bookmark_button);
         bookmarkButton.setOnClickListener(v -> {
           String locationId = location.getId().toString();
           if (bookmarks.contains(locationId)) {
@@ -243,6 +246,13 @@ public class LocationActivity extends AppCompatActivity {
             bookmarks.add(locationId);
             Toast.makeText(LocationActivity.this, "Bookmark added.", Toast.LENGTH_SHORT).show();
           }
+        });
+
+        //Setup your review button
+        yourReviewButton = findViewById(R.id.register_review_button);
+        yourReviewButton.setOnClickListener(v -> {
+          Intent intent = new Intent(LocationActivity.this, SubmitCommentDialog.class);
+          startActivity(intent);
         });
 
         //Setup comments
