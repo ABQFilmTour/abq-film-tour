@@ -16,7 +16,7 @@
   <string name="startup_select_title">Select a title from the drop down menu to get started!</string>
   <string name="selected_options_films_title">FILMS</string>
   <string name="selected_options_series_title">TV SHOW</string>
-  <string name="null_location">We\'re having trouble finding your location… Walk around and try again.</string>
+  <string name="null_location">Your location could not be retrieved. Check if you have Location turned on for your device.</string>
   <string name="cannot_enable_location">Cannot enable location.</string>
   <string name="enable_location_settings">Your locations setting is not enabled. Please enable it in settings menu.</string>
   <string name="cancel">Cancel</string>
@@ -43,5 +43,8 @@
   <string name="create_your_own_tour">Create Your Own Tour</string>
   <string name="all_locations">All Locations</string>
   <string name="menu_all_locations">All Locations</string>
+  <string name="menu_no_bookmarks">You have no bookmarks saved. Select the bookmark button on an existing location to create your own tour.</string>
+  <string name="menu_no_savedtitle">Select an existing title from Films or TV Shows to submit your location to.</string>
+  <string name="poster_url_format">%srest/productions/%s/poster</string>
 
 </resources>

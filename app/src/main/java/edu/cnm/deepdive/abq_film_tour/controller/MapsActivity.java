@@ -84,11 +84,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Shared preferences tag to reference the last saved title.
    */
-  private static final String SHARED_PREF_LAST_TITLE = "last_title";
+  static final String SHARED_PREF_LAST_TITLE = "last_title";
   /**
    * Shared preferences tag to reference a set of bookmarked location IDs.
    */
-  private static final String SHARED_PREF_BOOKMARKS = "bookmarks";
+  static final String SHARED_PREF_BOOKMARKS = "bookmarks";
   /**
    * Initial zoom level for the map camera, should display a birds eye view of the ABQ area.
    */
@@ -151,6 +151,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Log tag for this activity.
    */
   private static final String ERROR_LOG_TAG_MAPS_ACTIVITY = "MapsActivity";
+  /**
+   * Reference key for the user's latitude.
+   */
+  static final String USER_LOCATION_LAT_KEY = "userLocationLat";
+  /**
+   * Reference key for the user's longitude.
+   */
+  static final String USER_LOCATION_LONG_KEY = "userLocationLong";
 
   //FIELDS
   /**
@@ -227,7 +235,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
-    Log.d("Token", token);
+    Log.d("Token", token); //TODO Remove this when there's a better way to retrieve token
     //TODO refresh token to ensure it isn't stale
     setContentView(R.layout.activity_maps);
 
@@ -366,7 +374,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    *
    * @param errorMessage a String message to display to the user.
    */
-  public void exitWithAlertDialog(String errorMessage) {
+  private void exitWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
@@ -380,7 +388,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * outside of Albuquerque city limits it will toast the user and not update the map to user's
    * location.
    */
-  private void getDeviceLocation() throws SecurityException {
+  private LatLng getDeviceLocation() throws SecurityException {
     LocationManager locationManager = (LocationManager) getSystemService(
         Context.LOCATION_SERVICE);
     Criteria criteria = new Criteria();
@@ -395,11 +403,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, R.string.not_in_burque,
             Toast.LENGTH_SHORT).show();
       } else {
-        nearMe(userLatLng);
+        return userLatLng;
       }
     } else {
       Toast.makeText(this, R.string.null_location, Toast.LENGTH_LONG).show();
     }
+    //If the code makes it here, a location has not been successfully returned.
+    //Returns a 0,0 LatLng instead of null to avoid a null pointer.
+    return new LatLng(0, 0);
   }
 
   /**
@@ -411,6 +422,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
             permission.ACCESS_COARSE_LOCATION},
         PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+  }
+
+  /**
+   * Retrieves a locally saved Production from the title in shared preferences (assuming it exists).
+   * This way a production can be retrieved without having to call the database again.
+   * @return a production matching a given title
+   */
+  Production getProductionFromSavedTitle() {
+    String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null);
+    assert savedTitle != null;
+    assert !(savedTitle.equals(SHARED_PREF_BOOKMARKS));
+    for (Production production : productions) {
+      if (production.getTitle() == null) {
+        //Necessary check, there's still some bad data, this will avoid a null pointer from screwing things up for now
+        continue;
+      }
+      if (production.getTitle().equals(savedTitle)) {
+        return production;
+      }
+    }
+    return null; // Code should not reach this point unless a title somehow is not available.
   }
 
   /**
@@ -426,6 +458,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Checks to see if device's location is enabled.
    */
   private void isLocationEnabled() {
+    //FIXME Alert dialog pops up like three times
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
       AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialog);
       alertDialog.setTitle(R.string.enable_loc);
@@ -481,6 +514,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   public boolean onOptionsItemSelected(MenuItem item) {
     SelectionDialog selectionDialog;
     boolean handled = true;
+    LatLng location;
+    Bundle arguments = new Bundle();
     switch (item.getItemId()) {
       default:
         handled = super.onOptionsItemSelected(item);
@@ -490,12 +525,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_all_near_me:
         progressSpinner.setVisibility(View.VISIBLE);
-        getDeviceLocation();
+        location = getDeviceLocation();
+        if (location.latitude == 0 & location.longitude == 0) {
+          // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
+        } else {
+          nearMe(location);
+        }
         progressSpinner.setVisibility(View.GONE);
         break;
       case R.id.menu_television:
         selectionDialog = new SelectionDialog();
-        Bundle arguments = new Bundle();
         arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY,
             getString(R.string.selected_options_series_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, tvTitles);
@@ -504,22 +543,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         break;
       case R.id.menu_film:
         selectionDialog = new SelectionDialog();
-        arguments = new Bundle();
         arguments.putString(SELECTED_OPTIONS_MENU_ITEM_KEY,
             getString(R.string.selected_options_films_title));
         arguments.putStringArrayList(TITLE_LIST_KEY, movieTitles);
         selectionDialog.setArguments(arguments);
         selectionDialog.show(getSupportFragmentManager(), "dialog");
         break;
-      case R.id.menu_submit:
-        //TODO Disable when title is not selected
-        SubmitDialog submitDialog = new SubmitDialog();
-        submitDialog.show(getSupportFragmentManager(), "dialog");
-        break;
       case R.id.menu_bookmarks:
         progressSpinner.setVisibility(View.VISIBLE);
+        if (bookmarks.isEmpty()) {
+          Toast.makeText(this, getString(R.string.menu_no_bookmarks), Toast.LENGTH_LONG).show();
+        } else {
         populateMapFromBookmarks();
+        }
         progressSpinner.setVisibility(View.GONE);
+        break;
+      case R.id.menu_submit:
+        String savedTitle = sharedPref.getString(SHARED_PREF_LAST_TITLE, null);
+        if (savedTitle == null || savedTitle.equals(SHARED_PREF_BOOKMARKS)) {
+          Toast.makeText(this, R.string.menu_no_savedtitle, Toast.LENGTH_LONG).show();
+          break;
+        }
+        location = getDeviceLocation();
+        if (location.latitude == 0 & location.longitude == 0) {
+          // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
+        } else {
+          SubmitDialog submitDialog = new SubmitDialog();
+          arguments.putDouble(USER_LOCATION_LAT_KEY, location.latitude);
+          arguments.putDouble(USER_LOCATION_LONG_KEY, location.longitude);
+          submitDialog.setArguments(arguments);
+          submitDialog.show(getSupportFragmentManager(), "dialog");
+        }
         break;
       case R.id.sign_out:
         signOut();
@@ -539,6 +593,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // If request is cancelled, the result arrays are empty.
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          //TODO Optimize for more efficient battery usage
           locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
               2000, //Milliseconds
               10, //Distance

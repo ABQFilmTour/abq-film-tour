@@ -57,6 +57,11 @@ public class Image {
   private String url;
 
   /**
+   * The Google ID of the user who submitted this image.
+   */
+  private String googleId;
+
+  /**
    * Flag to verify that an image has been approved by an admin and can be displayed if security
    * is tightened. Probably unnecessary for now, but better to have if we implement later.
    */

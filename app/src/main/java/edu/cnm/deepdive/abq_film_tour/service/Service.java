@@ -1,14 +1,19 @@
 package edu.cnm.deepdive.abq_film_tour.service;
 
+import android.graphics.Bitmap;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
+import edu.cnm.deepdive.abq_film_tour.model.entity.Image;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.User;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import java.util.List;
 import java.util.UUID;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -42,9 +47,6 @@ public interface Service {
   @GET("rest/productions/")
   Call<List<Production>> getProductions(@Header("Authorization") String authorization);
 
-  @GET("rest/productions/{id}/")
-  Call<String> getPosterUrl(@Header("Authorization") String authorization, @Path(value = "id") UUID id);
-
   /**
    * Gets user comments.
    *
@@ -61,5 +63,14 @@ public interface Service {
    */
   @GET("rest/users/")
   Call<List<User>> getUsers(@Header("Authorization") String authorization);
+
+  @POST("rest/film_locations/")
+  Call<FilmLocation> postFilmLocation(@Header("Authorization") String authorization, @Body FilmLocation filmLocation);
+
+  @POST("rest/film_locations/{id}/user_comments")
+  Call<UserComment> postUserComment(@Header("Authorization") String authorization, @Path(value = "id") UUID id, @Body UserComment userComment);
+
+  @POST("rest/film_locations/{id}/images")
+  Call<UserComment> postImage(@Header("Authorization") String authorization, @Path(value = "id") UUID id, @Body Image image);
 
 }

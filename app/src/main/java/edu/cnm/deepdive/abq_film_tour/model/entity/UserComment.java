@@ -59,6 +59,11 @@ public class UserComment {
   private boolean approved;
 
   /**
+   * The Google ID of the user who submitted this comment.
+   */
+  private String googleId;
+
+  /**
    * Returns the UUID of this comment on the server.
    * @return the UUID of this comment on the server.
    */
