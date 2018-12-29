@@ -38,6 +38,16 @@
       android:name="com.google.android.geo.API_KEY"
       android:value="@string/google_maps_key"/>
 
+    <service android:name=".controller.CloudinaryListenerService"/>
+
+    <meta-data
+      android:name="CLOUDINARY_URL"
+      android:value="cloudinary://@abqfilmtour"/>
+
+    <meta-data
+      android:name="cloudinaryCallbackService"
+      android:value="edu.cnm.deepdive.abq_film_tour.controller.CloudinaryListenerService"/>
+
     <activity
       android:label="@string/title_activity_maps"
       android:name=".controller.MapsActivity"
