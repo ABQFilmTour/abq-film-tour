@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import com.cloudinary.android.MediaManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,8 +49,10 @@ import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import retrofit2.Call;
@@ -227,6 +230,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Log.d("Token", token);
     //TODO refresh token to ensure it isn't stale
     setContentView(R.layout.activity_maps);
+
     progressSpinner = findViewById(R.id.progress_spinner);
     progressSpinner.setVisibility(View.VISIBLE);
     //TODO Block the user from interacting with the UI while the spinner is doing its thing. Attempting anything from the options menu while data is loading will throw an exception.

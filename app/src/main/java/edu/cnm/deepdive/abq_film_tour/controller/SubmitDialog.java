@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Media;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -24,9 +23,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
 import edu.cnm.deepdive.abq_film_tour.R;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Dialog fragment for users to upload and submit changes.
@@ -53,6 +55,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
    */
   description;
 
+  private MapsActivity parentMap;
 
 
 
@@ -61,6 +64,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.submit_fragment, null, false);
+    parentMap = (MapsActivity)getActivity();
 
     uploadImage = view.findViewById(R.id.upload_image);
 
@@ -69,6 +73,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
 
     uploadImagebutton.setOnClickListener(this);
     registerButton.setOnClickListener(this);
+
 
     return  view;
   }
@@ -87,12 +92,26 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
 
     switch (v.getId()){
       case R.id.upload_image_btn:
-        Intent galleryIntenet = new Intent(Intent.ACTION_PICK,
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntenet, RESULT_LOAD_IMAGE);
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
         break;
       case R.id.register:
+
+        //Sam what does this do??
         Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
+        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        //uploads image to cloudinary
+        //TODO change to submitted image
+        String requestId = MediaManager.get().upload(R.drawable.back_ground)
+            .unsigned("wggcxbzh")
+            .option("site_name", "siteName")
+            .option("tags", "production")
+            //TODO set the siteName and production options to the actual values
+            .dispatch();
+        //TODO set up listener service and callback interface to check for progress of uploads
+        Toast.makeText(parentMap, "image uploaded", Toast.LENGTH_LONG).show();
         break;
     }
   }
@@ -151,4 +170,36 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
       super.onPostExecute(aVoid);
     }
   }
+
+  String requestId = MediaManager.get().upload("image name").callback(
+      new com.cloudinary.android.callback.UploadCallback() {
+        @Override
+        public void onStart(String requestId) {
+
+        }
+
+        @Override
+        public void onProgress(String requestId, long bytes, long totalBytes) {
+          Double progress = (double) bytes/totalBytes;
+          //TODO make spinner visible
+        }
+
+        @Override
+        public void onSuccess(String requestId, Map resultData) {
+
+        }
+
+        @Override
+        public void onError(String requestId, ErrorInfo error) {
+
+          Toast.makeText(parentMap, "unable to load image.", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onReschedule(String requestId, ErrorInfo error) {
+
+        }
+      })
+      .dispatch();
+
 }
