@@ -18,8 +18,10 @@ import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.cloudinary.android.callback.ErrorInfo;
 import edu.cnm.deepdive.abq_film_tour.R;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -27,7 +29,7 @@ import java.util.Objects;
  * the Options menu. It should not interact with the database at all, the dialog only retrieves a
  * list of title Strings and passes back the selected title.
  */
-public class SelectionDialog extends DialogFragment {
+public class SelectionDialog extends DialogFragment{
 
   /**
    * This is the parent activity to pass information back to.

@@ -16,7 +16,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Media;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -31,12 +30,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
 import com.google.android.gms.maps.model.LatLng;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
 import java.io.IOException;
 import java.util.ArrayList;
 import retrofit2.Call;
@@ -93,6 +95,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     System.out.println(savedTitle);
     production = parentMap.getProductionFromSavedTitle();
     View view = inflater.inflate(R.layout.submit_fragment, null, false);
+    parentMap = (MapsActivity)getActivity();
 
     uploadImage = view.findViewById(R.id.upload_image);
     uploadImagebutton = view.findViewById(R.id.upload_image_btn);
@@ -102,6 +105,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     registerButton.setOnClickListener(this);
     siteNameInput = view.findViewById(R.id.sitename_input);
     descriptionInput = view.findViewById(R.id.description_input);
+
 
     return  view;
   }
@@ -119,11 +123,25 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   public void onClick(View v) {
     switch (v.getId()){
       case R.id.upload_image_btn:
-        Intent galleryIntenet = new Intent(Intent.ACTION_PICK,
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntenet, RESULT_LOAD_IMAGE);
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
         break;
       case R.id.register:
+
+        Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
+        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        //uploads image to cloudinary
+        //TODO change to submitted image
+        String requestId = MediaManager.get().upload(R.drawable.back_ground)
+            .unsigned("wggcxbzh")
+            .option("site_name", "siteName")
+            .option("tags", "production")
+            //TODO set the siteName and production options to the actual values
+            .dispatch();
+        //TODO set up listener service and callback interface to check for progress of uploads
+        Toast.makeText(parentMap, "image uploaded", Toast.LENGTH_LONG).show();
 //        Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
         FilmLocationSubmitTask task = new FilmLocationSubmitTask(
             siteNameInput.getEditText().getText().toString(),
@@ -247,4 +265,36 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
       super.onPostExecute(aVoid);
     }
   }
+
+  String requestId = MediaManager.get().upload("image name").callback(
+      new com.cloudinary.android.callback.UploadCallback() {
+        @Override
+        public void onStart(String requestId) {
+
+        }
+
+        @Override
+        public void onProgress(String requestId, long bytes, long totalBytes) {
+          Double progress = (double) bytes/totalBytes;
+          //TODO make spinner visible
+        }
+
+        @Override
+        public void onSuccess(String requestId, Map resultData) {
+
+        }
+
+        @Override
+        public void onError(String requestId, ErrorInfo error) {
+
+          Toast.makeText(parentMap, "unable to load image.", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onReschedule(String requestId, ErrorInfo error) {
+
+        }
+      })
+      .dispatch();
+
 }
