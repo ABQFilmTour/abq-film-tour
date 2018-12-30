@@ -78,7 +78,6 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   private TextInputLayout descriptionInput;
   private FilmTourApplication filmTourApplication;
 
-
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -110,6 +109,35 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     return  view;
   }
 
+  com.cloudinary.android.callback.UploadCallback collaback = new com.cloudinary.android.callback.UploadCallback() {
+    @Override
+    public void onStart(String requestId) {
+
+    }
+
+    @Override
+    public void onProgress(String requestId, long bytes, long totalBytes) {
+      Double progress = (double) bytes/totalBytes;
+      //TODO make spinner visible
+    }
+
+    @Override
+    public void onSuccess(String requestId, Map resultData) {
+
+    }
+
+    @Override
+    public void onError(String requestId, ErrorInfo error) {
+
+      Toast.makeText(parentMap, "unable to load image.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onReschedule(String requestId, ErrorInfo error) {
+
+    }
+  };
+
   @Override
   public void onResume() {
     super.onResume();
@@ -129,15 +157,16 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
         break;
       case R.id.register:
 
-        Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
+//        Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
         //uploads image to cloudinary
         //TODO change to submitted image
-        String requestId = MediaManager.get().upload(R.drawable.back_ground)
+        String requestId = MediaManager.get().upload(R.drawable.bb_poster_image)
             .unsigned("wggcxbzh")
             .option("site_name", "siteName")
             .option("tags", "production")
+            .callback(collaback)
             //TODO set the siteName and production options to the actual values
             .dispatch();
         //TODO set up listener service and callback interface to check for progress of uploads
@@ -191,6 +220,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
       newFilmLocation.setLongCoordinate(String.valueOf(this.location.longitude));
       newFilmLocation.setProduction(production);
       newFilmLocation.setGoogleId(filmTourApplication.getAccount().getId());
+      newFilmLocation.setApproved(true);
       //TODO Create user comment with description info
     }
 
@@ -265,36 +295,5 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
       super.onPostExecute(aVoid);
     }
   }
-
-  String requestId = MediaManager.get().upload("image name").callback(
-      new com.cloudinary.android.callback.UploadCallback() {
-        @Override
-        public void onStart(String requestId) {
-
-        }
-
-        @Override
-        public void onProgress(String requestId, long bytes, long totalBytes) {
-          Double progress = (double) bytes/totalBytes;
-          //TODO make spinner visible
-        }
-
-        @Override
-        public void onSuccess(String requestId, Map resultData) {
-
-        }
-
-        @Override
-        public void onError(String requestId, ErrorInfo error) {
-
-          Toast.makeText(parentMap, "unable to load image.", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onReschedule(String requestId, ErrorInfo error) {
-
-        }
-      })
-      .dispatch();
 
 }

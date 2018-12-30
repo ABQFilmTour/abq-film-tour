@@ -164,6 +164,22 @@ public class LocationActivity extends AppCompatActivity {
     editor.apply();
   }
 
+  public FilmLocation getLocation() {
+    return location;
+  }
+
+  public void setLocation(FilmLocation location) {
+    this.location = location;
+  }
+
+  public Production getProduction() {
+    return production;
+  }
+
+  public void setProduction(Production production) {
+    this.production = production;
+  }
+
   /**
    * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment}, and {@link
    * LocationActivity} and tie them to a specific {@link FilmLocation} Returns a boolean if the
@@ -203,6 +219,8 @@ public class LocationActivity extends AppCompatActivity {
 
       return successfulQuery;
     }
+
+
 
     @Override
     protected void onPostExecute(Boolean successfulQuery) {

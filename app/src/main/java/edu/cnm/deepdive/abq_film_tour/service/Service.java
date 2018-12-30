@@ -67,8 +67,8 @@ public interface Service {
   @POST("rest/film_locations/")
   Call<FilmLocation> postFilmLocation(@Header("Authorization") String authorization, @Body FilmLocation filmLocation);
 
-  @POST("rest/film_locations/{id}/user_comments")
-  Call<UserComment> postUserComment(@Header("Authorization") String authorization, @Path(value = "id") UUID id, @Body UserComment userComment);
+  @POST("rest/film_locations/{id}/user_comments/")
+  Call<UserComment> postUserComment(@Header("Authorization") String authorization, @Body UserComment userComment, @Path(value = "id") UUID id);
 
   @POST("rest/film_locations/{id}/images")
   Call<UserComment> postImage(@Header("Authorization") String authorization, @Path(value = "id") UUID id, @Body Image image);
