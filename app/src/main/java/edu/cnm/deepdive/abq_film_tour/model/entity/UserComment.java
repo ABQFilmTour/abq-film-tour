@@ -30,7 +30,6 @@ public class UserComment {
   /**
    * The timestamp of when this comment was submitted.
    */
-  @Expose
   private Date created;
 
   /**
@@ -149,5 +148,13 @@ public class UserComment {
 
   public void setApproved(boolean approved) {
     this.approved = approved;
+  }
+
+  public String getGoogleId() {
+    return googleId;
+  }
+
+  public void setGoogleId(String googleId) {
+    this.googleId = googleId;
   }
 }
