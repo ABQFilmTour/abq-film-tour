@@ -2,10 +2,8 @@
 <LinearLayout
   android:id="@+id/submit_comment_fragment"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
+  android:layout_height="wrap_content"
   android:layout_gravity="center"
   android:orientation="vertical"
   android:padding="10dp"
@@ -15,7 +13,7 @@
   <android.support.design.widget.TextInputLayout
     android:id="@+id/user_comment_input"
     android:layout_width="match_parent"
-    android:layout_height="361dp"
+    android:layout_height="360dp"
     android:paddingTop="20dp"
     android:background="#D3D3D3"
     android:gravity="center_horizontal">
@@ -24,7 +22,7 @@
       <EditText
         android:id="@+id/register_comment_description"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:hint="Your Review"
         android:maxEms="100"/>
 
