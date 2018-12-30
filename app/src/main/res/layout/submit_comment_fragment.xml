@@ -13,19 +13,13 @@
   android:background="@color/colorPrimaryDark">
 
   <android.support.design.widget.TextInputLayout
-    android:id="@+id/sitename_input"
+    android:id="@+id/user_comment_input"
     android:layout_width="match_parent"
     android:layout_height="361dp"
     android:paddingTop="20dp"
     android:background="#D3D3D3"
     android:gravity="center_horizontal">
 
-    <android.support.design.widget.TextInputLayout
-      android:id="@+id/description_input"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@color/lightgrey_edit_text_background"
-      android:gravity="center_horizontal">
 
       <EditText
         android:id="@+id/register_comment_description"
@@ -36,16 +30,15 @@
 
     </android.support.design.widget.TextInputLayout>
 
-  </android.support.design.widget.TextInputLayout>
 
   <Button
-    android:id="@+id/register"
+    android:id="@+id/user_comment_button"
     android:textStyle="bold"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:background="@color/colorAccent"
-    android:text="Register"
+    android:text="Send"
     android:textColor="@color/colorPrimaryDark"/>
 
 </LinearLayout>

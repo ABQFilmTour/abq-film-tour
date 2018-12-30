@@ -251,8 +251,8 @@ public class LocationActivity extends AppCompatActivity {
         //Setup your review button
         yourReviewButton = findViewById(R.id.register_review_button);
         yourReviewButton.setOnClickListener(v -> {
-          Intent intent = new Intent(LocationActivity.this, SubmitCommentDialog.class);
-          startActivity(intent);
+          SubmitCommentDialog submitCommentDialog = new SubmitCommentDialog();
+          submitCommentDialog.show(getSupportFragmentManager(), "whatever");
         });
 
         //Setup comments
