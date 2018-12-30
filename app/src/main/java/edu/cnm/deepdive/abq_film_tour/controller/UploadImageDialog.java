@@ -43,6 +43,9 @@ public class UploadImageDialog extends DialogFragment implements View.OnClickLis
     userImageButton = view.findViewById(R.id.user_image_button);
     sendImageButton = view.findViewById(R.id.send_image_button);
 
+    userImageButton.setOnClickListener(this);
+    sendImageButton.setOnClickListener(this);
+
     return view;
   }
 

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.q42.android.scrollingimageview.ScrollingImageView;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
@@ -50,7 +51,7 @@ import retrofit2.Response;
  */
 public class LocationActivity extends AppCompatActivity {
 
-  private ImageView locationImage;
+  private ScrollingImageView locationImage;
   private ImageView locationPosterImage;
   private TextView locationSiteName;
   private TextView locationProductionTitle;
@@ -106,6 +107,7 @@ public class LocationActivity extends AppCompatActivity {
     //Queries the database
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
+
   }
 
   @Override
