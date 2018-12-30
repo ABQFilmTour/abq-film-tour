@@ -151,14 +151,14 @@
           android:id="@+id/register_review_button"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:background="@drawable/round_border_black"
+          android:background="@drawable/round_border_orange"
           android:hint="Your Review"
           android:textColor="@color/dialogTextColor"/>
         <Button
           android:id="@+id/register_image_button"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:background="@drawable/round_border_black"
+          android:background="@drawable/round_border_orange"
           android:hint="Upload Image"
           android:textColor="@color/dialogTextColor"/>
 

@@ -64,6 +64,7 @@ public class LocationActivity extends AppCompatActivity {
   private String token;
   private ImageButton bookmarkButton;
   private Button yourReviewButton;
+  private Button yourImageButton;
   private SharedPreferences sharedPref;
   private Set<String> bookmarks;
 
@@ -253,6 +254,13 @@ public class LocationActivity extends AppCompatActivity {
         yourReviewButton.setOnClickListener(v -> {
           SubmitCommentDialog submitCommentDialog = new SubmitCommentDialog();
           submitCommentDialog.show(getSupportFragmentManager(), "whatever");
+        });
+
+        //Setup your image button
+        yourImageButton = findViewById(R.id.register_image_button);
+        yourImageButton.setOnClickListener(v -> {
+          UploadImageDialog uploadImageDialog = new UploadImageDialog();
+          uploadImageDialog.show(getSupportFragmentManager(), "whatever");
         });
 
         //Setup comments
