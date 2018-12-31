@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -20,6 +21,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.cloudinary.android.MediaManager;
 import edu.cnm.deepdive.abq_film_tour.R;
+import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
+import edu.cnm.deepdive.abq_film_tour.model.entity.Image;
+import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
+import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
+import java.io.IOException;
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class UploadImageDialog extends DialogFragment implements View.OnClickListener {
@@ -30,14 +38,27 @@ public class UploadImageDialog extends DialogFragment implements View.OnClickLis
 
   Button userImageButton, sendImageButton;
 
-  private MapsActivity parentMap;
+  private FilmTourApplication filmTourApplication;
+  private LocationActivity parentActivity;
+  FilmLocation location;
+  Production production;
+
+  private String token;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
 
+    filmTourApplication = (FilmTourApplication) getActivity().getApplication();
+    parentActivity = (LocationActivity) getActivity();
+    location = parentActivity.getLocation();
+    production = parentActivity.getProduction();
+
+    token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
     View view = inflater.inflate(R.layout.submit_image_fragment, null, false);
+
+    location = parentActivity.getLocation();
 
     userUploadImage = view.findViewById(R.id.user_upload_image);
     userImageButton = view.findViewById(R.id.user_image_button);
@@ -68,23 +89,62 @@ public class UploadImageDialog extends DialogFragment implements View.OnClickLis
         break;
       case R.id.send_image_button:
 
-        Bitmap image = ((BitmapDrawable) userUploadImage.getDrawable()).getBitmap();
-        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
+//        Bitmap image = ((BitmapDrawable) userUploadImage.getDrawable()).getBitmap();
+//        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         //uploads image to cloudinary
-        //TODO change to submitted image
-        String requestId = MediaManager.get().upload(R.drawable.back_ground)
-            .unsigned("wggcxbzh")
-            .option("site_name", "siteName")
-            .option("tags", "production")
-            //TODO set the siteName and production options to the actual values
-            .dispatch();
-        //TODO set up listener service and callback interface to check for progress of uploads
-        Toast.makeText(parentMap, "image uploaded", Toast.LENGTH_LONG).show();
-        break;
+        new ImageUploadTask().execute();
     }
   }
 
+
+  private class ImageUploadTask extends AsyncTask<Void, Void, Boolean> {
+
+    //Note that this is only used to store a reference to an image in the database, it is not an
+    //actual image.
+    Image newImage;
+
+    @Override
+    protected void onPreExecute() {
+      newImage = new Image();
+      newImage.setFilmLocation(location);
+      newImage.setGoogleId(filmTourApplication.getAccount().getId());
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... voids) {
+      Boolean successfulQuery = false;
+      Call<Image> call = filmTourApplication.getService().postImage(token, newImage, location.getId());
+      try {
+        Response<Image> response = call.execute();
+        if (response.isSuccessful()) {
+          successfulQuery = true;
+        } else {
+          System.out.println(response.code());
+        }
+      } catch (IOException e) {
+        //TODO Improve exception handling
+      }
+      return successfulQuery;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean successfulQuery) {
+      if (successfulQuery) {
+        //TODO change to submitted image
+        String requestId = MediaManager.get().upload(R.drawable.mg_2390_small)
+            .unsigned("jgg1ktxp") //Does this need to be hidden?
+//            .option("site_name", location.getSiteName()) //Where is this stored?
+            .option("public_id", newImage.getId())
+//            .option("tags", "test")
+//            .option("tags", production.getTitle())
+//            .option("tags", newImage.getId()) //Only storing the ID here for easy reference
+            .dispatch();
+        //TODO set up listener service and callback interface to check for progress of uploads
+        Toast.makeText(parentActivity, "image uploaded", Toast.LENGTH_LONG).show();
+        dismiss();
+      } else {
+        Toast.makeText(parentActivity, "Failed", Toast.LENGTH_LONG).show();
+      }
+    }
+  }
 }
-
-

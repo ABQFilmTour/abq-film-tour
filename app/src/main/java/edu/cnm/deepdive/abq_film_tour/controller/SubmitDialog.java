@@ -91,7 +91,6 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     if (savedTitle == null || savedTitle.equals(SHARED_PREF_BOOKMARKS)) {
       dismiss(); //All incoming cases should be handled, but if for some reason the savedTitle is invalid, kill the fragment.
     }
-    System.out.println(savedTitle);
     production = parentMap.getProductionFromSavedTitle();
     View view = inflater.inflate(R.layout.submit_fragment, null, false);
     parentMap = (MapsActivity)getActivity();

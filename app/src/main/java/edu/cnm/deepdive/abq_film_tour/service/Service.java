@@ -71,6 +71,6 @@ public interface Service {
   Call<UserComment> postUserComment(@Header("Authorization") String authorization, @Body UserComment userComment, @Path(value = "id") UUID id);
 
   @POST("rest/film_locations/{id}/images")
-  Call<UserComment> postImage(@Header("Authorization") String authorization, @Path(value = "id") UUID id, @Body Image image);
+  Call<Image> postImage(@Header("Authorization") String authorization, @Body Image image, @Path(value = "id") UUID id);
 
 }

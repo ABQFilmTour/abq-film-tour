@@ -171,4 +171,12 @@ public class Image {
   public void setApproved(boolean approved) {
     this.approved = approved;
   }
+
+  public String getGoogleId() {
+    return googleId;
+  }
+
+  public void setGoogleId(String googleId) {
+    this.googleId = googleId;
+  }
 }
