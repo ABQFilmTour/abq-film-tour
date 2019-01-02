@@ -24,16 +24,17 @@
       android:layout_height="wrap_content">
 
 
-  <com.q42.android.scrollingimageview.ScrollingImageView
-    android:id="@+id/image_view_header"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    scrolling_image_view:speed="1dp"
-    android:adjustViewBounds="false"
-    app:layout_constraintDimensionRatio="16:9"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    scrolling_image_view:src="@drawable/mg_2390_small"/>
+
+      <com.q42.android.scrollingimageview.ScrollingImageView
+        android:id="@+id/image_view_header"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        scrolling_image_view:speed="1dp"
+        android:adjustViewBounds="false"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        scrolling_image_view:src="@drawable/mg_2390_small"/>
 
   <ImageView
     android:id="@+id/image_view_poster"
