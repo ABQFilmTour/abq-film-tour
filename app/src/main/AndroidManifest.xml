@@ -38,7 +38,7 @@
       android:name="com.google.android.geo.API_KEY"
       android:value="@string/google_maps_key"/>
 
-    <service android:name=".controller.CloudinaryListenerService"/>
+    <service android:name=".imageShelve.CloudinaryListenerService"/>
 
     <meta-data
       android:name="CLOUDINARY_URL"
@@ -65,9 +65,9 @@
       android:name=".controller.LocationActivity"
       android:screenOrientation="portrait">
     </activity>
-    <activity android:name=".ImageGallery">
+    <activity android:name=".imageShelve.ImageGallery">
     </activity>
-    <activity android:name=".controller.UserImageActivity">
+    <activity android:name=".imageShelve.UserImageActivity">
     </activity>
   </application>
 

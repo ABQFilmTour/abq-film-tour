@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import com.cloudinary.android.MediaManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,13 +45,12 @@ import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
+import edu.cnm.deepdive.abq_film_tour.view.CustomSnippetAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import retrofit2.Call;
@@ -568,11 +566,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location.latitude == 0 & location.longitude == 0) {
           // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
         } else {
-          SubmitDialog submitDialog = new SubmitDialog();
+          SubmitLocationDialog submitLocationDialog = new SubmitLocationDialog();
           arguments.putDouble(USER_LOCATION_LAT_KEY, location.latitude);
           arguments.putDouble(USER_LOCATION_LONG_KEY, location.longitude);
-          submitDialog.setArguments(arguments);
-          submitDialog.show(getSupportFragmentManager(), "dialog");
+          submitLocationDialog.setArguments(arguments);
+          submitLocationDialog.show(getSupportFragmentManager(), "dialog");
         }
         break;
       case R.id.sign_out:

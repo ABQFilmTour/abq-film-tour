@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,13 +11,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.util.ArraySet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -35,14 +30,12 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
-import java.io.FileNotFoundException;
+import edu.cnm.deepdive.abq_film_tour.view.CommentAdapter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -67,7 +60,7 @@ public class LocationActivity extends AppCompatActivity {
   private String token;
   private ImageButton bookmarkButton;
   private Button yourReviewButton;
-  private Button yourImageButton;
+//  private Button yourImageButton;
   private SharedPreferences sharedPref;
   private Set<String> bookmarks;
 
@@ -278,12 +271,14 @@ public class LocationActivity extends AppCompatActivity {
           submitCommentDialog.show(getSupportFragmentManager(), "whatever");
         });
 
+        /*
         //Setup your image button
         yourImageButton = findViewById(R.id.register_image_button);
         yourImageButton.setOnClickListener(v -> {
           UploadImageDialog uploadImageDialog = new UploadImageDialog();
           uploadImageDialog.show(getSupportFragmentManager(), "whatever");
         });
+        */
 
         //Setup comments
         ListView commentListView = findViewById(R.id.comment_list_view);
