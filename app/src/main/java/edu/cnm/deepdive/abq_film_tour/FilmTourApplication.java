@@ -1,5 +1,7 @@
 package edu.cnm.deepdive.abq_film_tour;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Application;
 import com.cloudinary.android.MediaManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -38,15 +40,6 @@ public class FilmTourApplication extends Application {
         .build();
     setupService();
     client = GoogleSignIn.getClient(this, options);
-
-    //initializes Media manager. The entry point of the library is the MediaManager object.
-    // The MediaManager.init() method must be called once per application lifecycle before
-    // using the Android library, preferably in Application.onCreate(). Setting the
-    // configuration parameters can be done either when initializing the library,
-    // or by using the CLOUDINARY_URL meta-data property in the AndroidManifest.xml file.
-    //We are using the meta-data property.
-
-    MediaManager.init(this);
   }
 
   private void setupService() {
@@ -57,7 +50,6 @@ public class FilmTourApplication extends Application {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build();
     service = retrofit.create(Service.class);
-//    apiKey = BuildConfig.API_KEY;
   }
 
   /**

@@ -31,6 +31,7 @@ import java.util.Objects;
  */
 public class SelectionDialog extends DialogFragment{
 
+  public static final int TRANSPARENCY = 50;
   /**
    * This is the parent activity to pass information back to.
    */
@@ -74,7 +75,7 @@ public class SelectionDialog extends DialogFragment{
     params.width = LayoutParams.MATCH_PARENT;
     params.height = LayoutParams.MATCH_PARENT;
     final Drawable d = new ColorDrawable(Color.BLACK);
-    d.setAlpha(50); //FIXME what is this magic value?
+    d.setAlpha(TRANSPARENCY);
     getDialog().getWindow().setBackgroundDrawable(d);
     getDialog().getWindow().setAttributes(params);
     super.onResume();

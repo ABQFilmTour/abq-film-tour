@@ -527,10 +527,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean handled = true;
     LatLng location;
     Bundle arguments = new Bundle();
-      /*if (this.progressSpinner.getVisibility() == View.VISIBLE) {
+    if (this.progressSpinner.getVisibility() == View.VISIBLE) {
         Toast.makeText(this, "Hold yer horses!!!", Toast.LENGTH_SHORT).show();
         return false;
-      }*/
+    }
     switch (item.getItemId()) {
       default:
         handled = super.onOptionsItemSelected(item);
@@ -743,7 +743,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    *
    * @param errorMessage a String message to display to the user.
    */
-  private void signOutWithAlertDialog(String errorMessage) {
+  void signOutWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)

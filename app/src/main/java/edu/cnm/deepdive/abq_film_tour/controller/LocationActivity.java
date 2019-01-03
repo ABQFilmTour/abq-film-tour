@@ -1,5 +1,8 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
+
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
@@ -59,7 +62,7 @@ public class LocationActivity extends AppCompatActivity {
   private String token;
   private ImageButton bookmarkButton;
   private Button commentButton;
-//  private Button imageButton;
+  //  private Button imageButton;
   private SharedPreferences sharedPref;
   private Set<String> bookmarks;
 
@@ -94,12 +97,13 @@ public class LocationActivity extends AppCompatActivity {
     //Queries the database
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
-
   }
 
   private void loadPosterImage() {
     //TODO This is the "lazy method" to add an authorization header, there's a cleaner method using Modules.
-    GlideUrl urlWithLazyHeader = new GlideUrl(String.format(getString(R.string.poster_url_format), getString(R.string.base_url), production.getId()),
+    GlideUrl urlWithLazyHeader = new GlideUrl(String
+        .format(getString(R.string.poster_url_format), getString(R.string.base_url),
+            production.getId()),
         new LazyHeaders.Builder()
             .addHeader("Authorization", token)
             .build());
@@ -136,6 +140,44 @@ public class LocationActivity extends AppCompatActivity {
       SubmitCommentDialog submitCommentDialog = new SubmitCommentDialog();
       submitCommentDialog.show(getSupportFragmentManager(), "whatever");
     });
+  }
+
+  private void setupComments() {
+    ListView commentListView = findViewById(R.id.comment_list_view);
+    CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
+    commentListView.setAdapter(commentAdapter);
+
+    //TODO Fix scrolling
+    commentListView.setOnTouchListener(new OnTouchListener() {
+      // Setting on Touch Listener for handling the touch inside ScrollView
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        // Disallow the touch request for parent scroll on touch of child view
+        v.getParent().requestDisallowInterceptTouchEvent(true);
+        return false;
+      }
+    });
+  }
+
+  private void setupImdbLink() {
+    //Setup IMDB link
+    locationImdb.setText(R.string.imdb_link);
+    locationImdb.setOnClickListener(v -> {
+      Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
+      Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
+      startActivity(intent);
+    });
+  }
+
+  private void setupTextViews() {
+    //Setup basic textviews.
+    production = location.getProduction();
+    String locationText = location.getSiteName();
+    locationSiteName.setText(locationText);
+    String productionTitle = production.getTitle();
+    locationProductionTitle.setText(productionTitle);
+    String productionPlot = production.getPlot();
+    locationPlot.setText(productionPlot);
   }
 
   private void setupViews() {
@@ -209,13 +251,14 @@ public class LocationActivity extends AppCompatActivity {
     return location;
   }
 
+  Production getProduction() {
+    return production;
+  }
+
   public void setLocation(FilmLocation location) {
     this.location = location;
   }
 
-  Production getProduction() {
-    return production;
-  }
 
   public void setProduction(Production production) {
     this.production = production;
@@ -251,71 +294,42 @@ public class LocationActivity extends AppCompatActivity {
         } else {
           Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(locationCallResponse.code()));
           Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(commentCallResponse.code()));
-          //TODO Make new error string format for both response codes
+          Response response = locationCallResponse; // There should be no instance where the locationCallResponse is different from the commentCallResponse.
+          if (response.code() == HTTP_UNAUTHORIZED) {
+            errorMessage = getString(R.string.error_unauthorized);
+          } else if (response.code() == HTTP_FORBIDDEN) {
+            //TODO Figure out how to retrieve the error description (it contains ban info)
+            errorMessage = getString(R.string.error_forbidden);
+          }
         }
       } catch (IOException e) {
         Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, e.getMessage());
         errorMessage = getString(R.string.error_io);
       }
-
       return successfulQuery;
     }
-
 
 
     @Override
     protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
         super.onPostExecute(successfulQuery);
-        //Setup basic textviews.
-        production = location.getProduction();
-        String locationText = location.getSiteName();
-        locationSiteName.setText(locationText);
-        String productionTitle = production.getTitle();
-        locationProductionTitle.setText(productionTitle);
-        String productionPlot = production.getPlot();
-        locationPlot.setText(productionPlot);
-
-        //Setup IMDB link
-        locationImdb.setText(R.string.imdb_link);
-        locationImdb.setOnClickListener(v -> {
-          Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
-          Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
-          startActivity(intent);
-        });
-
+        setupTextViews();
+        setupImdbLink();
         loadPosterImage();
-
-        /*
-        //Setup image button
+        setupBookmarkListener();
+        setupCommentButtonListener();
+        setupComments();
+        /* A method like this will set up an image button when the image feature is implemented.
         imageButton = findViewById(R.id.register_image_button);
         imageButton.setOnClickListener(v -> {
           UploadImageDialog uploadImageDialog = new UploadImageDialog();
           uploadImageDialog.show(getSupportFragmentManager(), "whatever");
-        });
-        */
-
-        setupBookmarkListener();
-
-        setupCommentButtonListener();
-
-        //Setup comments
-        ListView commentListView = findViewById(R.id.comment_list_view);
-        CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
-        commentListView.setAdapter(commentAdapter);
-
-        commentListView.setOnTouchListener(new OnTouchListener() {
-          // Setting on Touch Listener for handling the touch inside ScrollView
-          @Override
-          public boolean onTouch(View v, MotionEvent event) {
-            // Disallow the touch request for parent scroll on touch of child view
-            v.getParent().requestDisallowInterceptTouchEvent(true);
-            return false;
-          }
-        });
-
+        });*/
       } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
         signOutWithAlertDialog(errorMessage);
+      } else if (errorMessage.equals(getString(R.string.error_forbidden))) {
+        exitWithAlertDialog(errorMessage);
       } else {
         exitWithAlertDialog(errorMessage);
       }
