@@ -51,13 +51,12 @@
   <string name="production_poster">poster of the production</string>
   <string name="bookmark">Bookmark</string>
   <string name="dimension_ratio_image_header">16:9</string>
-  <string name="dimenstion_ratio_poster">w,2:3</string>
+  <string name="dimension_ratio_poster">w,2:3</string>
   <string name="submit_comment">Submit Comment.</string>
   <string name="submit_location_button_format">Submit for %s</string>
   <string name="upload_image">Upload Image</string>
   <string name="your_comment">Your Comment</string>
   <string name="send">Send</string>
-  <string name="upload_image">Upload Image</string>
   <string name="submit_new_site_name">Submit new site name</string>
   <string name="description">Description</string>
   <string name="submit">Submit</string>

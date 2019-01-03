@@ -41,7 +41,7 @@
     android:layout_height="@dimen/poster_height"
     android:layout_marginBottom="@dimen/margin_small"
     app:layout_constraintBottom_toBottomOf="@+id/image_view_header"
-    app:layout_constraintDimensionRatio="@string/dimenstion_ratio_poster"
+    app:layout_constraintDimensionRatio="@string/dimension_ratio_poster"
     app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
     app:layout_constraintTop_toBottomOf="@+id/image_view_header"
     android:contentDescription="@string/production_poster"/>
