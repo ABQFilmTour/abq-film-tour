@@ -158,6 +158,7 @@
           android:background="@drawable/round_border_orange"
           android:hint="Your Review"
           android:textColor="@color/dialogTextColor"/>
+        <!-- Image feature to be implemented later
         <Button
           android:id="@+id/register_image_button"
           android:layout_width="match_parent"
@@ -165,6 +166,7 @@
           android:background="@drawable/round_border_orange"
           android:hint="Upload Image"
           android:textColor="@color/dialogTextColor"/>
+         -->
 
       </LinearLayout>
 

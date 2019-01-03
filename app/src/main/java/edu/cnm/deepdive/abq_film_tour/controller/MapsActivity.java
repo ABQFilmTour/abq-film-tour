@@ -566,11 +566,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location.latitude == 0 & location.longitude == 0) {
           // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
         } else {
-          SubmitDialog submitDialog = new SubmitDialog();
+          SubmitLocationDialog submitLocationDialog = new SubmitLocationDialog();
           arguments.putDouble(USER_LOCATION_LAT_KEY, location.latitude);
           arguments.putDouble(USER_LOCATION_LONG_KEY, location.longitude);
-          submitDialog.setArguments(arguments);
-          submitDialog.show(getSupportFragmentManager(), "dialog");
+          submitLocationDialog.setArguments(arguments);
+          submitLocationDialog.show(getSupportFragmentManager(), "dialog");
         }
         break;
       case R.id.sign_out:

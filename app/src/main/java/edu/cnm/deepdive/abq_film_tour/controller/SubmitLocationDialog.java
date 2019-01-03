@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,34 +39,31 @@ import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.io.IOException;
-import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Response;
 
 /**
  * Dialog fragment for users to upload and submit changes.
  */
-public class SubmitDialog extends DialogFragment implements View.OnClickListener{
+public class SubmitLocationDialog extends DialogFragment implements View.OnClickListener{
   private static final int RESULT_LOAD_IMAGE = 1;
 
   /**
    * The Uploaded image.
    */
-  ImageView uploadImage;
+//  ImageView uploadImage;
   /**
    * Button to upload an image.
    */
-  Button uploadImagebutton, /**
-   * Button to register.
-   */
-  registerButton;
+  Button registerButton;
   /**
    * Field to enter the name of the site location.
    */
-  EditText siteName, /**
+  EditText siteName;
+  /**
    * Field to enter a short discription of the image.
    */
-  description;
+  EditText description;
 
   private MapsActivity parentMap;
   private SharedPreferences sharedPref;
@@ -92,14 +88,14 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
       dismiss(); //All incoming cases should be handled, but if for some reason the savedTitle is invalid, kill the fragment.
     }
     production = parentMap.getProductionFromSavedTitle();
-    View view = inflater.inflate(R.layout.submit_fragment, null, false);
+    View view = inflater.inflate(R.layout.submit_location_fragment, null, false);
     parentMap = (MapsActivity)getActivity();
 
-    uploadImage = view.findViewById(R.id.upload_image);
-    uploadImagebutton = view.findViewById(R.id.upload_image_btn);
+//    uploadImage = view.findViewById(R.id.upload_image);
+//    uploadImagebutton = view.findViewById(R.id.upload_image_btn);
     registerButton = view.findViewById(R.id.register);
     registerButton.setText(String.format("Submit for %s", production.getTitle()));
-    uploadImagebutton.setOnClickListener(this);
+//    uploadImagebutton.setOnClickListener(this);
     registerButton.setOnClickListener(this);
     siteNameInput = view.findViewById(R.id.sitename_input);
     descriptionInput = view.findViewById(R.id.description_input);
@@ -149,11 +145,13 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
   @Override
   public void onClick(View v) {
     switch (v.getId()){
+      /**
       case R.id.upload_image_btn:
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
         break;
+     **/
       case R.id.register:
 
 //        Bitmap image = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
@@ -186,7 +184,7 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
       Uri selectedImage = data.getData();
-      uploadImage.setImageURI(selectedImage);
+//      uploadImage.setImageURI(selectedImage);
     }
   }
 
@@ -252,47 +250,6 @@ public class SubmitDialog extends DialogFragment implements View.OnClickListener
       }
     }
 
-  }
-
-  private class ImageUploadTask extends AsyncTask<Void, Void, Void>{
-
-    /**
-     * The Image that is being uploaded.
-     */
-    Bitmap image;
-    /**
-     * The Site location name.
-     */
-    String siteName;
-    /**
-     * Description of the image.
-     */
-    String description;
-
-    /**
-     * Instantiates a new Register.
-     *
-     * @param image the uploaded image
-     */
-    public ImageUploadTask(Bitmap image){
-      this.image = image;
-    }
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      image.compress(CompressFormat.JPEG, 100, byteArrayOutputStream);
-      String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(),
-          Base64.DEFAULT);
-
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-      super.onPostExecute(aVoid);
-    }
   }
 
 }

@@ -60,7 +60,7 @@ public class LocationActivity extends AppCompatActivity {
   private String token;
   private ImageButton bookmarkButton;
   private Button yourReviewButton;
-  private Button yourImageButton;
+//  private Button yourImageButton;
   private SharedPreferences sharedPref;
   private Set<String> bookmarks;
 
