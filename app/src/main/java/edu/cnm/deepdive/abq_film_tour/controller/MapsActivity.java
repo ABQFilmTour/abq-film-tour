@@ -591,7 +591,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         break;
       case R.id.sign_out:
-        signOut();
+        filmTourApplication.signOut();
         break;
     }
     return handled;

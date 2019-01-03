@@ -55,5 +55,7 @@
   <string name="submit_comment">Submit Comment.</string>
   <string name="submit_location_button_format">Submit for %s</string>
   <string name="upload_image">Upload Image</string>
+  <string name="submission_successful">Post submitted! It will display once approved.</string>
+  <string name="submission_failed">We were unable to process your request.</string>
 
 </resources>

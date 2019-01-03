@@ -212,35 +212,6 @@ public class LocationActivity extends AppCompatActivity {
     alert.show();
   }
 
-  /**
-   * This method signs the Google account out of the application and returns the user to the login
-   * activity.
-   */
-  private void signOut() {
-    FilmTourApplication app = FilmTourApplication.getInstance();
-    app.getClient().signOut().addOnCompleteListener(this, (task) -> {
-      app.setAccount(null);
-      Intent intent = new Intent(this, LoginActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-      startActivity(intent);
-    });
-  }
-
-  /**
-   * Creates an alert dialog with a given error message and signs out, used for cleaner exception
-   * handling. Ideal for 401 as it invites the user to try to sign in again.
-   *
-   * @param errorMessage a String message to display to the user.
-   */
-  private void signOutWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
-    alertDialog.setMessage(errorMessage)
-        .setCancelable(false)
-        .setPositiveButton(R.string.alert_signout, (dialog, which) -> signOut());
-    AlertDialog alert = alertDialog.create();
-    alert.show();
-  }
-
   private void saveBookmarksToSharedPref(Set<String> bookmarks) {
     SharedPreferences.Editor editor = sharedPref.edit();
     editor.putStringSet(SHARED_PREF_BOOKMARKS, bookmarks);
@@ -326,7 +297,7 @@ public class LocationActivity extends AppCompatActivity {
           uploadImageDialog.show(getSupportFragmentManager(), "whatever");
         });*/
       } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
-        signOutWithAlertDialog(errorMessage);
+        filmTourApplication.signOutWithAlertDialog(errorMessage);
       } else if (errorMessage.equals(getString(R.string.error_forbidden))) {
         exitWithAlertDialog(errorMessage);
       } else {

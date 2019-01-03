@@ -1,14 +1,11 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
-import static android.app.Activity.RESULT_OK;
 import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.USER_LOCATION_LAT_KEY;
 import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.USER_LOCATION_LONG_KEY;
 import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.SHARED_PREF_LAST_TITLE;
 import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.SHARED_PREF_BOOKMARKS;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -44,7 +41,6 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
   private Production production;
   private String token;
   private TextInputLayout siteNameInput;
-  private TextInputLayout descriptionInput;
   private FilmTourApplication filmTourApplication;
 
   @Nullable
@@ -67,7 +63,6 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
     submitButton.setText(String.format(getString(R.string.submit_location_button_format), production.getTitle()));
     submitButton.setOnClickListener(this);
     siteNameInput = view.findViewById(R.id.sitename_input);
-    descriptionInput = view.findViewById(R.id.description_input);
     return view;
   }
 
@@ -83,9 +78,8 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
   public void onClick(View v) {
     switch (v.getId()){
       case R.id.submit:
-        FilmLocationSubmitTask task = new FilmLocationSubmitTask(
+        SubmitLocationTask task = new SubmitLocationTask(
             Objects.requireNonNull(siteNameInput.getEditText()).getText().toString(),
-            Objects.requireNonNull(descriptionInput.getEditText()).getText().toString(),
             getUserLocation(),
             production);
         task.execute();
@@ -98,17 +92,16 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
     return new LatLng(getArguments().getDouble(USER_LOCATION_LAT_KEY), getArguments().getDouble(USER_LOCATION_LONG_KEY));
   }
 
-  private class FilmLocationSubmitTask extends AsyncTask<Void, Void, Boolean> {
+  private class SubmitLocationTask extends AsyncTask<Void, Void, Boolean> {
 
     String siteName;
-    String description;
     LatLng location;
     Production production;
     FilmLocation newFilmLocation;
 
-    public FilmLocationSubmitTask(String siteName, String description, LatLng location, Production production) {
+    SubmitLocationTask(String siteName, LatLng location,
+        Production production) {
       this.siteName = siteName;
-      this.description = description;
       this.location = location;
       this.production = production;
     }
@@ -117,18 +110,17 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
     protected void onPreExecute() {
       super.onPreExecute();
       newFilmLocation = new FilmLocation();
+      newFilmLocation.setProduction(production);
+      newFilmLocation.setGoogleId(filmTourApplication.getAccount().getId());
       newFilmLocation.setSiteName(this.siteName);
       newFilmLocation.setLatCoordinate(String.valueOf(this.location.latitude));
       newFilmLocation.setLongCoordinate(String.valueOf(this.location.longitude));
-      newFilmLocation.setProduction(production);
-      newFilmLocation.setGoogleId(filmTourApplication.getAccount().getId());
-      newFilmLocation.setApproved(true); // Remove me!
-      //TODO Create user comment with description info
+      newFilmLocation.setApproved(true); // TODO Remove me!
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-      Boolean successfulQuery = false;
+      boolean successfulQuery = false;
       Call<FilmLocation> locationCall = filmTourApplication.getService()
           .postFilmLocation(token, newFilmLocation);
       try {
@@ -146,10 +138,10 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
     protected void onPostExecute(Boolean successfulQuery) {
       super.onPostExecute(successfulQuery);
       if (successfulQuery) {
-        Toast.makeText(parentMap, "Post submitted!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(parentMap, R.string.submission_successful, Toast.LENGTH_SHORT).show();
         dismiss();
       } else {
-        Toast.makeText(parentMap, "Something went wrong", Toast.LENGTH_SHORT).show();
+        Toast.makeText(parentMap, R.string.submission_failed, Toast.LENGTH_SHORT).show();
         dismiss();
       }
     }

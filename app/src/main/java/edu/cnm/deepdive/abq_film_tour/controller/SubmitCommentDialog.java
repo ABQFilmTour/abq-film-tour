@@ -19,7 +19,6 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -37,7 +36,7 @@ public class SubmitCommentDialog extends DialogFragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    filmTourApplication = (FilmTourApplication) getActivity().getApplication();
+    filmTourApplication = (FilmTourApplication) Objects.requireNonNull(getActivity()).getApplication();
     parentActivity = (LocationActivity) getActivity();
     location = parentActivity.getLocation();
     production = parentActivity.getProduction();
@@ -48,7 +47,7 @@ public class SubmitCommentDialog extends DialogFragment {
     Button userCommentButton = view.findViewById(R.id.user_comment_button);
     userCommentButton.setOnClickListener( v -> {
       String textEntered = commentEditText.getText().toString();
-      new PostCommentTask().execute(textEntered);
+      new SubmitCommentTask().execute(textEntered);
     });
     return view;
   }
@@ -61,7 +60,7 @@ public class SubmitCommentDialog extends DialogFragment {
     getDialog().getWindow().setAttributes(params);
   }
 
-  public class PostCommentTask extends AsyncTask<String, Void, Boolean> {
+  public class SubmitCommentTask extends AsyncTask<String, Void, Boolean> {
 
     UserComment newComment;
 
@@ -69,10 +68,10 @@ public class SubmitCommentDialog extends DialogFragment {
     protected void onPreExecute() {
       super.onPreExecute();
       newComment = new UserComment();
-      newComment.setApproved(true); //Remove me!
       newComment.setFilmLocation(location);
       newComment.setGoogleId(filmTourApplication.getAccount().getId());
       newComment.setText(SubmitCommentDialog.this.commentEditText.getText().toString());
+      newComment.setApproved(true); // TODO Remove me!
     }
 
     @Override
@@ -83,8 +82,6 @@ public class SubmitCommentDialog extends DialogFragment {
         Response<UserComment> response = call.execute();
         if (response.isSuccessful()) {
           successfulQuery = true;
-        } else {
-          System.out.println(response);
         }
       } catch (IOException e) {
         //TODO Handle errors
@@ -96,13 +93,12 @@ public class SubmitCommentDialog extends DialogFragment {
     protected void onPostExecute(Boolean successfulQuery) {
       super.onPostExecute(successfulQuery);
       if (successfulQuery) {
-        Toast.makeText(parentActivity, "Your comment has been submitted ", Toast.LENGTH_LONG).show();
+        Toast.makeText(parentActivity, R.string.submission_successful, Toast.LENGTH_SHORT).show();
         dismiss();
       } else {
-        Toast.makeText(parentActivity, "oh no", Toast.LENGTH_LONG).show();
+        Toast.makeText(parentActivity, R.string.submission_failed, Toast.LENGTH_SHORT).show();
+        dismiss();
       }
     }
-
   }
-
 }

@@ -3,6 +3,7 @@ package edu.cnm.deepdive.abq_film_tour;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Application;
+import android.content.Intent;
 import com.cloudinary.android.MediaManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -10,6 +11,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import edu.cnm.deepdive.abq_film_tour.controller.LoginActivity;
 import edu.cnm.deepdive.abq_film_tour.service.Service;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -40,6 +42,34 @@ public class FilmTourApplication extends Application {
         .build();
     setupService();
     client = GoogleSignIn.getClient(this, options);
+  }
+
+  /**
+   * This method signs the Google account out of the application and returns the user to the login
+   * activity.
+   */
+  public void signOut() {
+    getClient().signOut().addOnCompleteListener((task) -> {
+      setAccount(null);
+      Intent intent = new Intent(this, LoginActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(intent);
+    });
+  }
+
+  /**
+   * Creates an alert dialog with a given error message and signs out, used for cleaner exception
+   * handling. Ideal for 401 as it invites the user to try to sign in again.
+   *
+   * @param errorMessage a String message to display to the user.
+   */
+  public void signOutWithAlertDialog(String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+    alertDialog.setMessage(errorMessage)
+        .setCancelable(false)
+        .setPositiveButton(R.string.alert_signout, (dialog, which) -> signOut());
+    AlertDialog alert = alertDialog.create();
+    alert.show();
   }
 
   private void setupService() {
