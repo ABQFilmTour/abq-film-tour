@@ -25,66 +25,67 @@
 
 
 
-      <ImageView
+      <com.q42.android.scrollingimageview.ScrollingImageView
         android:id="@+id/image_view_header"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        scrolling_image_view:speed="1dp"
         android:adjustViewBounds="false"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:src="@drawable/mg_2390_small"/>
+        scrolling_image_view:src="@drawable/mg_2390_small"/>
 
-  <ImageView
-    android:id="@+id/image_view_poster"
-    android:layout_width="0dp"
-    android:layout_height="150dp"
-    android:layout_marginBottom="8dp"
-    app:layout_constraintBottom_toBottomOf="@+id/image_view_header"
-    app:layout_constraintDimensionRatio="w,2:3"
-    app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"/>
-    <!--app:srcCompat="@drawable/bb_poster_image"-->
+      <ImageView
+        android:id="@+id/image_view_poster"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/image_view_header"
+        app:layout_constraintDimensionRatio="w,2:3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@+id/image_view_header"/>
+      <!--app:srcCompat="@drawable/bb_poster_image"-->
 
-  <TextView
-    android:id="@+id/production_title_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="8dp"
-    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-    app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
-    app:layout_constraintStart_toEndOf="@+id/image_view_poster"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    app:layout_constraintBottom_toTopOf="@id/imdb_link_view"
-    />
+      <TextView
+        android:id="@+id/production_title_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
+        app:layout_constraintStart_toEndOf="@+id/image_view_poster"
+        app:layout_constraintTop_toBottomOf="@+id/image_view_header"
+        app:layout_constraintBottom_toTopOf="@id/imdb_link_view"
+        />
 
-  <ImageButton
-    android:id="@+id/bookmark_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:background="@android:drawable/list_selector_background"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    app:srcCompat="@drawable/bookmark_icon"/>
+      <ImageButton
+        android:id="@+id/bookmark_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/list_selector_background"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@+id/image_view_header"
+        app:srcCompat="@drawable/bookmark_icon"/>
 
-  <TextView
-    android:id="@+id/imdb_link_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="8dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:textColor="#0000FF"
-    android:textSize="@dimen/small_text_size"
-    app:layout_constraintEnd_toStartOf="@id/bookmark_button"
-    app:layout_constraintStart_toEndOf="@id/image_view_poster"
-    app:layout_constraintTop_toBottomOf="@id/production_title_view"
-    app:layout_constraintBottom_toTopOf="@id/plot_view"/>
+      <TextView
+        android:id="@+id/imdb_link_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:textColor="#0000FF"
+        android:textSize="@dimen/small_text_size"
+        app:layout_constraintEnd_toStartOf="@id/bookmark_button"
+        app:layout_constraintStart_toEndOf="@id/image_view_poster"
+        app:layout_constraintTop_toBottomOf="@id/production_title_view"
+        app:layout_constraintBottom_toTopOf="@id/plot_view"/>
 
       <TextView
         android:id="@+id/plot_view"
@@ -101,41 +102,41 @@
         app:layout_constraintTop_toBottomOf="@id/imdb_link_view"
         app:layout_constraintBottom_toTopOf="@id/location_sitename_view"/>
 
-  <TextView
-    android:id="@+id/location_sitename_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:textAlignment="center"
-    android:textSize="@dimen/large_text_size"
-    android:textColor="@color/dialogTextColor"
-    app:layout_constraintEnd_toStartOf="@id/guidelineRight"
-    app:layout_constraintStart_toEndOf="@id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/plot_view"
-    app:layout_constraintBottom_toTopOf="@id/user_image_comment_input"
-    android:background="@color/colorPrimaryDark"/>
+      <TextView
+        android:id="@+id/location_sitename_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="center"
+        android:textSize="@dimen/large_text_size"
+        android:textColor="@color/dialogTextColor"
+        app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+        app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@id/plot_view"
+        app:layout_constraintBottom_toTopOf="@id/user_image_comment_input"
+        android:background="@color/colorPrimaryDark"/>
 
-  <android.support.constraint.Guideline
-    android:id="@+id/guidelineLeft"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_begin="16dp"/>
-  <android.support.constraint.Guideline
-    android:id="@+id/guidelineRight"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_end="16dp"/>
-  <android.support.constraint.Barrier
-    android:id="@+id/barrier"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:barrierDirection="bottom"
-    app:constraint_referenced_ids="image_view_poster,location_sitename_view"
-    />
+      <android.support.constraint.Guideline
+        android:id="@+id/guidelineLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp"/>
+      <android.support.constraint.Guideline
+        android:id="@+id/guidelineRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp"/>
+      <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="image_view_poster,location_sitename_view"
+        />
 
 
       <LinearLayout
@@ -167,65 +168,17 @@
 
       </LinearLayout>
 
-      <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      <ListView
         android:id="@+id/comment_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
         android:layout_marginTop="24dp"
-        android:orientation="vertical"
+        android:textAlignment="center"
+        android:textColor="@color/dialogTextColor"
+        android:textSize="@dimen/medium_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_image_comment_input">
-
-        <android.support.v7.widget.CardView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="5dp">
-
-          <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
-
-            <ImageView
-              android:id="@+id/user_image_view"
-              android:layout_width="50dp"
-              android:layout_height="50dp"
-              android:padding="4dp" />
-
-
-            <TextView
-              android:id="@+id/user_name"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="5dp"
-              android:layout_toRightOf="@id/user_image_view"
-              android:text="User Name"
-              android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-              android:textStyle="bold"
-              android:textColor="@color/dialogTextColor"/>
-
-
-
-            <TextView
-              android:id="@+id/textViewPrice"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_below="@id/user_name"
-              android:layout_marginLeft="5dp"
-              android:layout_marginTop="5dp"
-              android:layout_toRightOf="@id/user_image_view"
-              android:text="User comment about this specific film location. Breaking bad was filmed here"
-              android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-              android:textColor="@color/colorPrimaryDark"
-              />
-
-          </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-
-      </LinearLayout>
-
+        app:layout_constraintTop_toBottomOf="@+id/user_image_comment_input"/>
 
     </android.support.constraint.ConstraintLayout>
 
