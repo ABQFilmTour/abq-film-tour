@@ -53,7 +53,7 @@ import retrofit2.Response;
  */
 public class LocationActivity extends AppCompatActivity {
 
-  private ScrollingImageView locationImage;
+  private ImageView locationImage;
   private ImageView locationPosterImage;
   private TextView locationSiteName;
   private TextView locationProductionTitle;
