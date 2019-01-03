@@ -17,10 +17,9 @@ import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
-import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
+import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import retrofit2.Call;
 import retrofit2.Response;
 

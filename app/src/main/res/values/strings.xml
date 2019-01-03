@@ -46,5 +46,7 @@
   <string name="menu_no_bookmarks">You have no bookmarks saved. Select the bookmark button on an existing location to create your own tour.</string>
   <string name="menu_no_savedtitle">Select an existing title from Films or TV Shows to submit your location to.</string>
   <string name="poster_url_format">%srest/productions/%s/poster</string>
+  <string name="bookmark_removed_notification">Bookmark removed.</string>
+  <string name="bookmark_added_notification">Bookmark added.</string>
 
 </resources>

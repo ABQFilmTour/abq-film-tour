@@ -1,7 +1,5 @@
-package edu.cnm.deepdive.abq_film_tour.service;
+package edu.cnm.deepdive.abq_film_tour;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Application;
 import com.cloudinary.android.MediaManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -10,7 +8,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import edu.cnm.deepdive.abq_film_tour.R;
+import edu.cnm.deepdive.abq_film_tour.service.Service;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
