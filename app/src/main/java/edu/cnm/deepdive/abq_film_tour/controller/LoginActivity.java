@@ -12,11 +12,11 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import edu.cnm.deepdive.abq_film_tour.R;
-import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
-
+import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 
 /**
- * Uses Google Sign-In to allow users to login to application.
+ * Initial sign in splash page. Allows the user to sign in with their Google account and sends the
+ * user to the MapsActivity.
  */
 public class LoginActivity extends AppCompatActivity {
 

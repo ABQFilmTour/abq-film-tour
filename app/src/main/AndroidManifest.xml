@@ -19,7 +19,7 @@
     android:allowBackup="true"
     android:icon="@mipmap/ic_filmtour_round"
     android:label="@string/title_activity_maps"
-    android:name=".service.FilmTourApplication"
+    android:name=".FilmTourApplication"
     android:roundIcon="@mipmap/ic_filmtour_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
@@ -37,8 +37,6 @@
     <meta-data
       android:name="com.google.android.geo.API_KEY"
       android:value="@string/google_maps_key"/>
-
-    <service android:name=".imageShelve.CloudinaryListenerService"/>
 
     <meta-data
       android:name="CLOUDINARY_URL"
@@ -64,10 +62,6 @@
     <activity
       android:name=".controller.LocationActivity"
       android:screenOrientation="portrait">
-    </activity>
-    <activity android:name=".imageShelve.ImageGallery">
-    </activity>
-    <activity android:name=".imageShelve.UserImageActivity">
     </activity>
   </application>
 

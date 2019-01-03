@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -44,7 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
-import edu.cnm.deepdive.abq_film_tour.service.FilmTourApplication;
+import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import edu.cnm.deepdive.abq_film_tour.view.CustomSnippetAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -157,6 +156,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Reference key for the user's longitude.
    */
   static final String USER_LOCATION_LONG_KEY = "userLocationLong";
+  /**
+   * Time in milliseconds to refresh location check.
+   */
+  private static final int REFRESH_LOCATION_MILLISECONDS = 2000;
+  /**
+   * Distance to refresh location check.
+   */
+  private static final int REFRESH_MIN_DISTANCE = 10;
+  /**
+   * Width of the custom map markers.
+   */
+  private static final int MAP_MARKER_WIDTH = 52;
 
   //FIELDS
   /**
@@ -199,6 +210,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Authentication token
    */
   private String token;
+  /**
+   * String set of bookmarked location IDs.
+   */
   private Set<String> bookmarks;
 
   /**
@@ -239,7 +253,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     progressSpinner = findViewById(R.id.progress_spinner);
     progressSpinner.setVisibility(View.VISIBLE);
-    //TODO Block the user from interacting with the UI while the spinner is doing its thing. Attempting anything from the options menu while data is loading will throw an exception.
+
     new GetProductionsTask().execute();
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     filmTourApplication.getAccount().getId();
@@ -279,7 +293,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * for the arclength or great-circle distance between the two points. Note: this method is an
    * approximation that assumes the Earth is a perfect sphere.
    **/
-  public static double calculateDistanceInKilometer(double userLat, double userLng,
+  private static double calculateDistanceInKilometer(double userLat, double userLng,
       double venueLat, double venueLng) {
     //converts degrees to radians
     double latDistance = Math.toRadians(userLat - venueLat);
@@ -318,16 +332,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Takes a custom drawable file and converts it to Bitmap. The BitmapDescriptorFactory.fromBitmap()
    * method will use converted bitmap to create the custom marker for us.
    *
-   * @param resource is always drawable.map_pin
    */
-  private static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
+  private static Bitmap createCustomMarker(Context context) {
 
     View marker = ((LayoutInflater) Objects.requireNonNull(context.getSystemService(
         Context.LAYOUT_INFLATER_SERVICE))).inflate(R.layout.custom_marker_layout, null);
 
     DisplayMetrics displayMetrics = new DisplayMetrics();
     ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-    marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
+    marker.setLayoutParams(new ViewGroup.LayoutParams(MAP_MARKER_WIDTH, ViewGroup.LayoutParams.WRAP_CONTENT));
     marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
     marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
     Bitmap bitmap = Bitmap.createBitmap(
@@ -351,7 +364,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Marker marker = map.addMarker(new MarkerOptions()
         .position(coordinates)
         .icon(BitmapDescriptorFactory.fromBitmap(
-            createCustomMarker(MapsActivity.this, R.drawable.map_pin)))
+            createCustomMarker(MapsActivity.this)))
         .title(location.getSiteName())
         .snippet(
             location.getProduction().getTitle()));
@@ -514,6 +527,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean handled = true;
     LatLng location;
     Bundle arguments = new Bundle();
+      /*if (this.progressSpinner.getVisibility() == View.VISIBLE) {
+        Toast.makeText(this, "Hold yer horses!!!", Toast.LENGTH_SHORT).show();
+        return false;
+      }*/
     switch (item.getItemId()) {
       default:
         handled = super.onOptionsItemSelected(item);
@@ -591,10 +608,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // If request is cancelled, the result arrays are empty.
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          //TODO Optimize for more efficient battery usage
           locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-              2000, //Milliseconds
-              10, //Distance
+              REFRESH_LOCATION_MILLISECONDS,
+              REFRESH_MIN_DISTANCE,
               locationListenerGPS);
         } else {
           // permission denied, boo!
@@ -653,7 +669,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         createMapMarker(location);
       }
     }
-
   }
 
   /**
