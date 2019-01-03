@@ -1,11 +1,10 @@
-package edu.cnm.deepdive.abq_film_tour;
+package edu.cnm.deepdive.abq_film_tour.imageShelve;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import edu.cnm.deepdive.abq_film_tour.controller.RecyclerImageViewAdapter;
-import edu.cnm.deepdive.abq_film_tour.controller.UserImage;
+import edu.cnm.deepdive.abq_film_tour.R;
 import java.util.ArrayList;
 import java.util.List;
 

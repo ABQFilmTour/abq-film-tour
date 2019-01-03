@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.abq_film_tour.controller;
+package edu.cnm.deepdive.abq_film_tour.imageShelve;
 
 import android.app.Service;
 import android.content.Intent;

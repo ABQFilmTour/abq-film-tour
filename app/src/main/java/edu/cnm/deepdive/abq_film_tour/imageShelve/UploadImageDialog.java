@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.abq_film_tour.controller;
+package edu.cnm.deepdive.abq_film_tour.imageShelve;
 
 
 import android.content.Intent;
@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.cloudinary.android.MediaManager;
 import edu.cnm.deepdive.abq_film_tour.R;
+import edu.cnm.deepdive.abq_film_tour.controller.LocationActivity;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Image;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;

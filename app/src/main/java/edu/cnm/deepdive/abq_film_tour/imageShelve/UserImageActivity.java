@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.abq_film_tour.controller;
+package edu.cnm.deepdive.abq_film_tour.imageShelve;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.abq_film_tour.controller;
+package edu.cnm.deepdive.abq_film_tour.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
