@@ -55,5 +55,11 @@
   <string name="submit_comment">Submit Comment.</string>
   <string name="submit_location_button_format">Submit for %s</string>
   <string name="upload_image">Upload Image</string>
+  <string name="your_comment">Your Comment</string>
+  <string name="send">Send</string>
+  <string name="upload_image">Upload Image</string>
+  <string name="submit_new_site_name">Submit new site name</string>
+  <string name="description">Description</string>
+  <string name="submit">Submit</string>
 
 </resources>
