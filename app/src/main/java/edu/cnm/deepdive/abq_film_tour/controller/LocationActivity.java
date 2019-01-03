@@ -26,7 +26,6 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.q42.android.scrollingimageview.ScrollingImageView;
 import edu.cnm.deepdive.abq_film_tour.R;
-import edu.cnm.deepdive.abq_film_tour.imageShelve.UploadImageDialog;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
@@ -272,12 +271,14 @@ public class LocationActivity extends AppCompatActivity {
           submitCommentDialog.show(getSupportFragmentManager(), "whatever");
         });
 
+        /*
         //Setup your image button
         yourImageButton = findViewById(R.id.register_image_button);
         yourImageButton.setOnClickListener(v -> {
           UploadImageDialog uploadImageDialog = new UploadImageDialog();
           uploadImageDialog.show(getSupportFragmentManager(), "whatever");
         });
+        */
 
         //Setup comments
         ListView commentListView = findViewById(R.id.comment_list_view);
