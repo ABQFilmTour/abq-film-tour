@@ -48,5 +48,12 @@
   <string name="poster_url_format">%srest/productions/%s/poster</string>
   <string name="bookmark_removed_notification">Bookmark removed.</string>
   <string name="bookmark_added_notification">Bookmark added.</string>
+  <string name="production_poster">poster of the production</string>
+  <string name="bookmark">Bookmark</string>
+  <string name="dimension_ratio_image_header">16:9</string>
+  <string name="dimenstion_ratio_poster">w,2:3</string>
+  <string name="submit_comment">Submit Comment.</string>
+  <string name="submit_location_button_format">Submit for %s</string>
+  <string name="upload_image">Upload Image</string>
 
 </resources>

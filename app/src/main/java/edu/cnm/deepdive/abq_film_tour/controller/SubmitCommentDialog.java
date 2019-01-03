@@ -20,6 +20,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -30,39 +31,34 @@ public class SubmitCommentDialog extends DialogFragment {
   private FilmLocation location;
   private Production production;
   private String token;
-  EditText commentEditText;
+  private EditText commentEditText;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-
     filmTourApplication = (FilmTourApplication) getActivity().getApplication();
     parentActivity = (LocationActivity) getActivity();
     location = parentActivity.getLocation();
     production = parentActivity.getProduction();
     token = getString(R.string.oauth2_header,
         FilmTourApplication.getInstance().getAccount().getIdToken());
-
     View view = inflater.inflate(R.layout.submit_comment_fragment, null, false);
     commentEditText = view.findViewById(R.id.register_comment_description);
     Button userCommentButton = view.findViewById(R.id.user_comment_button);
-
     userCommentButton.setOnClickListener( v -> {
       String textEntered = commentEditText.getText().toString();
       new PostCommentTask().execute(textEntered);
     });
-
     return view;
   }
 
   @Override
   public void onResume() {
     super.onResume();
-
-    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+    WindowManager.LayoutParams params = Objects.requireNonNull(getDialog().getWindow()).getAttributes();
     params.width = LayoutParams.MATCH_PARENT;
-    getDialog().getWindow().setAttributes((WindowManager.LayoutParams) params);
+    getDialog().getWindow().setAttributes(params);
   }
 
   public class PostCommentTask extends AsyncTask<String, Void, Boolean> {
@@ -76,16 +72,12 @@ public class SubmitCommentDialog extends DialogFragment {
       newComment.setApproved(true); //Remove me!
       newComment.setFilmLocation(location);
       newComment.setGoogleId(filmTourApplication.getAccount().getId());
-      String theText = SubmitCommentDialog.this.commentEditText.getText().toString();
-      System.out.println(theText);
       newComment.setText(SubmitCommentDialog.this.commentEditText.getText().toString());
-      SimpleDateFormat requiredFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     }
 
     @Override
     protected Boolean doInBackground(String... strings) {
-      Boolean successfulQuery = false;
-
+      boolean successfulQuery = false;
       Call<UserComment> call = filmTourApplication.getService().postUserComment(token, newComment, location.getId());
       try {
         Response<UserComment> response = call.execute();
@@ -101,10 +93,10 @@ public class SubmitCommentDialog extends DialogFragment {
     }
 
     @Override
-    protected void onPostExecute(Boolean aBoolean) {
-      super.onPostExecute(aBoolean);
-      if (aBoolean) {
-        Toast.makeText(parentActivity, "Success!", Toast.LENGTH_LONG).show();
+    protected void onPostExecute(Boolean successfulQuery) {
+      super.onPostExecute(successfulQuery);
+      if (successfulQuery) {
+        Toast.makeText(parentActivity, "Your comment has been submitted ", Toast.LENGTH_LONG).show();
         dismiss();
       } else {
         Toast.makeText(parentActivity, "oh no", Toast.LENGTH_LONG).show();

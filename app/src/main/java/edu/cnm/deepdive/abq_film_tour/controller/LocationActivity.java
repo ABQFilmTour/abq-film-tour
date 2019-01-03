@@ -115,7 +115,7 @@ public class LocationActivity extends AppCompatActivity {
 
   private void setupButtons() {
     bookmarkButton = findViewById(R.id.bookmark_button);
-    commentButton = findViewById(R.id.register_review_button);
+    commentButton = findViewById(R.id.submit_comment_button);
   }
 
   private void setupBookmarkListener() {
@@ -272,7 +272,6 @@ public class LocationActivity extends AppCompatActivity {
   public class LocationTask extends AsyncTask<UUID, Void, Boolean> {
 
     private String errorMessage = getString(R.string.error_default);
-    BitmapDrawable poster;
 
     @Override
     protected Boolean doInBackground(UUID... UUIDs) {
