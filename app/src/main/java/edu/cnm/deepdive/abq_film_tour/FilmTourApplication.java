@@ -6,6 +6,7 @@ import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -64,17 +65,17 @@ public class FilmTourApplication extends Application {
    * Performs end of function routine based on a given error message.
    * @param errorMessage
    */
-  public void handleErrorMessage(String errorMessage) {
+  public void handleErrorMessage(Context context, String errorMessage) {
     if (errorMessage.equals(getString(R.string.error_unauthorized))) {
       //Unauthorized, give the user a chance to sign back in.
-      signOutWithAlertDialog(errorMessage);
+      signOutWithAlertDialog(context, errorMessage);
     } else if (errorMessage.equals(getString(R.string.error_forbidden))) {
       //Forbidden, exit with a ban message.
       //TODO Figure out how to display the ban message provided in the error description
-      exitWithAlertDialog(errorMessage);
+      exitWithAlertDialog(context, errorMessage);
     } else {
       //In any other possibility, exit just to be safe.
-      exitWithAlertDialog(errorMessage);
+      exitWithAlertDialog(context, errorMessage);
     }
   }
 
@@ -84,8 +85,8 @@ public class FilmTourApplication extends Application {
    *
    * @param errorMessage a String message to display to the user.
    */
-  private void exitWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+  private void exitWithAlertDialog(Context context, String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(context, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
         .setPositiveButton(R.string.alert_exit, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
@@ -112,8 +113,8 @@ public class FilmTourApplication extends Application {
    *
    * @param errorMessage a String message to display to the user.
    */
-  private void signOutWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+  private void signOutWithAlertDialog(Context context, String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(context, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
         .setPositiveButton(R.string.alert_signout, (dialog, which) -> signOut());

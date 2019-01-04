@@ -733,7 +733,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         populateTitlesList();
         new GetLocationsTask().execute(); //we got the productions time to call for the locations
       } else {
-        filmTourApplication.handleErrorMessage(errorMessage);
+        filmTourApplication.handleErrorMessage(MapsActivity.this, errorMessage);
       }
     }
   }
@@ -777,7 +777,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         checkForPastTitle(); //see what we've got in shared pref
         progressSpinner.setVisibility(View.GONE); //all the work is done the spinner can go now
       } else {
-        filmTourApplication.handleErrorMessage(errorMessage);
+        filmTourApplication.handleErrorMessage(MapsActivity.this, errorMessage);
       }
     }
   }

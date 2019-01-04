@@ -266,7 +266,7 @@ public class LocationActivity extends AppCompatActivity {
           uploadImageDialog.show(getSupportFragmentManager(), "whatever");
         });*/
       } else {
-        filmTourApplication.handleErrorMessage(errorMessage);
+        filmTourApplication.handleErrorMessage(LocationActivity.this, errorMessage);
       }
     }
   }
