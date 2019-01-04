@@ -91,7 +91,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final float BEARING_LEVEL_NEAR_ME = 0;
   /**
-   * Tilt level for the camera when "Near Me" is selected, looks really cool.
+   * Tilt level for the camera when "Near Me" is selected.
    */
   private static final float TILT_LEVEL_NEAR_ME = 40;
   /**
@@ -134,6 +134,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Status code returned by the program if it closes with an error.
    */
+  //TODO is STATUS_CODE_ERROR ever used? can we delete this?
   private static final int STATUS_CODE_ERROR = 1;
   /**
    * Log tag for this activity.
@@ -408,6 +409,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Retrieves a locally saved Production from the title in shared preferences (assuming it exists).
    * This way a production can be retrieved without having to call the database again.
+   *
    * @return a production matching a given title
    */
   Production getProductionFromSavedTitle() {
@@ -710,6 +712,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected Boolean doInBackground(Void... voids) {
       boolean successfulQuery = false;
         Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
+        //TODO fix duplicate code
       try {
         Response<List<Production>> response = call.execute();
         if (response.isSuccessful()) {

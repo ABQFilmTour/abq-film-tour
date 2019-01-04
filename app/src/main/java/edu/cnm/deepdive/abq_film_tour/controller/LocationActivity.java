@@ -39,8 +39,8 @@ import retrofit2.Response;
 
 /**
  * The Location activity takes the location layout and passes in the {@link TextView}, {@link
- * FilmLocation}, {@link Production}, and {@link UserComment}. it extends {@link
- * AppCompatActivity#AppCompatActivity()}
+ * FilmLocation}*, {@link Production}, and {@link UserComment}. it extends {@link
+ * AppCompatActivity#AppCompatActivity()}*
  */
 public class LocationActivity extends AppCompatActivity {
 
@@ -96,10 +96,20 @@ public class LocationActivity extends AppCompatActivity {
     new LocationTask().execute(locationUUID);
   }
 
+  /**
+   * Gets film location.
+   *
+   * @return the film location
+   */
   public FilmLocation getLocation() {
     return location;
   }
 
+  /**
+   * Gets production.
+   *
+   * @return the production
+   */
   Production getProduction() {
     return production;
   }
@@ -131,10 +141,20 @@ public class LocationActivity extends AppCompatActivity {
     editor.apply();
   }
 
+  /**
+   * Sets film location.
+   *
+   * @param the film location
+   */
   public void setLocation(FilmLocation location) {
     this.location = location;
   }
 
+  /**
+   * Sets production.
+   *
+   * @param the production
+   */
   public void setProduction(Production production) {
     this.production = production;
   }
@@ -212,7 +232,7 @@ public class LocationActivity extends AppCompatActivity {
 
   /**
    * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment}, and {@link
-   * LocationActivity} and tie them to a specific {@link FilmLocation} Returns a boolean if the
+   * LocationActivity}* and tie them to a specific {@link FilmLocation} Returns a boolean if the
    * query was successful, displays an alert dialog and exits the app if not.
    */
   public class LocationTask extends AsyncTask<UUID, Void, Boolean> {

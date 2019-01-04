@@ -9,9 +9,9 @@ import java.util.UUID;
 
 /**
  * This entity represents an individual film location. Its primary attributes are the site name and
- * the lat and long coordinates, as well as the user and the production it is associated with. Some
+ * the latitude and longitude coordinates, as well as the user and the production it is associated with. Some
  * fields overlap with fields in the associated production as they were included with the city's
- * data. In the event of a conflict the Production's information should take priority.
+ * data. In the event of a conflict the Production's information will take priority.
  */
 @Entity(    foreignKeys =  {
     @ForeignKey(entity = User.class, parentColumns = "user_id",
@@ -53,7 +53,7 @@ public class FilmLocation {
 
   /**
    * A 7 digit ID prefixed with "tt" to correspond with the production this location was filmed for
-   * in the IMDb.
+   * on IMDb.
    */
   @Expose
   private String imdbId;
@@ -71,7 +71,7 @@ public class FilmLocation {
   private String type;
 
   /**
-   * The address this entity should be located at.
+   * The address where this entity is located.
    */
   @Expose
   private String address;
@@ -83,7 +83,7 @@ public class FilmLocation {
   private long shootDate;
 
   /**
-   * Information about the shoot as provided by the city.
+   * Information about the shoot as provided by the city of Albuquerque.
    */
   @Expose
   private String originalDetails;
@@ -119,22 +119,24 @@ public class FilmLocation {
   private boolean bookmarked;
 
   /**
-   * Empty constructor for ROOM.
+   * Empty constructor for ROOM if we decide to implement a cached ROOM database.
    */
   public FilmLocation() {
 
   }
 
   /**
-   * Retrieves the UUID.
-   * @return UUID.
+   * Retrieves the UUID of the location.
+   *
+   * @return UUID
    */
   public UUID getId() {
     return id;
   }
 
   /**
-   * Sets the UUID.
+   * Sets the UUID of the location.
+   *
    * @param id the UUID.
    */
   public void setId(UUID id) {
@@ -143,6 +145,7 @@ public class FilmLocation {
 
   /**
    * Returns the name of the location.
+   *
    * @return the name of the location.
    */
   public String getSiteName() {
@@ -151,6 +154,7 @@ public class FilmLocation {
 
   /**
    * Sets the name of the location.
+   *
    * @param siteName the name of the location.
    */
   public void setSiteName(String siteName) {
@@ -159,6 +163,7 @@ public class FilmLocation {
 
   /**
    * Returns the IMDb ID of the production associated with this location.
+   *
    * @return the IMDb ID of the production associated with this location.
    */
   public String getImdbid() {
@@ -167,6 +172,7 @@ public class FilmLocation {
 
   /**
    * Sets the IMDb id of the production associated with this location.
+   *
    * @param imdbid the IMDb ID of the production associated with this location.
    */
   public void setImdbid(String imdbid) {
@@ -175,6 +181,7 @@ public class FilmLocation {
 
   /**
    * Returns the production associated with this location.
+   *
    * @return the production associated with this location.
    */
   public Production getProduction() {
@@ -183,6 +190,7 @@ public class FilmLocation {
 
   /**
    * Sets the production associated with this location.
+   *
    * @param production the production associated with this location.
    */
   public void setProduction(Production production) {
@@ -191,6 +199,7 @@ public class FilmLocation {
 
   /**
    * Returns the title of the production associated with this location.
+   *
    * @return the title of the production associated with this location.
    */
   public String getTitle() {
@@ -199,6 +208,7 @@ public class FilmLocation {
 
   /**
    * Sets the title of the production associated with this location.
+   *
    * @param title the production associated with this location.
    */
   public void setTitle(String title) {
@@ -207,6 +217,7 @@ public class FilmLocation {
 
   /**
    * Returns the type of the production associated with this location.
+   *
    * @return the type of the production associated with this location.
    */
   public String getType() {
@@ -215,6 +226,7 @@ public class FilmLocation {
 
   /**
    * Sets the type of the the production associated with this location.
+   *
    * @param type the type of the the production associated with this location.
    */
   public void setType(String type) {
@@ -223,6 +235,7 @@ public class FilmLocation {
 
   /**
    * Returns the provided address of the location.
+   *
    * @return the provided address of the location.
    */
   public String getAddress() {
@@ -231,6 +244,7 @@ public class FilmLocation {
 
   /**
    * Sets the provided address of the location.
+   *
    * @param address the provided address of the location.
    */
   public void setAddress(String address) {
@@ -239,6 +253,7 @@ public class FilmLocation {
 
   /**
    * Returns the date of shooting in epoch date format.
+   *
    * @return the date of shooting in epoch date format.
    */
   public long getShootDate() {
@@ -247,6 +262,7 @@ public class FilmLocation {
 
   /**
    * Sets the date of shooting in epoch date format.
+   *
    * @param shootDate the date of shooting in epoch date format.
    */
   public void setShootDate(long shootDate) {
@@ -255,6 +271,7 @@ public class FilmLocation {
 
   /**
    * Returns city provided information about the time of shooting.
+   *
    * @return city provided information about the time of shooting.
    */
   public String getOriginalDetails() {
@@ -263,6 +280,7 @@ public class FilmLocation {
 
   /**
    * Sets information about the time of shooting.
+   *
    * @param originalDetails information about the time of shooting.
    */
   public void setOriginalDetails(String originalDetails) {
@@ -271,6 +289,7 @@ public class FilmLocation {
 
   /**
    * Returns the longitude coordinate of the location.
+   *
    * @return the longitude coordinate of the location.
    */
   public String getLongCoordinate() {
@@ -279,7 +298,8 @@ public class FilmLocation {
 
   /**
    * Sets the longitude coordinate of the location.
-   * @param longCoordinate the latitude coordinate of the location.
+   *
+   * @param longCoordinate the longitude coordinate of the location.
    */
   public void setLongCoordinate(String longCoordinate) {
     this.longCoordinate = longCoordinate;
@@ -287,6 +307,7 @@ public class FilmLocation {
 
   /**
    * Return the latitude coordinate of the location.
+   *
    * @return the latitude coordinate of the location.
    */
   public String getLatCoordinate() {
@@ -295,44 +316,89 @@ public class FilmLocation {
 
   /**
    * Sets the latitude coordinate of the location.
+   *
    * @param latCoordinate the latitude coordinate of the location.
    */
   public void setLatCoordinate(String latCoordinate) {
     this.latCoordinate = latCoordinate;
   }
 
+  /**
+   * Gets user.
+   *
+   * @return the user
+   */
   public User getUser() {
     return user;
   }
 
+  /**
+   * Sets user.
+   *
+   * @param user the user
+   */
   public void setUser(User user) {
     this.user = user;
   }
 
+  /**
+   * Is approved boolean.
+   *
+   * @return the boolean
+   */
+  //FIXME Boolean method 'isApproved' is always inverted
   public boolean isApproved() {
     return approved;
   }
 
+  /**
+   * Sets approved.
+   *
+   * @param approved the approved
+   */
   public void setApproved(boolean approved) {
     this.approved = approved;
   }
 
+  /**
+   * Is bookmarked boolean.
+   *
+   * @return the boolean
+   */
   public boolean isBookmarked() {
     return bookmarked;
   }
 
+  /**
+   * Sets bookmarked.
+   *
+   * @param bookmarked the bookmarked
+   */
   public void setBookmarked(boolean bookmarked) {
     this.bookmarked = bookmarked;
   }
 
+  /**
+   * Toggle bookmarked.
+   */
   public void toggleBookmarked() {
     this.bookmarked = !this.bookmarked;
   }
 
+  /**
+   * Gets google id.
+   *
+   * @return the google id
+   */
   public String getGoogleId() {
     return googleId;
   }
 
+  /**
+   * Sets google id.
+   *
+   * @param googleId the google id
+   */
   public void setGoogleId(String googleId) {
     this.googleId = googleId;
   }

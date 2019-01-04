@@ -23,6 +23,9 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Response;
 
+/**
+ * Dialog fragment for users to upload and submit comments.
+ */
 public class SubmitCommentDialog extends DialogFragment {
 
   private FilmTourApplication filmTourApplication;
@@ -60,8 +63,15 @@ public class SubmitCommentDialog extends DialogFragment {
     getDialog().getWindow().setAttributes(params);
   }
 
+  /**
+   * Asynchronous task that posts a user submitted comment to the database. Returns a boolean and toasts
+   * the user if the submission was successful or unsuccessful.
+   */
   public class SubmitCommentTask extends AsyncTask<String, Void, Boolean> {
 
+    /**
+     * A new submitted user comment.
+     */
     UserComment newComment;
 
     @Override

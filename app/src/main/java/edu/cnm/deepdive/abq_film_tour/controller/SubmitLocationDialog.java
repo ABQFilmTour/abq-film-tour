@@ -31,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 /**
- * Dialog fragment for users to upload and submit changes.
+ * Dialog fragment for users to upload a new location.
  */
 public class SubmitLocationDialog extends DialogFragment implements View.OnClickListener{
 
@@ -96,11 +96,30 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
 
   private class SubmitLocationTask extends AsyncTask<Void, Void, Boolean> {
 
+    /**
+     * The name of the location.
+     */
     String siteName;
+    /**
+     * Latitude and longitude of the filming location.
+     */
     LatLng location;
+    /**
+     * The Production.
+     */
     Production production;
+    /**
+     * The New film location.
+     */
     FilmLocation newFilmLocation;
 
+    /**
+     * Instantiates a new Submit location task.
+     *
+     * @param siteName the site name
+     * @param location latitude and longitude of the location
+     * @param production the production
+     */
     SubmitLocationTask(String siteName, LatLng location,
         Production production) {
       this.siteName = siteName;
@@ -125,6 +144,7 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
       boolean successfulQuery = false;
       Call<FilmLocation> locationCall = filmTourApplication.getService()
           .postFilmLocation(token, newFilmLocation);
+      //TODO fix duplicated code
       try {
         Response<FilmLocation> response = locationCall.execute();
         if (response.isSuccessful()) {
