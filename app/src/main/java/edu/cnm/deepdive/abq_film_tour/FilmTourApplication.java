@@ -1,10 +1,12 @@
 package edu.cnm.deepdive.abq_film_tour;
 
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
+
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Application;
 import android.content.Intent;
-import com.cloudinary.android.MediaManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -13,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.cnm.deepdive.abq_film_tour.controller.LoginActivity;
 import edu.cnm.deepdive.abq_film_tour.service.Service;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -29,7 +32,6 @@ public class FilmTourApplication extends Application {
   private Retrofit retrofit;
   private Service service;
 
-
   @Override
   public void onCreate() {
     super.onCreate();
@@ -45,12 +47,44 @@ public class FilmTourApplication extends Application {
   }
 
   /**
+   * Creates an error message based on a given HTTP response code.
+   */
+  public String getErrorMessageFromHttpResponse(Response response) {
+    String errorMessage = getString(R.string.error_http, response.code());
+    if (response.code() == HTTP_UNAUTHORIZED) {
+      errorMessage = getString(R.string.error_unauthorized);
+    } else if (response.code() == HTTP_FORBIDDEN) {
+      //TODO Figure out how to retrieve the error description (it contains ban info)
+      errorMessage = getString(R.string.error_forbidden);
+    }
+    return errorMessage;
+  }
+
+  /**
+   * Performs end of function routine based on a given error message.
+   * @param errorMessage
+   */
+  public void handleErrorMessage(String errorMessage) {
+    if (errorMessage.equals(getString(R.string.error_unauthorized))) {
+      //Unauthorized, give the user a chance to sign back in.
+      signOutWithAlertDialog(errorMessage);
+    } else if (errorMessage.equals(getString(R.string.error_forbidden))) {
+      //Forbidden, exit with a ban message.
+      //TODO Figure out how to display the ban message provided in the error description
+      exitWithAlertDialog(errorMessage);
+    } else {
+      //In any other possibility, exit just to be safe.
+      exitWithAlertDialog(errorMessage);
+    }
+  }
+
+  /**
    * Creates an alert dialog with a given error message and closes the program, used for cleaner
    * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
    *
    * @param errorMessage a String message to display to the user.
    */
-  public void exitWithAlertDialog(String errorMessage) {
+  private void exitWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
@@ -78,7 +112,7 @@ public class FilmTourApplication extends Application {
    *
    * @param errorMessage a String message to display to the user.
    */
-  public void signOutWithAlertDialog(String errorMessage) {
+  private void signOutWithAlertDialog(String errorMessage) {
     AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
     alertDialog.setMessage(errorMessage)
         .setCancelable(false)
@@ -168,6 +202,5 @@ public class FilmTourApplication extends Application {
   public Service getService() {
     return service;
   }
-  
   
 }

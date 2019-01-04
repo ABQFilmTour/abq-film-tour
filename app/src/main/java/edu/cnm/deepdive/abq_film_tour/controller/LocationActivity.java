@@ -1,13 +1,9 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
-import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
-import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
+import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.SHARED_PREF_BOOKMARKS;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,7 +23,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
-import com.q42.android.scrollingimageview.ScrollingImageView;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
@@ -49,29 +44,27 @@ import retrofit2.Response;
  */
 public class LocationActivity extends AppCompatActivity {
 
-  private ImageView locationImage;
+  //CONSTANTS
+  private final String LOCATION_ID_KEY = "location_id_key";
+  private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
+
+  //FIELDS
+  private FilmTourApplication filmTourApplication;
   private ImageView locationPosterImage;
   private TextView locationSiteName;
   private TextView locationProductionTitle;
   private TextView locationImdb;
   private TextView locationPlot;
-  private ListView listView;
   private FilmLocation location;
   private Production production;
   private List<UserComment> userComments;
   private String token;
   private ImageButton bookmarkButton;
   private Button commentButton;
-  //  private Button imageButton;
   private SharedPreferences sharedPref;
   private Set<String> bookmarks;
-
-  private final String LOCATION_ID_KEY = "location_id_key";
-  private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
-  private static final int STATUS_CODE_ERROR = 1;
-  private static final String SHARED_PREF_BOOKMARKS = "bookmarks";
-
-  private FilmTourApplication filmTourApplication;
+  private ListView commentListView;
+  private ImageView locationImage;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,12 +84,21 @@ public class LocationActivity extends AppCompatActivity {
     assert extras != null;
     String locationID = extras.getString(LOCATION_ID_KEY);
 
+    //Sets up layout content
     setupViews();
     setupButtons();
 
     //Queries the database
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
+  }
+
+  public FilmLocation getLocation() {
+    return location;
+  }
+
+  Production getProduction() {
+    return production;
   }
 
   private void loadPosterImage() {
@@ -111,6 +113,27 @@ public class LocationActivity extends AppCompatActivity {
         .load(urlWithLazyHeader)
         .into(locationPosterImage);
     //TODO Default image in case there's no poster?
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    //Saves bookmarks to shared preferences when activity is no longer visible.
+    saveBookmarksToSharedPref(bookmarks);
+  }
+
+  private void saveBookmarksToSharedPref(Set<String> bookmarks) {
+    SharedPreferences.Editor editor = sharedPref.edit();
+    editor.putStringSet(SHARED_PREF_BOOKMARKS, bookmarks);
+    editor.apply();
+  }
+
+  public void setLocation(FilmLocation location) {
+    this.location = location;
+  }
+
+  public void setProduction(Production production) {
+    this.production = production;
   }
 
   private void setupButtons() {
@@ -170,7 +193,7 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   private void setupTextViews() {
-    //Setup basic textviews.
+    //Assigns data to text views after it has been retrieved from the database..
     production = location.getProduction();
     String locationText = location.getSiteName();
     locationSiteName.setText(locationText);
@@ -187,36 +210,7 @@ public class LocationActivity extends AppCompatActivity {
     locationSiteName = findViewById(R.id.location_sitename_view);
     locationImdb = findViewById(R.id.imdb_link_view);
     locationPlot = findViewById(R.id.plot_view);
-    listView = findViewById(R.id.comment_list_view);
-  }
-
-  @Override
-  protected void onStop() {
-    super.onStop();
-    //Saves bookmarks to shared preferences when activity is no longer visible.
-    saveBookmarksToSharedPref(bookmarks);
-  }
-
-  private void saveBookmarksToSharedPref(Set<String> bookmarks) {
-    SharedPreferences.Editor editor = sharedPref.edit();
-    editor.putStringSet(SHARED_PREF_BOOKMARKS, bookmarks);
-    editor.apply();
-  }
-
-  public FilmLocation getLocation() {
-    return location;
-  }
-
-  Production getProduction() {
-    return production;
-  }
-
-  public void setLocation(FilmLocation location) {
-    this.location = location;
-  }
-
-  public void setProduction(Production production) {
-    this.production = production;
+    commentListView = findViewById(R.id.comment_list_view);
   }
 
   /**
@@ -232,15 +226,12 @@ public class LocationActivity extends AppCompatActivity {
     protected Boolean doInBackground(UUID... UUIDs) {
       boolean successfulQuery = false;
       try {
-        //Retrieve the info from the server
         Call<FilmLocation> locationCall = filmTourApplication.getService()
             .getFilmLocation(token, UUIDs[0]);
         Call<List<UserComment>> commentCall = filmTourApplication.getService()
             .getComments(token, UUIDs[0]);
         Response<FilmLocation> locationCallResponse = locationCall.execute();
         Response<List<UserComment>> commentCallResponse = commentCall.execute();
-
-        //Assign info to local values if it came through correctly
         if (locationCallResponse.isSuccessful() && commentCallResponse.isSuccessful()) {
           location = locationCallResponse.body();
           userComments = commentCallResponse.body();
@@ -248,13 +239,8 @@ public class LocationActivity extends AppCompatActivity {
         } else {
           Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(locationCallResponse.code()));
           Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(commentCallResponse.code()));
-          Response response = locationCallResponse; // There should be no instance where the locationCallResponse is different from the commentCallResponse.
-          if (response.code() == HTTP_UNAUTHORIZED) {
-            errorMessage = getString(R.string.error_unauthorized);
-          } else if (response.code() == HTTP_FORBIDDEN) {
-            //TODO Figure out how to retrieve the error description (it contains ban info)
-            errorMessage = getString(R.string.error_forbidden);
-          }
+          errorMessage = filmTourApplication.getErrorMessageFromHttpResponse(locationCallResponse);
+          //I can't think of a situation where both of these calls would return different response codes.
         }
       } catch (IOException e) {
         Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, e.getMessage());
@@ -279,12 +265,8 @@ public class LocationActivity extends AppCompatActivity {
           UploadImageDialog uploadImageDialog = new UploadImageDialog();
           uploadImageDialog.show(getSupportFragmentManager(), "whatever");
         });*/
-      } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
-        filmTourApplication.signOutWithAlertDialog(errorMessage);
-      } else if (errorMessage.equals(getString(R.string.error_forbidden))) {
-        filmTourApplication.exitWithAlertDialog(errorMessage);
       } else {
-        filmTourApplication.exitWithAlertDialog(errorMessage);
+        filmTourApplication.handleErrorMessage(errorMessage);
       }
     }
   }
