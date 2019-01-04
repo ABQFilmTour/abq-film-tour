@@ -54,7 +54,7 @@
         android:background="@android:drawable/list_selector_background"
         app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
         app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-        app:srcCompat="@drawable/bookmark_icon"
+        app:srcCompat="@drawable/bookmark_button"
         android:contentDescription="@string/bookmark"
         />
 
