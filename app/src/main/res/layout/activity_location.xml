@@ -1,189 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical"
   android:theme="@style/LocationActivityTheme"
   tools:context=".controller.LocationActivity">
 
 
-  <ScrollView
-    android:id="@+id/location_list_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
-
-    <android.support.constraint.ConstraintLayout
-      android:id="@+id/location_constraint_view"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content">
-
-      <ImageView
-        android:id="@+id/image_view_header"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:adjustViewBounds="false"
-        app:layout_constraintDimensionRatio="@string/dimension_ratio_image_header"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/default_image_header"
-        android:importantForAccessibility="no"/>
-
-  <ImageView
-    android:id="@+id/image_view_poster"
-    android:layout_width="0dp"
-    android:layout_height="@dimen/poster_height"
-    android:layout_marginBottom="@dimen/margin_small"
-    app:layout_constraintBottom_toBottomOf="@+id/image_view_header"
-    app:layout_constraintDimensionRatio="@string/dimension_ratio_poster"
-    app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    android:contentDescription="@string/production_poster"/>
-
-
-  <TextView
-    android:id="@+id/production_title_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_small"
-    android:layout_marginStart="@dimen/margin_medium"
-    android:layout_marginEnd="@dimen/margin_small"
-    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-    app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
-    app:layout_constraintStart_toEndOf="@+id/image_view_poster"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    app:layout_constraintBottom_toTopOf="@id/imdb_link_view"
-    />
-
-  <ImageButton
-    android:id="@+id/bookmark_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_small"
-    android:background="@android:drawable/list_selector_background"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    app:srcCompat="@drawable/bookmark_icon"
-    android:contentDescription="@string/bookmark"
-    />
-
-  <TextView
-    android:id="@+id/imdb_link_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_medium"
-    android:layout_marginStart="@dimen/margin_medium"
-    android:layout_marginEnd="@dimen/margin_small"
-    android:clickable="true"
-    android:focusable="true"
-    android:textColor="@color/text_color_link"
-    android:textSize="@dimen/text_size_x_small"
-    app:layout_constraintEnd_toStartOf="@id/bookmark_button"
-    app:layout_constraintStart_toEndOf="@id/image_view_poster"
-    app:layout_constraintTop_toBottomOf="@id/production_title_view"
-    app:layout_constraintBottom_toTopOf="@id/plot_view"/>
-
-      <TextView
-        android:id="@+id/plot_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintEnd_toStartOf="@id/guidelineRight"
-        app:layout_constraintStart_toEndOf="@id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@id/imdb_link_view"
-        app:layout_constraintBottom_toTopOf="@id/location_sitename_view"/>
-
-  <TextView
-    android:id="@+id/location_sitename_view"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_large"
-    android:layout_marginStart="@dimen/margin_small"
-    android:layout_marginEnd="@dimen/margin_small"
-    android:textAlignment="center"
-    android:textSize="@dimen/text_size_large"
-    android:textColor="@color/dialogTextColor"
-    app:layout_constraintEnd_toStartOf="@id/guidelineRight"
-    app:layout_constraintStart_toEndOf="@id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/plot_view"
-    app:layout_constraintBottom_toTopOf="@id/user_image_comment_input"
-    android:background="@color/colorPrimaryDark"/>
-
-  <android.support.constraint.Guideline
-    android:id="@+id/guidelineLeft"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_begin="@dimen/margin_medium"/>
-  <android.support.constraint.Guideline
-    android:id="@+id/guidelineRight"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_end="@dimen/margin_medium"/>
-  <android.support.constraint.Barrier
-    android:id="@+id/barrier"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:barrierDirection="bottom"
-    app:constraint_referenced_ids="image_view_poster,location_sitename_view"
-    />
-
-      <LinearLayout
-        android:id="@+id/user_image_comment_input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@id/location_sitename_view"
-        app:layout_constraintBottom_toTopOf="@+id/comment_list_view">
-
-        <Button
-          android:id="@+id/submit_comment_button"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@drawable/round_border_orange"
-          android:textColor="@color/dialogTextColor"
-          android:hint="@string/submit_comment"/>
-
-        <!-- Image feature to be implemented later
-        <Button-->
-          <!--android:id="@+id/submit_image_button"-->
-          <!--android:layout_width="match_parent"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:background="@drawable/round_border_orange"-->
-          <!--android:hint="@string/upload_image"-->
-          <!--android:textColor="@color/dialogTextColor"/>-->
-
-      </LinearLayout>
-
-      <!--FIXME the vertically scrolling ScrollView should not contain another vertically scrolling widget (ListView)-->
 
       <ListView
         android:id="@+id/comment_list_view"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/comment_view_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/margin_large"
         android:textAlignment="center"
         android:textColor="@color/dialogTextColor"
         android:textSize="@dimen/text_size_medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_image_comment_input"/>
+       />
 
-    </android.support.constraint.ConstraintLayout>
+</RelativeLayout>
 
-  </ScrollView>
-
-</android.support.constraint.ConstraintLayout>

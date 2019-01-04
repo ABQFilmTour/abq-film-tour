@@ -71,6 +71,9 @@ public class LocationActivity extends AppCompatActivity {
     //Sets up the activity and required fields
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_location);
+    commentListView = findViewById(R.id.comment_list_view);
+    View headerView = getLayoutInflater().inflate(R.layout.activity_location_header, null);
+    commentListView.addHeaderView(headerView);
     filmTourApplication = (FilmTourApplication) getApplication();
     token = getString(R.string.oauth2_header,
         FilmTourApplication.getInstance().getAccount().getIdToken());
@@ -170,17 +173,6 @@ public class LocationActivity extends AppCompatActivity {
     //TODO Do not display comment if !approved, possibly can do this in comment adapter
     CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
     commentListView.setAdapter(commentAdapter);
-
-    //TODO Fix scrolling
-    commentListView.setOnTouchListener(new OnTouchListener() {
-      // Setting on Touch Listener for handling the touch inside ScrollView
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        // Disallow the touch request for parent scroll on touch of child view
-        v.getParent().requestDisallowInterceptTouchEvent(true);
-        return false;
-      }
-    });
   }
 
   private void setupImdbLink() {
