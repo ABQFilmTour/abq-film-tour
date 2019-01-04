@@ -24,7 +24,7 @@
     android:roundIcon="@mipmap/ic_filmtour_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme"
-    tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+    tools:ignore="AllowBackup">
     <uses-library
       android:name="org.apache.http.legacy"
       android:required="false"/>
