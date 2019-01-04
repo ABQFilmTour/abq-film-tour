@@ -254,6 +254,7 @@ public class LocationActivity extends AppCompatActivity {
     protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
         super.onPostExecute(successfulQuery);
+        LocationActivity.this.setTitle(location.getSiteName());
         setupTextViews();
         setupImdbLink();
         loadPosterImage();
