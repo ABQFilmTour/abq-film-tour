@@ -197,21 +197,6 @@ public class LocationActivity extends AppCompatActivity {
     saveBookmarksToSharedPref(bookmarks);
   }
 
-  /**
-   * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
-   *
-   * @param errorMessage a String message to display to the user.
-   */
-  private void exitWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
-    alertDialog.setMessage(errorMessage)
-        .setCancelable(false)
-        .setPositiveButton(R.string.alert_exit, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
-    AlertDialog alert = alertDialog.create();
-    alert.show();
-  }
-
   private void saveBookmarksToSharedPref(Set<String> bookmarks) {
     SharedPreferences.Editor editor = sharedPref.edit();
     editor.putStringSet(SHARED_PREF_BOOKMARKS, bookmarks);
@@ -229,7 +214,6 @@ public class LocationActivity extends AppCompatActivity {
   public void setLocation(FilmLocation location) {
     this.location = location;
   }
-
 
   public void setProduction(Production production) {
     this.production = production;
@@ -279,7 +263,6 @@ public class LocationActivity extends AppCompatActivity {
       return successfulQuery;
     }
 
-
     @Override
     protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
@@ -299,9 +282,9 @@ public class LocationActivity extends AppCompatActivity {
       } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
         filmTourApplication.signOutWithAlertDialog(errorMessage);
       } else if (errorMessage.equals(getString(R.string.error_forbidden))) {
-        exitWithAlertDialog(errorMessage);
+        filmTourApplication.exitWithAlertDialog(errorMessage);
       } else {
-        exitWithAlertDialog(errorMessage);
+        filmTourApplication.exitWithAlertDialog(errorMessage);
       }
     }
   }

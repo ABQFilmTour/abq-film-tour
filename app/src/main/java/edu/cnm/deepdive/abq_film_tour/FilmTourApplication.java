@@ -45,6 +45,21 @@ public class FilmTourApplication extends Application {
   }
 
   /**
+   * Creates an alert dialog with a given error message and closes the program, used for cleaner
+   * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
+   *
+   * @param errorMessage a String message to display to the user.
+   */
+  public void exitWithAlertDialog(String errorMessage) {
+    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+    alertDialog.setMessage(errorMessage)
+        .setCancelable(false)
+        .setPositiveButton(R.string.alert_exit, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
+    AlertDialog alert = alertDialog.create();
+    alert.show();
+  }
+
+  /**
    * This method signs the Google account out of the application and returns the user to the login
    * activity.
    */
