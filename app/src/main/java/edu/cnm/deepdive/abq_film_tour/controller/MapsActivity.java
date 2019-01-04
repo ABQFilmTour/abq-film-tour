@@ -3,7 +3,6 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 import android.Manifest.permission;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,14 +61,6 @@ import retrofit2.Response;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   //CONSTANTS
-  /**
-   * HTTP status code for Unauthorized (something messed up trying to authorize your request, try again?)
-   */
-  private static final int HTTP_UNAUTHORIZED = 401;
-  /**
-   * HTTP status code for Forbidden (we got your request just fine and think you should go away)
-   */
-  private static final int HTTP_FORBIDDEN = 403;
   /**
    * String type that refers to Television Production types.
    */
@@ -250,10 +241,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Log.d("Token", token); //TODO Remove this when there's a better way to retrieve token
     //TODO refresh token to ensure it isn't stale
     setContentView(R.layout.activity_maps);
-
     progressSpinner = findViewById(R.id.progress_spinner);
     progressSpinner.setVisibility(View.VISIBLE);
-
     new GetProductionsTask().execute();
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     filmTourApplication.getAccount().getId();
@@ -331,13 +320,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Takes a custom drawable file and converts it to Bitmap. The BitmapDescriptorFactory.fromBitmap()
    * method will use converted bitmap to create the custom marker for us.
-   *
    */
   private static Bitmap createCustomMarker(Context context) {
-
     View marker = ((LayoutInflater) Objects.requireNonNull(context.getSystemService(
         Context.LAYOUT_INFLATER_SERVICE))).inflate(R.layout.custom_marker_layout, null);
-
     DisplayMetrics displayMetrics = new DisplayMetrics();
     ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     marker.setLayoutParams(new ViewGroup.LayoutParams(MAP_MARKER_WIDTH, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -347,7 +333,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
     marker.draw(canvas);
-
     return bitmap;
   }
 
@@ -377,21 +362,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
       startActivity(intent);
     });
-  }
-
-  /**
-   * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
-   *
-   * @param errorMessage a String message to display to the user.
-   */
-  private void exitWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
-    alertDialog.setMessage(errorMessage)
-        .setCancelable(false)
-        .setPositiveButton(R.string.alert_exit, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
-    AlertDialog alert = alertDialog.create();
-    alert.show();
   }
 
   /**
@@ -492,10 +462,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private void nearMe(LatLng userLatLng) {
     setTitle(getString(R.string.all_nearby_locations));
     CameraPosition cameraPosition = new CameraPosition.Builder()
-        .target(userLatLng) // Sets the center of the map to location user
+        .target(userLatLng) // Sets the center of the map to user location
         .zoom(ZOOM_LEVEL_NEAR_ME) // Sets the zoom
-        .bearing(BEARING_LEVEL_NEAR_ME) // Sets the orientation of the camera to east
-        .tilt(TILT_LEVEL_NEAR_ME) // Sets the tilt of the camera to 30 degrees
+        .bearing(BEARING_LEVEL_NEAR_ME) // Sets the orientation of the camera
+        .tilt(TILT_LEVEL_NEAR_ME) // Sets the tilt of the camera
         .build(); // Creates a CameraPosition from the builder
     populateMapFromLocation(userLatLng);
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -527,10 +497,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean handled = true;
     LatLng location;
     Bundle arguments = new Bundle();
-      /*if (this.progressSpinner.getVisibility() == View.VISIBLE) {
+    if (this.progressSpinner.getVisibility() == View.VISIBLE) {
         Toast.makeText(this, "Hold yer horses!!!", Toast.LENGTH_SHORT).show();
         return false;
-      }*/
+    }
     switch (item.getItemId()) {
       default:
         handled = super.onOptionsItemSelected(item);
@@ -591,7 +561,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         break;
       case R.id.sign_out:
-        signOut();
+        filmTourApplication.signOut();
         break;
     }
     return handled;
@@ -724,35 +694,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * This method signs the Google account out of the application and returns the user to the login
-   * activity.
-   */
-  private void signOut() {
-    FilmTourApplication app = FilmTourApplication.getInstance();
-    app.getClient().signOut().addOnCompleteListener(this, (task) -> {
-      app.setAccount(null);
-      Intent intent = new Intent(this, LoginActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-      startActivity(intent);
-    });
-  }
-
-  /**
-   * Creates an alert dialog with a given error message and signs out, used for cleaner exception
-   * handling. Ideal for 401 as it invites the user to try to sign in again.
-   *
-   * @param errorMessage a String message to display to the user.
-   */
-  private void signOutWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
-    alertDialog.setMessage(errorMessage)
-        .setCancelable(false)
-        .setPositiveButton(R.string.alert_signout, (dialog, which) -> signOut());
-    AlertDialog alert = alertDialog.create();
-    alert.show();
-  }
-
-  /**
    * Asynchronous task that retrieves the productions from the server. Returns a boolean if the
    * query was successful, displays an alert dialog and exits the app if not.
    */
@@ -770,27 +711,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       boolean successfulQuery = false;
       try {
         Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
-        //ring ring
         Response<List<Production>> response = call.execute();
-        //hello is this mister production list
         if (response.isSuccessful()) {
-          //yes it is how can I help you
           productions = response.body();
           successfulQuery = true;
         } else {
-          //no you have the wrong number or something sorry
           Log.d(ERROR_LOG_TAG_MAPS_ACTIVITY, String.valueOf(response.code()));
-          errorMessage = getString(R.string.error_http, response.code());
-          if (response.code() == HTTP_UNAUTHORIZED) {
-            errorMessage = getString(R.string.error_unauthorized);
-          } else if (response.code() == HTTP_FORBIDDEN) {
-            //TODO Figure out how to retrieve the error description (it contains ban info)
-            errorMessage = getString(R.string.error_forbidden);
-          }
-          //TODO Load cached data if failed to reach server?
+          errorMessage = filmTourApplication.getErrorMessageFromHttpResponse(response);
         }
       } catch (IOException e) {
-        //your call could not be completed as dialed please try again
         Log.d(ERROR_LOG_TAG_MAPS_ACTIVITY, e.getMessage());
         errorMessage = getString(R.string.error_io);
       }
@@ -803,10 +732,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       if (successfulQuery) {
         populateTitlesList();
         new GetLocationsTask().execute(); //we got the productions time to call for the locations
-      } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
-        signOutWithAlertDialog(errorMessage);
       } else {
-        exitWithAlertDialog(errorMessage);
+        filmTourApplication.handleErrorMessage(MapsActivity.this, errorMessage);
       }
     }
   }
@@ -835,9 +762,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           successfulQuery = true;
         } else {
           Log.d(ERROR_LOG_TAG_MAPS_ACTIVITY, String.valueOf(response.code()));
+          errorMessage = filmTourApplication.getErrorMessageFromHttpResponse(response);
         }
       } catch (IOException e) {
         Log.d(ERROR_LOG_TAG_MAPS_ACTIVITY, e.getMessage());
+        errorMessage = getString(R.string.error_io);
       }
       return successfulQuery;
     }
@@ -847,10 +776,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       if (successfulQuery) {
         checkForPastTitle(); //see what we've got in shared pref
         progressSpinner.setVisibility(View.GONE); //all the work is done the spinner can go now
-      } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
-        signOutWithAlertDialog(errorMessage);
       } else {
-        exitWithAlertDialog(errorMessage);
+        filmTourApplication.handleErrorMessage(MapsActivity.this, errorMessage);
       }
     }
   }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   package="edu.cnm.deepdive.abq_film_tour">
 
   <!--
@@ -22,7 +23,8 @@
     android:name=".FilmTourApplication"
     android:roundIcon="@mipmap/ic_filmtour_round"
     android:supportsRtl="true"
-    android:theme="@style/AppTheme">
+    android:theme="@style/AppTheme"
+    tools:ignore="AllowBackup">
     <uses-library
       android:name="org.apache.http.legacy"
       android:required="false"/>

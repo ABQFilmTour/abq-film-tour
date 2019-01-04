@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:scrolling_image_view="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -17,42 +16,41 @@
     android:orientation="vertical"
     >
 
-
     <android.support.constraint.ConstraintLayout
       android:id="@+id/location_constraint_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
-
-
 
       <ImageView
         android:id="@+id/image_view_header"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="false"
-        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintDimensionRatio="@string/dimension_ratio_image_header"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/default_image_header"/>
+        android:background="@drawable/default_image_header"
+        android:importantForAccessibility="no"/>
 
   <ImageView
     android:id="@+id/image_view_poster"
     android:layout_width="0dp"
-    android:layout_height="150dp"
-    android:layout_marginBottom="8dp"
+    android:layout_height="@dimen/poster_height"
+    android:layout_marginBottom="@dimen/margin_small"
     app:layout_constraintBottom_toBottomOf="@+id/image_view_header"
-    app:layout_constraintDimensionRatio="w,2:3"
+    app:layout_constraintDimensionRatio="@string/dimension_ratio_poster"
     app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"/>
-    <!--app:srcCompat="@drawable/bb_poster_image"-->
+    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
+    android:contentDescription="@string/production_poster"/>
+
 
   <TextView
     android:id="@+id/production_title_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="8dp"
+    android:layout_marginTop="@dimen/margin_small"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_small"
     android:textAppearance="@style/TextAppearance.AppCompat.Title"
     app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
     app:layout_constraintStart_toEndOf="@+id/image_view_poster"
@@ -64,23 +62,25 @@
     android:id="@+id/bookmark_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="@dimen/margin_small"
     android:background="@android:drawable/list_selector_background"
     app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
     app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    app:srcCompat="@drawable/bookmark_icon"/>
+    app:srcCompat="@drawable/bookmark_icon"
+    android:contentDescription="@string/bookmark"
+    />
 
   <TextView
     android:id="@+id/imdb_link_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="@dimen/margin_medium"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_small"
     android:clickable="true"
     android:focusable="true"
-    android:textColor="#0000FF"
-    android:textSize="@dimen/small_text_size"
+    android:textColor="@color/text_color_link"
+    android:textSize="@dimen/text_size_x_small"
     app:layout_constraintEnd_toStartOf="@id/bookmark_button"
     app:layout_constraintStart_toEndOf="@id/image_view_poster"
     app:layout_constraintTop_toBottomOf="@id/production_title_view"
@@ -90,10 +90,10 @@
         android:id="@+id/plot_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toStartOf="@id/guidelineRight"
@@ -105,11 +105,11 @@
     android:id="@+id/location_sitename_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
+    android:layout_marginTop="@dimen/margin_large"
+    android:layout_marginStart="@dimen/margin_small"
+    android:layout_marginEnd="@dimen/margin_small"
     android:textAlignment="center"
-    android:textSize="@dimen/large_text_size"
+    android:textSize="@dimen/text_size_large"
     android:textColor="@color/dialogTextColor"
     app:layout_constraintEnd_toStartOf="@id/guidelineRight"
     app:layout_constraintStart_toEndOf="@id/guidelineLeft"
@@ -122,13 +122,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:layout_constraintGuide_begin="16dp"/>
+    app:layout_constraintGuide_begin="@dimen/margin_medium"/>
   <android.support.constraint.Guideline
     android:id="@+id/guidelineRight"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:layout_constraintGuide_end="16dp"/>
+    app:layout_constraintGuide_end="@dimen/margin_medium"/>
   <android.support.constraint.Barrier
     android:id="@+id/barrier"
     android:layout_width="wrap_content"
@@ -137,12 +137,11 @@
     app:constraint_referenced_ids="image_view_poster,location_sitename_view"
     />
 
-
       <LinearLayout
         android:id="@+id/user_image_comment_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_small"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
@@ -151,38 +150,39 @@
         app:layout_constraintBottom_toTopOf="@+id/comment_list_view">
 
         <Button
-          android:id="@+id/register_review_button"
+          android:id="@+id/submit_comment_button"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="@drawable/round_border_orange"
-          android:hint="Your Review"
-          android:textColor="@color/dialogTextColor"/>
+          android:textColor="@color/dialogTextColor"
+          android:hint="@string/submit_comment"/>
+
         <!-- Image feature to be implemented later
-        <Button
-          android:id="@+id/register_image_button"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@drawable/round_border_orange"
-          android:hint="Upload Image"
-          android:textColor="@color/dialogTextColor"/>
-         -->
+        <Button-->
+          <!--android:id="@+id/submit_image_button"-->
+          <!--android:layout_width="match_parent"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:background="@drawable/round_border_orange"-->
+          <!--android:hint="@string/upload_image"-->
+          <!--android:textColor="@color/dialogTextColor"/>-->
 
       </LinearLayout>
+
+      <!--FIXME the vertically scrolling ScrollView should not contain another vertically scrolling widget (ListView)-->
 
       <ListView
         android:id="@+id/comment_list_view"
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="24dp"
+        android:layout_height="@dimen/comment_view_height"
+        android:layout_marginTop="@dimen/margin_large"
         android:textAlignment="center"
         android:textColor="@color/dialogTextColor"
-        android:textSize="@dimen/medium_text_size"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_image_comment_input"/>
 
     </android.support.constraint.ConstraintLayout>
-
 
   </ScrollView>
 

@@ -2,10 +2,12 @@
 <resources>
   <color name="colorPrimary">#000000</color>
   <color name="colorPrimaryDark">#000000</color>
-  <color name="colorTranparent">#59000000</color>
+  <color name="colorTransparent">#59000000</color>
   <color name="colorAccent">#FC950D</color>
   <color name="dialogTextColor">#FFFFFF</color>
   <color name="orangeTheme">#ff7326</color>
   <color name="darkerTransparent">#B3000000</color>
-  <color name="lightgrey_edit_text_background">#D3D3D3</color>
+  <color name="edit_text_background">#D3D3D3</color>
+  <color name="text_color_link">#0000FF</color>
+  <color name="custom_marker_border_color">#FFFFFF</color>
 </resources>

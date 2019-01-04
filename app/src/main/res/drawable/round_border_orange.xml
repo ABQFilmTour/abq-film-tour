@@ -6,20 +6,15 @@
     android:color="@color/orangeTheme" >
   </solid>
 
-  <stroke
-    android:width="2dp"
-    android:color="@color/dialogTextColor" >
-  </stroke>
-
   <padding
     android:left="5dp"
     android:top="5dp"
     android:right="5dp"
-    android:bottom="5dp"    >
+    android:bottom="5dp">
   </padding>
 
   <corners
-    android:radius="11dp"   >
+    android:radius="11dp">
   </corners>
 
 

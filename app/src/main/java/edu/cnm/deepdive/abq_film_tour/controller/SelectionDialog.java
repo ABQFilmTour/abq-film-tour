@@ -18,10 +18,8 @@ import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.cloudinary.android.callback.ErrorInfo;
 import edu.cnm.deepdive.abq_film_tour.R;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -31,6 +29,7 @@ import java.util.Objects;
  */
 public class SelectionDialog extends DialogFragment{
 
+  private static final int TRANSPARENCY = 50;
   /**
    * This is the parent activity to pass information back to.
    */
@@ -43,7 +42,7 @@ public class SelectionDialog extends DialogFragment{
     AlertDialog.Builder builder = new Builder(getActivity());
     parentMap = (MapsActivity) getActivity();
     View view = Objects.requireNonNull(getActivity())
-        .getLayoutInflater().inflate(R.layout.fragment_selection, null, false);
+        .getLayoutInflater().inflate(R.layout.selection_dialog_fragment, null, false);
     Toolbar toolbar = view.findViewById(R.id.my_toolbar);
     assert getArguments() != null;
     toolbar.setTitle(getArguments().getString(SELECTED_OPTIONS_MENU_ITEM_KEY));
@@ -74,7 +73,7 @@ public class SelectionDialog extends DialogFragment{
     params.width = LayoutParams.MATCH_PARENT;
     params.height = LayoutParams.MATCH_PARENT;
     final Drawable d = new ColorDrawable(Color.BLACK);
-    d.setAlpha(50); //FIXME what is this magic value?
+    d.setAlpha(TRANSPARENCY);
     getDialog().getWindow().setBackgroundDrawable(d);
     getDialog().getWindow().setAttributes(params);
     super.onResume();

@@ -1,10 +1,9 @@
 package edu.cnm.deepdive.abq_film_tour.controller;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
+import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.SHARED_PREF_BOOKMARKS;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
-import com.q42.android.scrollingimageview.ScrollingImageView;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
@@ -46,29 +44,27 @@ import retrofit2.Response;
  */
 public class LocationActivity extends AppCompatActivity {
 
-  private ImageView locationImage;
+  //CONSTANTS
+  private final String LOCATION_ID_KEY = "location_id_key";
+  private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
+
+  //FIELDS
+  private FilmTourApplication filmTourApplication;
   private ImageView locationPosterImage;
   private TextView locationSiteName;
   private TextView locationProductionTitle;
   private TextView locationImdb;
   private TextView locationPlot;
-  private ListView listView;
   private FilmLocation location;
   private Production production;
   private List<UserComment> userComments;
   private String token;
   private ImageButton bookmarkButton;
   private Button commentButton;
-//  private Button imageButton;
   private SharedPreferences sharedPref;
   private Set<String> bookmarks;
-
-  private final String LOCATION_ID_KEY = "location_id_key";
-  private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
-  private static final int STATUS_CODE_ERROR = 1;
-  private static final String SHARED_PREF_BOOKMARKS = "bookmarks";
-
-  private FilmTourApplication filmTourApplication;
+  private ListView commentListView;
+  private ImageView locationImage;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,18 +84,28 @@ public class LocationActivity extends AppCompatActivity {
     assert extras != null;
     String locationID = extras.getString(LOCATION_ID_KEY);
 
+    //Sets up layout content
     setupViews();
     setupButtons();
 
     //Queries the database
     UUID locationUUID = UUID.fromString(locationID);
     new LocationTask().execute(locationUUID);
+  }
 
+  public FilmLocation getLocation() {
+    return location;
+  }
+
+  Production getProduction() {
+    return production;
   }
 
   private void loadPosterImage() {
     //TODO This is the "lazy method" to add an authorization header, there's a cleaner method using Modules.
-    GlideUrl urlWithLazyHeader = new GlideUrl(String.format(getString(R.string.poster_url_format), getString(R.string.base_url), production.getId()),
+    GlideUrl urlWithLazyHeader = new GlideUrl(String
+        .format(getString(R.string.poster_url_format), getString(R.string.base_url),
+            production.getId()),
         new LazyHeaders.Builder()
             .addHeader("Authorization", token)
             .build());
@@ -109,9 +115,30 @@ public class LocationActivity extends AppCompatActivity {
     //TODO Default image in case there's no poster?
   }
 
+  @Override
+  protected void onStop() {
+    super.onStop();
+    //Saves bookmarks to shared preferences when activity is no longer visible.
+    saveBookmarksToSharedPref(bookmarks);
+  }
+
+  private void saveBookmarksToSharedPref(Set<String> bookmarks) {
+    SharedPreferences.Editor editor = sharedPref.edit();
+    editor.putStringSet(SHARED_PREF_BOOKMARKS, bookmarks);
+    editor.apply();
+  }
+
+  public void setLocation(FilmLocation location) {
+    this.location = location;
+  }
+
+  public void setProduction(Production production) {
+    this.production = production;
+  }
+
   private void setupButtons() {
     bookmarkButton = findViewById(R.id.bookmark_button);
-    commentButton = findViewById(R.id.register_review_button);
+    commentButton = findViewById(R.id.submit_comment_button);
   }
 
   private void setupBookmarkListener() {
@@ -138,6 +165,45 @@ public class LocationActivity extends AppCompatActivity {
     });
   }
 
+  private void setupComments() {
+    commentListView = findViewById(R.id.comment_list_view);
+    //TODO Do not display comment if !approved, possibly can do this in comment adapter
+    CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
+    commentListView.setAdapter(commentAdapter);
+
+    //TODO Fix scrolling
+    commentListView.setOnTouchListener(new OnTouchListener() {
+      // Setting on Touch Listener for handling the touch inside ScrollView
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        // Disallow the touch request for parent scroll on touch of child view
+        v.getParent().requestDisallowInterceptTouchEvent(true);
+        return false;
+      }
+    });
+  }
+
+  private void setupImdbLink() {
+    //Setup IMDB link
+    locationImdb.setText(R.string.imdb_link);
+    locationImdb.setOnClickListener(v -> {
+      Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
+      Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
+      startActivity(intent);
+    });
+  }
+
+  private void setupTextViews() {
+    //Assigns data to text views after it has been retrieved from the database..
+    production = location.getProduction();
+    String locationText = location.getSiteName();
+    locationSiteName.setText(locationText);
+    String productionTitle = production.getTitle();
+    locationProductionTitle.setText(productionTitle);
+    String productionPlot = production.getPlot();
+    locationPlot.setText(productionPlot);
+  }
+
   private void setupViews() {
     locationImage = findViewById(R.id.image_view_header);
     locationPosterImage = findViewById(R.id.image_view_poster);
@@ -145,80 +211,7 @@ public class LocationActivity extends AppCompatActivity {
     locationSiteName = findViewById(R.id.location_sitename_view);
     locationImdb = findViewById(R.id.imdb_link_view);
     locationPlot = findViewById(R.id.plot_view);
-    listView = findViewById(R.id.comment_list_view);
-  }
-
-  @Override
-  protected void onStop() {
-    super.onStop();
-    //Saves bookmarks to shared preferences when activity is no longer visible.
-    saveBookmarksToSharedPref(bookmarks);
-  }
-
-  /**
-   * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
-   *
-   * @param errorMessage a String message to display to the user.
-   */
-  private void exitWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
-    alertDialog.setMessage(errorMessage)
-        .setCancelable(false)
-        .setPositiveButton(R.string.alert_exit, (dialog, which) -> System.exit(STATUS_CODE_ERROR));
-    AlertDialog alert = alertDialog.create();
-    alert.show();
-  }
-
-  /**
-   * This method signs the Google account out of the application and returns the user to the login
-   * activity.
-   */
-  private void signOut() {
-    FilmTourApplication app = FilmTourApplication.getInstance();
-    app.getClient().signOut().addOnCompleteListener(this, (task) -> {
-      app.setAccount(null);
-      Intent intent = new Intent(this, LoginActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-      startActivity(intent);
-    });
-  }
-
-  /**
-   * Creates an alert dialog with a given error message and signs out, used for cleaner exception
-   * handling. Ideal for 401 as it invites the user to try to sign in again.
-   *
-   * @param errorMessage a String message to display to the user.
-   */
-  private void signOutWithAlertDialog(String errorMessage) {
-    AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
-    alertDialog.setMessage(errorMessage)
-        .setCancelable(false)
-        .setPositiveButton(R.string.alert_signout, (dialog, which) -> signOut());
-    AlertDialog alert = alertDialog.create();
-    alert.show();
-  }
-
-  private void saveBookmarksToSharedPref(Set<String> bookmarks) {
-    SharedPreferences.Editor editor = sharedPref.edit();
-    editor.putStringSet(SHARED_PREF_BOOKMARKS, bookmarks);
-    editor.apply();
-  }
-
-  public FilmLocation getLocation() {
-    return location;
-  }
-
-  public void setLocation(FilmLocation location) {
-    this.location = location;
-  }
-
-  Production getProduction() {
-    return production;
-  }
-
-  public void setProduction(Production production) {
-    this.production = production;
+    commentListView = findViewById(R.id.comment_list_view);
   }
 
   /**
@@ -229,21 +222,17 @@ public class LocationActivity extends AppCompatActivity {
   public class LocationTask extends AsyncTask<UUID, Void, Boolean> {
 
     private String errorMessage = getString(R.string.error_default);
-    BitmapDrawable poster;
 
     @Override
     protected Boolean doInBackground(UUID... UUIDs) {
       boolean successfulQuery = false;
       try {
-        //Retrieve the info from the server
         Call<FilmLocation> locationCall = filmTourApplication.getService()
             .getFilmLocation(token, UUIDs[0]);
         Call<List<UserComment>> commentCall = filmTourApplication.getService()
             .getComments(token, UUIDs[0]);
         Response<FilmLocation> locationCallResponse = locationCall.execute();
         Response<List<UserComment>> commentCallResponse = commentCall.execute();
-
-        //Assign info to local values if it came through correctly
         if (locationCallResponse.isSuccessful() && commentCallResponse.isSuccessful()) {
           location = locationCallResponse.body();
           userComments = commentCallResponse.body();
@@ -251,73 +240,34 @@ public class LocationActivity extends AppCompatActivity {
         } else {
           Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(locationCallResponse.code()));
           Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(commentCallResponse.code()));
-          //TODO Make new error string format for both response codes
+          errorMessage = filmTourApplication.getErrorMessageFromHttpResponse(locationCallResponse);
+          //I can't think of a situation where both of these calls would return different response codes.
         }
       } catch (IOException e) {
         Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, e.getMessage());
         errorMessage = getString(R.string.error_io);
       }
-
       return successfulQuery;
     }
-
-
 
     @Override
     protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
         super.onPostExecute(successfulQuery);
-        //Setup basic textviews.
-        production = location.getProduction();
-        String locationText = location.getSiteName();
-        locationSiteName.setText(locationText);
-        String productionTitle = production.getTitle();
-        locationProductionTitle.setText(productionTitle);
-        String productionPlot = production.getPlot();
-        locationPlot.setText(productionPlot);
-
-        //Setup IMDB link
-        locationImdb.setText(R.string.imdb_link);
-        locationImdb.setOnClickListener(v -> {
-          Uri locationImdb = Uri.parse(getString(R.string.imdb_url) + production.getImdbID());
-          Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
-          startActivity(intent);
-        });
-
+        setupTextViews();
+        setupImdbLink();
         loadPosterImage();
-
-        /*
-        //Setup image button
+        setupBookmarkListener();
+        setupCommentButtonListener();
+        setupComments();
+        /* A method like this will set up an image button when the image feature is implemented.
         imageButton = findViewById(R.id.register_image_button);
         imageButton.setOnClickListener(v -> {
           UploadImageDialog uploadImageDialog = new UploadImageDialog();
           uploadImageDialog.show(getSupportFragmentManager(), "whatever");
-        });
-        */
-
-        setupBookmarkListener();
-
-        setupCommentButtonListener();
-
-        //Setup comments
-        ListView commentListView = findViewById(R.id.comment_list_view);
-        CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
-        commentListView.setAdapter(commentAdapter);
-
-        commentListView.setOnTouchListener(new OnTouchListener() {
-          // Setting on Touch Listener for handling the touch inside ScrollView
-          @Override
-          public boolean onTouch(View v, MotionEvent event) {
-            // Disallow the touch request for parent scroll on touch of child view
-            v.getParent().requestDisallowInterceptTouchEvent(true);
-            return false;
-          }
-        });
-
-      } else if (errorMessage.equals(getString(R.string.error_unauthorized))) {
-        signOutWithAlertDialog(errorMessage);
+        });*/
       } else {
-        exitWithAlertDialog(errorMessage);
+        filmTourApplication.handleErrorMessage(LocationActivity.this, errorMessage);
       }
     }
   }

@@ -3,18 +3,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/custom_marker_view"
-  android:layout_width="52dp"
+  android:layout_width="@dimen/custom_marker_view_width"
   android:layout_height="wrap_content">
   <de.hdodenhof.circleimageview.CircleImageView
-    android:id="@+id/user_dp"
-    android:layout_width="42dp"
-    android:layout_height="46dp"
-    app:civ_border_color="#fff"
+    android:layout_width="@dimen/custom_marker_width"
+    android:layout_height="@dimen/custom_marker_height"
+    app:civ_border_color="@color/custom_marker_border_color"
     android:layout_alignParentTop="true"
     android:layout_gravity="center_horizontal"
-    android:layout_marginLeft="4dp"
+    android:layout_marginStart="@dimen/margin_x_small"
     android:contentDescription="@null"
-    android:src="@drawable/map_pin" />
+    android:src="@drawable/custom_marker" />
 </RelativeLayout>
 
 

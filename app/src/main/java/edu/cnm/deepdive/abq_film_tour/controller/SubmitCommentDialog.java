@@ -19,7 +19,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -30,42 +30,37 @@ public class SubmitCommentDialog extends DialogFragment {
   private FilmLocation location;
   private Production production;
   private String token;
-  EditText commentEditText;
+  private EditText commentEditText;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-
-    filmTourApplication = (FilmTourApplication) getActivity().getApplication();
+    filmTourApplication = (FilmTourApplication) Objects.requireNonNull(getActivity()).getApplication();
     parentActivity = (LocationActivity) getActivity();
     location = parentActivity.getLocation();
     production = parentActivity.getProduction();
     token = getString(R.string.oauth2_header,
         FilmTourApplication.getInstance().getAccount().getIdToken());
-
     View view = inflater.inflate(R.layout.submit_comment_fragment, null, false);
-    commentEditText = view.findViewById(R.id.register_comment_description);
+    commentEditText = view.findViewById(R.id.user_comment_edit);
     Button userCommentButton = view.findViewById(R.id.user_comment_button);
-
     userCommentButton.setOnClickListener( v -> {
       String textEntered = commentEditText.getText().toString();
-      new PostCommentTask().execute(textEntered);
+      new SubmitCommentTask().execute(textEntered);
     });
-
     return view;
   }
 
   @Override
   public void onResume() {
     super.onResume();
-
-    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+    WindowManager.LayoutParams params = Objects.requireNonNull(getDialog().getWindow()).getAttributes();
     params.width = LayoutParams.MATCH_PARENT;
-    getDialog().getWindow().setAttributes((WindowManager.LayoutParams) params);
+    getDialog().getWindow().setAttributes(params);
   }
 
-  public class PostCommentTask extends AsyncTask<String, Void, Boolean> {
+  public class SubmitCommentTask extends AsyncTask<String, Void, Boolean> {
 
     UserComment newComment;
 
@@ -73,44 +68,39 @@ public class SubmitCommentDialog extends DialogFragment {
     protected void onPreExecute() {
       super.onPreExecute();
       newComment = new UserComment();
-      newComment.setApproved(true); //Remove me!
       newComment.setFilmLocation(location);
       newComment.setGoogleId(filmTourApplication.getAccount().getId());
-      String theText = SubmitCommentDialog.this.commentEditText.getText().toString();
-      System.out.println(theText);
       newComment.setText(SubmitCommentDialog.this.commentEditText.getText().toString());
-      SimpleDateFormat requiredFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+      newComment.setApproved(true); // TODO Remove me!
     }
 
     @Override
     protected Boolean doInBackground(String... strings) {
-      Boolean successfulQuery = false;
-
+      boolean successfulQuery = false;
       Call<UserComment> call = filmTourApplication.getService().postUserComment(token, newComment, location.getId());
       try {
         Response<UserComment> response = call.execute();
         if (response.isSuccessful()) {
           successfulQuery = true;
         } else {
-          System.out.println(response);
+          // Do nothing - toast in onPostExecute displays enough information for now.
         }
       } catch (IOException e) {
-        //TODO Handle errors
+        // Do nothing - toast in onPostExecute displays enough information for now.
       }
       return successfulQuery;
     }
 
     @Override
-    protected void onPostExecute(Boolean aBoolean) {
-      super.onPostExecute(aBoolean);
-      if (aBoolean) {
-        Toast.makeText(parentActivity, "Success!", Toast.LENGTH_LONG).show();
+    protected void onPostExecute(Boolean successfulQuery) {
+      super.onPostExecute(successfulQuery);
+      if (successfulQuery) {
+        Toast.makeText(parentActivity, R.string.submission_successful, Toast.LENGTH_SHORT).show();
         dismiss();
       } else {
-        Toast.makeText(parentActivity, "oh no", Toast.LENGTH_LONG).show();
+        Toast.makeText(parentActivity, R.string.submission_failed, Toast.LENGTH_SHORT).show();
+        dismiss();
       }
     }
-
   }
-
 }
