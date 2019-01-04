@@ -22,12 +22,12 @@
   <string name="cancel">Cancel</string>
   <string name="not_in_burque">Estás fuera de los límites de la ciudad de Albuquerque.</string>
   <string name="unable_to_signin">Incapaz de iniciar sesión</string>
-  <string name="application_title">Film Tour</string>
+  <string name="title_application">Film Tour</string>
   <string name="log_null_production_type">Production %s has a null type.</string>
   <string name="client_id">650840836337-o0r50gnee6g2h5bg9lkq7d4776bfvp9c.apps.googleusercontent.com</string>
   <string name="oauth2_header">Bearer %s</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>
-  <string name="all_nearby_locations">Cerca De Mí</string>
+  <string name="title_near_me">Cerca De Mí</string>
   <string name="error_http">HTTP código de error %d</string>
   <string name="error_io">Error al llegar al servidor.</string>
   <string name="error_stale_token">Error. Intente reinstalar.</string>

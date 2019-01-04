@@ -313,7 +313,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       }
     } else {
       Toast.makeText(MapsActivity.this, R.string.startup_select_title, Toast.LENGTH_LONG).show();
-      setTitle(getString(R.string.application_title));
+      setTitle(getString(R.string.title_application));
     }
   }
 
@@ -460,7 +460,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * user's location and populates map pins of nearby filming locations.
    */
   private void nearMe(LatLng userLatLng) {
-    setTitle(getString(R.string.all_nearby_locations));
+    setTitle(getString(R.string.title_near_me));
     CameraPosition cameraPosition = new CameraPosition.Builder()
         .target(userLatLng) // Sets the center of the map to user location
         .zoom(ZOOM_LEVEL_NEAR_ME) // Sets the zoom
@@ -597,7 +597,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private void populateMapFromAll() {
     map.clear();
     progressSpinner.setVisibility(View.VISIBLE);
-    this.setTitle(getString(R.string.all_locations));
+    this.setTitle(getString(R.string.title_all_locations));
     for (FilmLocation location : locations) {
       createMapMarker(location);
     }
@@ -610,7 +610,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private void populateMapFromBookmarks() {
     map.clear();
-    this.setTitle(getString(R.string.create_your_own_tour));
+    this.setTitle(getString(R.string.title_bookmarks));
     for (FilmLocation location : locations) {
       if (!location.isApproved()) {
         continue;
@@ -709,8 +709,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected Boolean doInBackground(Void... voids) {
       boolean successfulQuery = false;
-      try {
         Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
+      try {
         Response<List<Production>> response = call.execute();
         if (response.isSuccessful()) {
           productions = response.body();

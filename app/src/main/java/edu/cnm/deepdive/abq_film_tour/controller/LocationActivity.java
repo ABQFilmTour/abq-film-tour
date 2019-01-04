@@ -152,10 +152,14 @@ public class LocationActivity extends AppCompatActivity {
         bookmarks.remove(locationId);
         Toast.makeText(LocationActivity.this, R.string.bookmark_removed_notification,
             Toast.LENGTH_SHORT).show();
+        bookmarkButton.setSelected(false);
+        bookmarkButton.refreshDrawableState();
       } else {
         bookmarks.add(locationId);
         Toast.makeText(LocationActivity.this, R.string.bookmark_added_notification,
             Toast.LENGTH_SHORT).show();
+        bookmarkButton.setSelected(true);
+        bookmarkButton.refreshDrawableState();
       }
     });
   }
@@ -246,6 +250,7 @@ public class LocationActivity extends AppCompatActivity {
     protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
         super.onPostExecute(successfulQuery);
+        LocationActivity.this.setTitle(location.getSiteName());
         setupTextViews();
         setupImdbLink();
         loadPosterImage();
