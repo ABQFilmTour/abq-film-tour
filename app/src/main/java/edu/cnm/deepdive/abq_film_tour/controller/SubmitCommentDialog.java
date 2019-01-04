@@ -82,9 +82,11 @@ public class SubmitCommentDialog extends DialogFragment {
         Response<UserComment> response = call.execute();
         if (response.isSuccessful()) {
           successfulQuery = true;
+        } else {
+          // Do nothing - toast in onPostExecute displays enough information for now.
         }
       } catch (IOException e) {
-        //TODO Handle errors
+        // Do nothing - toast in onPostExecute displays enough information for now.
       }
       return successfulQuery;
     }

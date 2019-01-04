@@ -16,13 +16,10 @@
     android:orientation="vertical"
     >
 
-
     <android.support.constraint.ConstraintLayout
       android:id="@+id/location_constraint_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
-
-
 
       <ImageView
         android:id="@+id/image_view_header"
@@ -140,7 +137,6 @@
     app:constraint_referenced_ids="image_view_poster,location_sitename_view"
     />
 
-
       <LinearLayout
         android:id="@+id/user_image_comment_input"
         android:layout_width="wrap_content"
@@ -160,8 +156,6 @@
           android:background="@drawable/round_border_orange"
           android:textColor="@color/dialogTextColor"
           android:hint="@string/submit_comment"/>
-
-
 
         <!-- Image feature to be implemented later
         <Button-->
@@ -189,7 +183,6 @@
         app:layout_constraintTop_toBottomOf="@+id/user_image_comment_input"/>
 
     </android.support.constraint.ConstraintLayout>
-
 
   </ScrollView>
 

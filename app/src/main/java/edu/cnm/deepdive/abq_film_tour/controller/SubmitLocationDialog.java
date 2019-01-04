@@ -35,8 +35,6 @@ import retrofit2.Response;
  */
 public class SubmitLocationDialog extends DialogFragment implements View.OnClickListener{
 
-  private static final int RESULT_LOAD_IMAGE = 1;
-
   private MapsActivity parentMap;
   private Production production;
   private String token;
@@ -80,14 +78,18 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
       case R.id.submit:
         SubmitLocationTask task = new SubmitLocationTask(
             Objects.requireNonNull(siteNameInput.getEditText()).getText().toString(),
-            getUserLocation(),
+            getUserLocationFromArguments(),
             production);
         task.execute();
         break;
     }
   }
 
-  public LatLng getUserLocation() {
+  /**
+   * Retrieves the user location from the arguments passed into the activity.
+   * @return a LatLng of the user's location.
+   */
+  private LatLng getUserLocationFromArguments() {
     assert getArguments() != null;
     return new LatLng(getArguments().getDouble(USER_LOCATION_LAT_KEY), getArguments().getDouble(USER_LOCATION_LONG_KEY));
   }
@@ -127,9 +129,11 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
         Response<FilmLocation> response = locationCall.execute();
         if (response.isSuccessful()) {
           successfulQuery = true;
+        } else {
+          // Do nothing - toast in onPostExecute displays enough information for now.
         }
       } catch (IOException e) {
-        //TODO Handle error
+        // Do nothing - toast in onPostExecute displays enough information for now.
       }
       return successfulQuery;
     }

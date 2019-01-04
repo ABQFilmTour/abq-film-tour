@@ -166,7 +166,8 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   private void setupComments() {
-    ListView commentListView = findViewById(R.id.comment_list_view);
+    commentListView = findViewById(R.id.comment_list_view);
+    //TODO Do not display comment if !approved, possibly can do this in comment adapter
     CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
     commentListView.setAdapter(commentAdapter);
 

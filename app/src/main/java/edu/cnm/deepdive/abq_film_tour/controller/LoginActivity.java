@@ -20,12 +20,12 @@ import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
  */
 public class LoginActivity extends AppCompatActivity {
 
-  private static final int REQUEST_CODE = 1000;
   /**
    * Time in milliseconds that the splash screen displays before sending the user to the
    * MapsActivity.
    */
   private static final int SPLASH_DELAY_TIME = 2000;
+  private static final int REQUEST_CODE = 1000;
 
   private SignInButton signIn;
 
