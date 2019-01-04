@@ -18,12 +18,11 @@
     android:background="@color/edit_text_background"
     android:gravity="center_horizontal">
 
-
       <EditText
-        android:id="@+id/register_comment_description"
+        android:id="@+id/user_comment_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/your_comment"
+        android:hint="@string/user_comment_hint"
         android:inputType="text"
         android:maxEms="100"/>
 
@@ -37,7 +36,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/margin_small"
     android:background="@color/colorAccent"
-    android:text="@string/send"
+    android:text="@string/submit"
     android:textColor="@color/colorPrimaryDark"/>
 
 </LinearLayout>

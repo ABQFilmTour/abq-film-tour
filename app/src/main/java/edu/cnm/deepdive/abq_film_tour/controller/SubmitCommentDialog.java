@@ -43,7 +43,7 @@ public class SubmitCommentDialog extends DialogFragment {
     token = getString(R.string.oauth2_header,
         FilmTourApplication.getInstance().getAccount().getIdToken());
     View view = inflater.inflate(R.layout.submit_comment_fragment, null, false);
-    commentEditText = view.findViewById(R.id.register_comment_description);
+    commentEditText = view.findViewById(R.id.user_comment_edit);
     Button userCommentButton = view.findViewById(R.id.user_comment_button);
     userCommentButton.setOnClickListener( v -> {
       String textEntered = commentEditText.getText().toString();

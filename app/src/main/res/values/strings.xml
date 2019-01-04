@@ -57,4 +57,7 @@
   <string name="upload_image">Upload Image</string>
   <string name="submission_successful">Post submitted! It will display once approved.</string>
   <string name="submission_failed">We were unable to process your request.</string>
+  <string name="submit_new_site_name">Enter the name of this location here.</string>
+  <string name="submit">Submit</string>
+  <string name="user_comment_hint">Enter your comment here.</string>
 </resources>
