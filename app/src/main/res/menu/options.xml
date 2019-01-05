@@ -7,29 +7,41 @@
     android:id="@+id/menu_all_locations"
     android:title="@string/menu_all_locations"
     app:showAsAction="never"/>
+
   <item
     android:id="@+id/menu_all_near_me"
     android:title="@string/menu_all_near_me"
     app:showAsAction="never"/>
+
   <item
     android:id="@+id/menu_film"
     android:title="@string/menu_film"
     app:showAsAction="never" />
+
   <item
     android:id="@+id/menu_television"
     android:title="@string/menu_television"
     app:showAsAction="never" />
+
   <item
     android:id="@+id/menu_bookmarks"
     android:title="@string/menu_bookmarks"
     app:showAsAction="never"/>
+
   <item
     android:id="@+id/menu_submit"
     android:title="@string/menu_submit"
     app:showAsAction="never"/>
+
+  <item
+    android:id="@+id/help"
+    android:title="@string/help"
+    app:showAsAction="never"/>
+
   <item
     android:id="@+id/sign_out"
     android:title="@string/sign_out"
     app:showAsAction="never"/>
+
 
 </menu>

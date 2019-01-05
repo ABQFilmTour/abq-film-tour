@@ -13,6 +13,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -559,6 +560,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           submitLocationDialog.setArguments(arguments);
           submitLocationDialog.show(getSupportFragmentManager(), "dialog");
         }
+        break;
+      case R.id.help:
+        Uri help = Uri.parse("https://abqfilmtour.github.io/docs/UsageInstructions.html");
+        Intent hIntent = new Intent(Intent.ACTION_VIEW, help);
+        startActivity(hIntent);
         break;
       case R.id.sign_out:
         filmTourApplication.signOut();
