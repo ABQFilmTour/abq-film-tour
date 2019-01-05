@@ -43,8 +43,8 @@ import retrofit2.Response;
 
 /**
  * This activity displays more information about a selected location and loads when the user selects
- * the location from the map pin. The activity retrieves the information from the database on loading
- * and the user can navigate to a dialog fragment to submit new content.
+ * the location from the map pin. The activity retrieves the information from the database on
+ * loading and the user can navigate to a dialog fragment to submit new content.
  */
 public class LocationActivity extends AppCompatActivity {
 
@@ -162,19 +162,21 @@ public class LocationActivity extends AppCompatActivity {
     editor.apply();
   }
 
+
   /**
    * Sets film location.
    *
-   * @param the film location
+   * @param location the film location
    */
   public void setLocation(FilmLocation location) {
     this.location = location;
   }
 
+
   /**
    * Sets production.
    *
-   * @param the production
+   * @param production the production
    */
   public void setProduction(Production production) {
     this.production = production;
