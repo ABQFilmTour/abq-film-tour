@@ -23,6 +23,7 @@
   <string name="error_io">Failed to reach server. Check your network connection.</string>
   <string name="error_unauthorized">Please sign in again.</string>
   <string name="exit_alert_dialog">Exit</string>
+  <string name="help">Help</string>
   <string name="imdb_link">Link to IMDB Page</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>
   <string name="loc_settings">Location Settings</string>
@@ -59,5 +60,4 @@
   <string name="unable_to_signin">Unable to sign in</string>
   <string name="upload_image">Upload Image</string>
   <string name="user_comment_hint">Enter your comment here.</string>
-  <string name="help">Help</string>
 </resources>

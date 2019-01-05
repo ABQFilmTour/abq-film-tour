@@ -93,7 +93,6 @@ public class LocationActivity extends AppCompatActivity {
 
     //Sets up layout content
     setupViews();
-    setupButtons();
 
     //Queries the database
     UUID locationUUID = UUID.fromString(locationID);
@@ -183,6 +182,9 @@ public class LocationActivity extends AppCompatActivity {
 
   private void setupButtons() {
     bookmarkButton = findViewById(R.id.bookmark_button);
+    if (bookmarks.contains(location.getId().toString())) {
+      bookmarkButton.setSelected(true);
+    }
     commentButton = findViewById(R.id.submit_comment_button);
   }
 
@@ -296,6 +298,7 @@ public class LocationActivity extends AppCompatActivity {
         setupTextViews();
         setupImdbLink();
         loadPosterImage();
+        setupButtons();
         setupBookmarkListener();
         setupCommentButtonListener();
         setupComments();
