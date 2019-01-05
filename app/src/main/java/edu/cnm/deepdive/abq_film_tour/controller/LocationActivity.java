@@ -147,7 +147,7 @@ public class LocationActivity extends AppCompatActivity {
   /**
    * Sets film location.
    *
-   * @param the film location
+   * @param the film location. 
    */
   public void setLocation(FilmLocation location) {
     this.location = location;

@@ -339,6 +339,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * retrieved from.
    */
   private void createMapMarker(FilmLocation location) {
+    if (location.getSiteName().equals("null")) {
+      //Skip locations with a "null" site name.
+      return;
+    }
     LatLng coordinates = new LatLng(Double.valueOf(location.getLatCoordinate()),
         Double.valueOf(location.getLongCoordinate()));
     Marker marker = map.addMarker(new MarkerOptions()
