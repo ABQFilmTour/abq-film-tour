@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Production {
 
   /**
-   * The UUID of this production on the ABQ Film Tour server.
+   * The UUID of this production on the server.
    */
   @PrimaryKey
   @Expose
@@ -32,7 +32,7 @@ public class Production {
   private String imdbId;
 
   /**
-   * A type of "movie" or "series" to specify what kind of production this is.
+   * Specifies what type the production is. The production can be of type "movie" or "series".
    */
   @Expose
   private String type;
@@ -62,24 +62,28 @@ public class Production {
   private String posterUrl;
 
   /**
-   * Returns the UUID of this production on the ABQ Film Tour server.
-   * @return the UUID of this production on the ABQ Film Tour server.
+   * Returns the UUID of this production on the server.
+   *
+   * @return the UUID of this production on the server
    */
   public UUID getId() {
     return id;
   }
 
   /**
-   * Sets the UUID of this production on the ABQ Film Tour server.
-   * @param id the UUID of this production on the ABQ Film Tour server.
+   * Sets the UUID of this production on the server.
+   *
+   * @param id the UUID of this production on the server.
    */
   public void setId(UUID id) {
     this.id = id;
   }
 
   /**
-   * Returns the ID of this production in the IMDb, a 7 digit number prefixed with "tt" for "title".
-   * @return the ID of this production in the IMDb, a 7 digit number prefixed with "tt" for "title".
+   * Returns the ID of this production in the IMDb, a 7 digit number prefixed with "tt" for
+   * "title".
+   *
+   * @return the ID of this production in the IMDb
    */
   public String getImdbID() {
     return imdbId;
@@ -87,7 +91,8 @@ public class Production {
 
   /**
    * Sets the ID of this production in the IMDb, a 7 digit number prefixed with "tt" for "title".
-   * @param imdbID the ID of this production in the IMDb, a 7 digit number prefixed with "tt" for "title".
+   *
+   * @param imdbID the ID of this production in the IMDb
    */
   public void setImdbID(String imdbID) {
     this.imdbId = imdbID;
@@ -95,7 +100,8 @@ public class Production {
 
   /**
    * Returns the year this production was released.
-   * @return the year this production was released.
+   *
+   * @return the year this production was released
    */
   public String getReleaseYear() {
     return releaseYear;
@@ -103,23 +109,26 @@ public class Production {
 
   /**
    * Sets the year this production was released.
-   * @param releaseYear the year this production was released.
+   *
+   * @param releaseYear the year this production was released
    */
   public void setReleaseYear(String releaseYear) {
     this.releaseYear = releaseYear;
   }
 
   /**
-   * Returns a type of "movie" or "series" to specify what kind of production this is.
-   * @return a type of "movie" or "series" to specify what kind of production this is.
+   * Returns the type of production this is. A production can be of type "movie" or "series".
+   *
+   * @return type of "movie" or "series" to specify what kind of production this is
    */
   public String getType() {
     return type;
   }
 
   /**
-   * Sets a type of "movie" or "series" to specify what kind of production this is.
-   * @param type a type of "movie" or "series" to specify what kind of production this is.
+   * Sets the type of production this is. A production can be of type "movie" or "series".
+   *
+   * @param type the type of "movie" or "series" to specify what kind of production this is
    */
   public void setType(String type) {
     this.type = type;
@@ -127,7 +136,8 @@ public class Production {
 
   /**
    * Returns the title of the series or film.
-   * @return the title of the series or film.
+   *
+   * @return the title of the series or film
    */
   public String getTitle() {
     return title;
@@ -135,7 +145,8 @@ public class Production {
 
   /**
    * Sets the title of the series or film.
-   * @param title the title of the series or film.
+   *
+   * @param title the title of the series or film
    */
   public void setTitle(String title) {
     this.title = title;
@@ -143,24 +154,36 @@ public class Production {
 
   /**
    * Returns a brief plot summary up to 300 characters in length.
-   * @return a brief plot summary up to 300 characters in length.
+   *
+   * @return a brief plot summary
    */
   public String getPlot() {
     return plot;
   }
 
   /**
-   * Sets the plot summary.
-   * @param plot a brief plot summary up to 300 characters in length.
+   * Sets the plot summary up to 300 characters in length.
+   *
+   * @param plot a brief plot summary
    */
   public void setPlot(String plot) {
     this.plot = plot;
   }
 
+  /**
+   * Gets the url for the poster image.
+   *
+   * @return the poster image url
+   */
   public String getPosterUrl() {
     return posterUrl;
   }
 
+  /**
+   * Sets the url for the poster image.
+   *
+   * @param posterUrl the poster image url
+   */
   public void setPosterUrl(String posterUrl) {
     this.posterUrl = posterUrl;
   }

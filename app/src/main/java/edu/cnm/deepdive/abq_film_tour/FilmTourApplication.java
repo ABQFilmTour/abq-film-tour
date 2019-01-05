@@ -49,6 +49,9 @@ public class FilmTourApplication extends Application {
 
   /**
    * Creates an error message based on a given HTTP response code.
+   *
+   * @param response the response
+   * @return the error message from http response
    */
   public String getErrorMessageFromHttpResponse(Response response) {
     String errorMessage = getString(R.string.error_http, response.code());
@@ -63,7 +66,9 @@ public class FilmTourApplication extends Application {
 
   /**
    * Performs end of function routine based on a given error message.
-   * @param errorMessage
+   *
+   * @param context the context
+   * @param errorMessage the error message
    */
   public void handleErrorMessage(Context context, String errorMessage) {
     if (errorMessage.equals(getString(R.string.error_unauthorized))) {
@@ -81,7 +86,8 @@ public class FilmTourApplication extends Application {
 
   /**
    * Creates an alert dialog with a given error message and closes the program, used for cleaner
-   * exception handling. Ideal for 403 as it explicitly tells the user to GTFO.
+   * exception handling. Ideal for 403 as it explicitly tells the user that they are forbidden from
+   * using the service.
    *
    * @param errorMessage a String message to display to the user.
    */
@@ -133,45 +139,45 @@ public class FilmTourApplication extends Application {
   }
 
   /**
-   * Gets instance.
+   * Gets instance of the application.
    *
-   * @return the instance
+   * @return the instance of the application
    */
   public static FilmTourApplication getInstance() {
     return instance;
   }
 
   /**
-   * Gets client.
+   * Gets Google signin client.
    *
-   * @return the client
+   * @return the Google signin client
    */
   public GoogleSignInClient getClient() {
     return client;
   }
 
   /**
-   * Sets client.
+   * Sets Google signin client.
    *
-   * @param client the client
+   * @param client the Google signin client
    */
   public void setClient(GoogleSignInClient client) {
     this.client = client;
   }
 
   /**
-   * Gets account.
+   * Gets user's Google account.
    *
-   * @return the account
+   * @return the user's Google account
    */
   public GoogleSignInAccount getAccount() {
     return account;
   }
 
   /**
-   * Sets account.
+   * Sets user's Google account.
    *
-   * @param account the account
+   * @param account the user's Gooogle account
    */
   public void setAccount(GoogleSignInAccount account) {
     this.account = account;

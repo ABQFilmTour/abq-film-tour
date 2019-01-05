@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * A comment associated with a film location.
+ * This class represents a comment associated with a film location.
  */
 @Entity(
     foreignKeys =  {
@@ -33,7 +33,7 @@ public class UserComment {
   private Date created;
 
   /**
-   * The location this comment is associated with.
+   * The location associated with this comment.
    */
   @Expose
   private FilmLocation filmLocation;
@@ -45,14 +45,13 @@ public class UserComment {
   private User user;
 
   /**
-   * The text content of this comment, maximum of 4096 characters.
+   * The text of this comment, maximum of 4096 characters.
    */
   @Expose
   private String text;
 
   /**
-   * Flag to verify that a comment has been approved by an admin and can be displayed if security
-   * is tightened.
+   * Flag to verify that a comment has been approved by an admin and can be displayed.
    */
   @Expose
   private boolean approved;
@@ -64,7 +63,8 @@ public class UserComment {
 
   /**
    * Returns the UUID of this comment on the server.
-   * @return the UUID of this comment on the server.
+   *
+   * @return the UUID of this comment on the server
    */
   public UUID getId() {
     return id;
@@ -72,23 +72,26 @@ public class UserComment {
 
   /**
    * Sets the UUID of this comment on the server.
-   * @param id the UUID of this comment on the server.
+   *
+   * @param id the UUID of this comment on the server
    */
   public void setId(UUID id) {
     this.id = id;
   }
 
   /**
-   * Returns the location this comment is associated with.
-   * @return the location this comment is associated with.
+   * Returns the location associated with this comment.
+   *
+   * @return the location associated with this comment.
    */
   public FilmLocation getFilmLocation() {
     return filmLocation;
   }
 
   /**
-   * Sets the location this comment is associated with.
-   * @param filmLocation the location this comment is associated with.
+   * Sets the location associated with this comment.
+   *
+   * @param filmLocation the location associated with this comment
    */
   public void setFilmLocation(FilmLocation filmLocation) {
     this.filmLocation = filmLocation;
@@ -96,7 +99,8 @@ public class UserComment {
 
   /**
    * Returns the user who submitted this comment.
-   * @return the user who submitted this comment.
+   *
+   * @return the user who submitted this comment
    */
   public User getUser() {
     return user;
@@ -104,7 +108,8 @@ public class UserComment {
 
   /**
    * Sets the user who submitted this comment.
-   * @param user the user who submitted this comment.
+   *
+   * @param user the user who submitted this comment
    */
   public void setUser(User user) {
     this.user = user;
@@ -112,7 +117,8 @@ public class UserComment {
 
   /**
    * Returns the timestamp of when this comment was submitted.
-   * @return the timestamp of when this comment was submitted.
+   *
+   * @return the timestamp of when this comment was submitted
    */
   public Date getCreated() {
     return created;
@@ -120,40 +126,63 @@ public class UserComment {
 
   /**
    * Sets the timestamp of when this comment was submitted.
-   * @param created the timestamp of when this comment was submitted.
+   *
+   * @param created the timestamp of when this comment was submitted
    */
   public void setCreated(Date created) {
     this.created = created;
   }
 
   /**
-   * The text content of this comment.
-   * @return the text content of this comment.
+   * The text of this comment.
+   *
+   * @return the text of this comment
    */
   public String getText() {
     return text;
   }
 
   /**
-   * The text content of this comment.
-   * @param text the text content of this comment.
+   * The text of this comment.
+   *
+   * @param text the text of this comment
    */
   public void setText(String text) {
     this.text = text;
   }
 
+  /**
+   * Returns boolean flag to verify that a comment has been approved by an admin and can be displayed.
+   *
+   * @return the boolean approved flag
+   */
   public boolean isApproved() {
     return approved;
   }
 
+  /**
+   * Sets boolean flag to verify that a comment has been approved by an admin and can be displayed.
+   *
+   * @param approved the approved boolean flag
+   */
   public void setApproved(boolean approved) {
     this.approved = approved;
   }
 
+  /**
+   * Gets google id of the user.
+   *
+   * @return the google id of the user
+   */
   public String getGoogleId() {
     return googleId;
   }
 
+  /**
+   * Sets google id of the user.
+   *
+   * @param googleId the google id of the user
+   */
   public void setGoogleId(String googleId) {
     this.googleId = googleId;
   }

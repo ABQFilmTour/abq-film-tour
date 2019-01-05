@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * This class will represent images submitted to the server to represent film locations.
- * It is currently under construction.
+ * This class will represent images submitted to the server to represent film locations. It is
+ * currently under construction.
  */
 @Entity(
     foreignKeys = {
@@ -70,7 +70,8 @@ public class Image {
 
   /**
    * Returns the UUID of this image on the server.
-   * @return the UUID of this image on the server.
+   *
+   * @return the UUID of this image on the server
    */
   public UUID getId() {
     return id;
@@ -78,15 +79,17 @@ public class Image {
 
   /**
    * Sets the UUID of this image on the server.
-   * @param id the UUID of this image on the server.
+   *
+   * @param id the UUID of this image on the server
    */
   public void setId(UUID id) {
     this.id = id;
   }
 
   /**
-   * Returns the film location this image is associated with.
-   * @return the FilmLocation this image is associated with.
+   * Returns the associated film location.
+   *
+   * @return the associated film location
    */
   public FilmLocation getFilmLocation() {
     return filmLocation;
@@ -94,6 +97,7 @@ public class Image {
 
   /**
    * Sets the FilmLocation this image is associated with.
+   *
    * @param filmLocation the FilmLocation this image is associated with.
    */
   public void setFilmLocation(FilmLocation filmLocation) {
@@ -102,6 +106,7 @@ public class Image {
 
   /**
    * Returns the user who submitted this image.
+   *
    * @return the user who submitted this image.
    */
   public User getUser() {
@@ -110,6 +115,7 @@ public class Image {
 
   /**
    * Sets the user who submitted this image.
+   *
    * @param user the user who submitted this image.
    */
   public void setUser(User user) {
@@ -118,6 +124,7 @@ public class Image {
 
   /**
    * Returns the time and date this image was submitted.
+   *
    * @return the time and date this image was submitted.
    */
   public Date getCreated() {
@@ -126,6 +133,7 @@ public class Image {
 
   /**
    * Sets the time and date this image was submitted.
+   *
    * @param created the time and date this image was submitted.
    */
   public void setCreated(Date created) {
@@ -134,6 +142,7 @@ public class Image {
 
   /**
    * Returns a brief description of the contents of this image.
+   *
    * @return a brief description of the contents of this image.
    */
   public String getDescription() {
@@ -142,6 +151,7 @@ public class Image {
 
   /**
    * Sets brief description of the contents of this image.
+   *
    * @param description a brief description of the contents of this image.
    */
   public void setDescription(String description) {
@@ -149,33 +159,55 @@ public class Image {
   }
 
   /**
-   * Returns the url this image should be located at on the central domain.
-   * @return the url this image should be located at on the central domain.
+   * Returns the url of this image.
+   *
+   * @return the url this image
    */
   public String getUrl() {
     return url;
   }
 
   /**
-   * Sets the url this image should be located at on the central domain.
-   * @param url the url this image should be located at on the central domain.
+   * Sets the url of this image.
+   *
+   * @param url the url this image
    */
   public void setUrl(String url) {
     this.url = url;
   }
 
+  /**
+   * Returns a boolean if the image is approved or not.
+   *
+   * @return the boolean approved
+   */
   public boolean isApproved() {
     return approved;
   }
 
+  /**
+   * Sets boolean approved.
+   *
+   * @param approved boolean
+   */
   public void setApproved(boolean approved) {
     this.approved = approved;
   }
 
+  /**
+   * Gets google id of the user.
+   *
+   * @return the google id of the user
+   */
   public String getGoogleId() {
     return googleId;
   }
 
+  /**
+   * Sets google id of the user.
+   *
+   * @param googleId the google id of the user
+   */
   public void setGoogleId(String googleId) {
     this.googleId = googleId;
   }

@@ -11,7 +11,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import org.w3c.dom.Text;
 
 /**
- * CustomSnippetAdapter makes the snippets look pretty.
+ * Custom adapter for snippets.
  */
 public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -21,13 +21,13 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
   /**
    * Instantiates a new Custom snippet adapter.
    *
-   * @param context
+   * @param context the context
    */
   public CustomSnippetAdapter(Context context) {
     mSnippet = LayoutInflater.from(context).inflate(R.layout.custom_info_snippet, null);
   }
 
-
+//TODO Becca make this work
 //
 //  public double howFarAway();{
 //    double venueLat = Double.valueOf(location.getLatCoordinate());

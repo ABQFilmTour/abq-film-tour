@@ -253,9 +253,9 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   /**
-   * The Location task extends {@link AsyncTask#AsyncTask()} to grab {@link UserComment}, and {@link
-   * LocationActivity}* and tie them to a specific {@link FilmLocation} Returns a boolean if the
-   * query was successful, displays an alert dialog and exits the app if not.
+   * Asynchroynous task that retrieves the location and comments for the location from the database.
+   * Returns a boolean. If the query was successful populates the location and comments. If not
+   * successful handles the error message.
    */
   public class LocationTask extends AsyncTask<UUID, Void, Boolean> {
 

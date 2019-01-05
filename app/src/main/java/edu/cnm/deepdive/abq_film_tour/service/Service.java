@@ -23,8 +23,9 @@ import retrofit2.http.Query;
 public interface Service {
 
   /**
-   * Gets film location.
+   * Gets film location associated with a film location id.
    *
+   * @param authorization the authorization token
    * @param id the film location id
    * @return the film location
    */
@@ -32,9 +33,10 @@ public interface Service {
   Call<FilmLocation> getFilmLocation(@Header("Authorization") String authorization, @Path(value = "id") UUID id);
 
   /**
-   * Gets list of locations.
+   * Gets list of film locations.
    *
-   * @return the locations
+   * @param authorization the authorization token
+   * @return the film locations
    */
   @GET("rest/film_locations/")
   Call<List<FilmLocation>> getLocations(@Header("Authorization") String authorization);
@@ -42,34 +44,48 @@ public interface Service {
   /**
    * Gets list of productions.
    *
+   * @param authorization the authorization token
    * @return the productions
    */
   @GET("rest/productions/")
   Call<List<Production>> getProductions(@Header("Authorization") String authorization);
 
   /**
-   * Gets user comments.
+   * Gets user comments associated with a film location id.
    *
+   * @param authorization the authorization token
    * @param id the id of the film location
-   * @return the comments
+   * @return the user comments
    */
   @GET("rest/film_locations/{id}/user_comments/")
   Call<List<UserComment>> getComments(@Header("Authorization") String authorization, @Path(value = "id") UUID id);
 
   /**
-   * Gets users.
+   * Posts a new film location to the server.
    *
-   * @return the users
+   * @param authorization the authorization token
+   * @param filmLocation the film location
    */
-  @GET("rest/users/")
-  Call<List<User>> getUsers(@Header("Authorization") String authorization);
-
   @POST("rest/film_locations/")
   Call<FilmLocation> postFilmLocation(@Header("Authorization") String authorization, @Body FilmLocation filmLocation);
 
+  /**
+   * Posts a new user comment to the server.
+   *
+   * @param authorization the authorization token
+   * @param userComment the new user comment
+   * @param id the id of the film location
+   */
   @POST("rest/film_locations/{id}/user_comments/")
   Call<UserComment> postUserComment(@Header("Authorization") String authorization, @Body UserComment userComment, @Path(value = "id") UUID id);
 
+  /**
+   * This will post a new image entity to the server. This is under construction.
+   *
+   * @param authorization the authorization token
+   * @param image the new image entity
+   * @param id the id of the film location
+   */
   @POST("rest/film_locations/{id}/images")
   Call<Image> postImage(@Header("Authorization") String authorization, @Body Image image, @Path(value = "id") UUID id);
 

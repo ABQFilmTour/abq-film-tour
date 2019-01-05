@@ -19,8 +19,8 @@ public class CommentAdapter extends ArrayAdapter<UserComment> {
   /**
    * Instantiates a new Comment adapter.
    *
-   * @param context
-   * @param resource
+   * @param context the context
+   * @param resource the resource
    */
   public CommentAdapter(@NonNull Context context, int resource) {
     super(context, resource);
@@ -29,9 +29,9 @@ public class CommentAdapter extends ArrayAdapter<UserComment> {
   /**
    * Instantiates a new Comment adapter.
    *
-   * @param context
-   * @param resource
-   * @param objects
+   * @param context the context
+   * @param resource the resource
+   * @param objects the objects
    */
   public CommentAdapter(@NonNull Context context, int resource,
       @NonNull List<UserComment> objects) {
