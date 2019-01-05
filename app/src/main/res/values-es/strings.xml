@@ -11,7 +11,7 @@
   <string name="bookmark_removed_notification">Marcador eliminado.</string>
   <string name="bookmark">Marcador</string>
   <string name="cancel">Cancelar</string>
-  <string name="cannot_enable_location">No se puede habilitar la ubicación</string>
+  <string name="cannot_enable_location">No se puede habilitar la ubicación.</string>
   <string name="client_id">650840836337-o0r50gnee6g2h5bg9lkq7d4776bfvp9c.apps.googleusercontent.com</string>
   <string name="dimension_ratio_image_header">3:2</string>
   <string name="dimension_ratio_poster">w,2:3</string>
@@ -21,8 +21,7 @@
   <string name="error_forbidden">Tienes prohibido utilizar este servicio.</string>
   <string name="error_http">HTTP código de error %d</string>
   <string name="error_io">Error al llegar al servidor.</string>
-  <string name="error_stale_token">Error. Intente reinstalar.</string>
-  <string name="error_unauthorized">No se pudo autorizar. Intente volver a iniciar sesión o reinstalar la aplicación.</string>
+  <string name="error_unauthorized">Por favor, vuelva a iniciar sesión.</string>
   <string name="exit_alert_dialog">Dejar</string>
   <string name="imdb_link">Enlace a IMDB</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>

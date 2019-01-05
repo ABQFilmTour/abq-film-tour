@@ -89,6 +89,7 @@ public class SubmitCommentDialog extends DialogFragment {
       boolean successfulQuery = false;
       Call<UserComment> call = filmTourApplication.getService().postUserComment(token, newComment, location.getId());
       try {
+        //TODO fix duplicated code
         Response<UserComment> response = call.execute();
         if (response.isSuccessful()) {
           successfulQuery = true;
