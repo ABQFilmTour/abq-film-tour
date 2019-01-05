@@ -32,6 +32,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import edu.cnm.deepdive.abq_film_tour.view.CommentAdapter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -100,6 +101,24 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   /**
+   * This method filters out user comments that do not have the approved flag by populating a new
+   * list with only the approved comments.
+   * It could easily be done with userComments.removeIf(s -> !s.isApproved()); but this method would
+   * limit the application to require API 24, excluding about 40% of the marketplace.
+   * @param unfilteredComments the unfiltered userComments List.
+   * @return a list of filtered comments, only with the approved flag set to true.
+   */
+  private List<UserComment> filterComments(List<UserComment> unfilteredComments) {
+    List<UserComment> filteredComments = new ArrayList<>();
+    for (UserComment userComment : unfilteredComments) {
+      if (userComment.isApproved()) {
+        filteredComments.add(userComment);
+      }
+    }
+    return filteredComments;
+  }
+
+  /**
    * Gets film location.
    *
    * @return the film location
@@ -147,7 +166,7 @@ public class LocationActivity extends AppCompatActivity {
   /**
    * Sets film location.
    *
-   * @param the film location. 
+   * @param the film location.
    */
   public void setLocation(FilmLocation location) {
     this.location = location;
@@ -197,11 +216,7 @@ public class LocationActivity extends AppCompatActivity {
 
   private void setupComments() {
     commentListView = findViewById(R.id.comment_list_view);
-    //Filter out unapproved comments before starting adapter.
-    //TODO This requires API 24, and would cause unapproved comments to display on about 21% of the marketplace.
-    if (VERSION.SDK_INT >= VERSION_CODES.N) {
-      userComments.removeIf(s -> !s.isApproved());
-    }
+    userComments = filterComments(userComments);
     CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
     commentListView.setAdapter(commentAdapter);
   }
