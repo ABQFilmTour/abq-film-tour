@@ -198,10 +198,10 @@ public class LocationActivity extends AppCompatActivity {
   private void setupComments() {
     commentListView = findViewById(R.id.comment_list_view);
     //Filter out unapproved comments before starting adapter.
-    //TODO This requires API 24, and would cause unapproved comments to display on about 21% of the marketplace.
+    /*//TODO This requires API 24, and would cause unapproved comments to display on about 21% of the marketplace.
     if (VERSION.SDK_INT >= VERSION_CODES.N) {
       userComments.removeIf(s -> !s.isApproved());
-    }
+    }*/
     CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
     commentListView.setAdapter(commentAdapter);
   }
