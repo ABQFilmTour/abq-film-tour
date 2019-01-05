@@ -81,7 +81,7 @@ public class SubmitCommentDialog extends DialogFragment {
       newComment.setFilmLocation(location);
       newComment.setGoogleId(filmTourApplication.getAccount().getId());
       newComment.setText(SubmitCommentDialog.this.commentEditText.getText().toString());
-      newComment.setApproved(true); // TODO Remove me!
+      newComment.setApproved(true); // TODO Remove me when security is tighter.
     }
 
     @Override

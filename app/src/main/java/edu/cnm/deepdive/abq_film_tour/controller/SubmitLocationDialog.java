@@ -136,7 +136,7 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
       newFilmLocation.setSiteName(this.siteName);
       newFilmLocation.setLatCoordinate(String.valueOf(this.location.latitude));
       newFilmLocation.setLongCoordinate(String.valueOf(this.location.longitude));
-      newFilmLocation.setApproved(true); // TODO Remove me!
+      newFilmLocation.setApproved(true); // TODO Remove me when security is higher.
     }
 
     @Override

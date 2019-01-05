@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -30,6 +32,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import edu.cnm.deepdive.abq_film_tour.view.CommentAdapter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,9 +41,9 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 /**
- * The Location activity takes the location layout and passes in the {@link TextView}, {@link
- * FilmLocation}*, {@link Production}, and {@link UserComment}. it extends {@link
- * AppCompatActivity#AppCompatActivity()}*
+ * This activity displays more information about a selected location and loads when the user selects
+ * the location from the map pin. The activity retrieves the information from the database on loading
+ * and the user can navigate to a dialog fragment to submit new content.
  */
 public class LocationActivity extends AppCompatActivity {
 
@@ -188,13 +191,17 @@ public class LocationActivity extends AppCompatActivity {
     //Setup comment button
     commentButton.setOnClickListener(v -> {
       SubmitCommentDialog submitCommentDialog = new SubmitCommentDialog();
-      submitCommentDialog.show(getSupportFragmentManager(), "whatever");
+      submitCommentDialog.show(getSupportFragmentManager(), "");
     });
   }
 
   private void setupComments() {
     commentListView = findViewById(R.id.comment_list_view);
-    //TODO Do not display comment if !approved, possibly can do this in comment adapter
+    //Filter out unapproved comments before starting adapter.
+    //TODO This requires API 24, and would cause unapproved comments to display on about 21% of the marketplace.
+    if (VERSION.SDK_INT >= VERSION_CODES.N) {
+      userComments.removeIf(s -> !s.isApproved());
+    }
     CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
     commentListView.setAdapter(commentAdapter);
   }

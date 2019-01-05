@@ -50,5 +50,4 @@ public class CommentAdapter extends ArrayAdapter<UserComment> {
     adaptedView.setBackgroundResource(R.drawable.round_border_black);
     return adaptedView;
   }
-
 }

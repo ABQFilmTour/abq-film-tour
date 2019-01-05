@@ -346,7 +346,6 @@ public class FilmLocation {
    *
    * @return the boolean
    */
-  //FIXME Boolean method 'isApproved' is always inverted
   public boolean isApproved() {
     return approved;
   }

@@ -132,11 +132,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 11;
   /**
-   * Status code returned by the program if it closes with an error.
-   */
-  //TODO is STATUS_CODE_ERROR ever used? can we delete this?
-  private static final int STATUS_CODE_ERROR = 1;
-  /**
    * Log tag for this activity.
    */
   private static final String ERROR_LOG_TAG_MAPS_ACTIVITY = "MapsActivity";
@@ -239,7 +234,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     filmTourApplication = (FilmTourApplication) getApplication();
     super.onCreate(savedInstanceState);
     token = getString(R.string.oauth2_header, filmTourApplication.getAccount().getIdToken());
-    Log.d("Token", token); //TODO Remove this when there's a better way to retrieve token
     //TODO refresh token to ensure it isn't stale
     setContentView(R.layout.activity_maps);
     progressSpinner = findViewById(R.id.progress_spinner);

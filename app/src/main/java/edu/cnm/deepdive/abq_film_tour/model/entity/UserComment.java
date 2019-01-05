@@ -52,7 +52,7 @@ public class UserComment {
 
   /**
    * Flag to verify that a comment has been approved by an admin and can be displayed if security
-   * is tightened. Probably unnecessary for now, but better to have if we implement later.
+   * is tightened.
    */
   @Expose
   private boolean approved;
