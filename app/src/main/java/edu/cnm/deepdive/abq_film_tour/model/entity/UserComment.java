@@ -39,12 +39,6 @@ public class UserComment {
   private FilmLocation filmLocation;
 
   /**
-   * The user who submitted this comment.
-   */
-  @Expose
-  private User user;
-
-  /**
    * The text of this comment, maximum of 4096 characters.
    */
   @Expose
@@ -59,7 +53,20 @@ public class UserComment {
   /**
    * The Google ID of the user who submitted this comment.
    */
+  @Expose
   private String googleId;
+
+  /**
+   * Url to the user's Google profile image.
+   */
+  @Expose
+  private String userPictureUrl;
+
+  /**
+   * The name of the user.
+   */
+  @Expose
+  private String userName;
 
   /**
    * Returns the UUID of this comment on the server.
@@ -95,24 +102,6 @@ public class UserComment {
    */
   public void setFilmLocation(FilmLocation filmLocation) {
     this.filmLocation = filmLocation;
-  }
-
-  /**
-   * Returns the user who submitted this comment.
-   *
-   * @return the user who submitted this comment
-   */
-  public User getUser() {
-    return user;
-  }
-
-  /**
-   * Sets the user who submitted this comment.
-   *
-   * @param user the user who submitted this comment
-   */
-  public void setUser(User user) {
-    this.user = user;
   }
 
   /**
@@ -185,5 +174,29 @@ public class UserComment {
    */
   public void setGoogleId(String googleId) {
     this.googleId = googleId;
+  }
+
+  /**
+   * Gets the URL of the author's profile picture.
+   * @return the URL of the author's profile picture.
+   */
+  public String getUserPictureUrl() {
+    return userPictureUrl;
+  }
+
+  /**
+   * Sets the URL of the author's profile picture.
+   * @param userPictureUrl the URL of the author's profile picture.
+   */
+  public void setUserPictureUrl(String userPictureUrl) {
+    this.userPictureUrl = userPictureUrl;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 }

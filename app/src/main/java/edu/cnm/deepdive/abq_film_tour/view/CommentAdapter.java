@@ -7,11 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This is a custom adapter for user submitted comments.
@@ -48,15 +51,21 @@ public class CommentAdapter extends ArrayAdapter<UserComment> {
     View v = convertView;
     if (v == null) {
       LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      assert inflater != null;
       v = inflater.inflate(R.layout.cardview_item_comment, null);
     }
 
+    ImageView imageView = v.findViewById(R.id.user_image_view);
+    Glide.with(v)
+        .load(Objects.requireNonNull(getItem(position)).getUserPictureUrl())
+        .into(imageView);
+
     TextView userNameView = v.findViewById(R.id.user_name);
-    userNameView.setText(getItem(position).getUser().getGoogleName());
+    userNameView.setText(Objects.requireNonNull(getItem(position)).getUserName());
 
     TextView textView = v.findViewById(R.id.comment_text_view);
     StringBuilder text = new StringBuilder();
-    text.append(getItem(position).getText());
+    text.append(Objects.requireNonNull(getItem(position)).getText());
     textView.setText(text);
     return v;
   }
