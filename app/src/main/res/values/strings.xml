@@ -5,6 +5,7 @@
   <!--<string name="base_url">http://10.0.2.2:5050/</string>-->
 
   <string name="alert_exit">Exit</string>
+  <string name="alert_ok">OK</string>
   <string name="alert_signout">Sign Out</string>
   <string name="app_name">abq-film-tour</string>
   <string name="bookmark_added_notification">Bookmark added.</string>
@@ -24,6 +25,7 @@
   <string name="error_unauthorized">Please sign in again.</string>
   <string name="exit_alert_dialog">Exit</string>
   <string name="help">Help</string>
+  <string name="image_unimplemented">Sorry, this feature is still a work in progress. Check our website for updates!  abqfilmtour.github.io</string>
   <string name="imdb_link">Link to IMDB Page</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>
   <string name="loc_settings">Location Settings</string>

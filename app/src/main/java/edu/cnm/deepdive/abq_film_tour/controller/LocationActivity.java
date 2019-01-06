@@ -2,6 +2,8 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 
 import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.SHARED_PREF_BOOKMARKS;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -65,6 +67,7 @@ public class LocationActivity extends AppCompatActivity {
   private String token;
   private ImageButton bookmarkButton;
   private Button commentButton;
+  private Button imageButton;
   private SharedPreferences sharedPref;
   private Set<String> bookmarks;
   private ListView commentListView;
@@ -188,6 +191,7 @@ public class LocationActivity extends AppCompatActivity {
       bookmarkButton.setSelected(true);
     }
     commentButton = findViewById(R.id.submit_comment_button);
+    imageButton = findViewById(R.id.submit_image_button);
   }
 
   private void setupBookmarkListener() {
@@ -215,6 +219,18 @@ public class LocationActivity extends AppCompatActivity {
     commentButton.setOnClickListener(v -> {
       SubmitCommentDialog submitCommentDialog = new SubmitCommentDialog();
       submitCommentDialog.show(getSupportFragmentManager(), "");
+    });
+  }
+
+  private void setupImageButtonListener() {
+    //TODO Change when image feature is working.
+    imageButton.setOnClickListener(v -> {
+      android.app.AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+      alertDialog.setMessage(R.string.image_unimplemented)
+          .setCancelable(false)
+          .setPositiveButton(R.string.alert_ok, null);
+      AlertDialog alert = alertDialog.create();
+      alert.show();
     });
   }
 
@@ -303,13 +319,8 @@ public class LocationActivity extends AppCompatActivity {
         setupButtons();
         setupBookmarkListener();
         setupCommentButtonListener();
+        setupImageButtonListener();
         setupComments();
-        /* A method like this will set up an image button when the image feature is implemented.
-        imageButton = findViewById(R.id.register_image_button);
-        imageButton.setOnClickListener(v -> {
-          UploadImageDialog uploadImageDialog = new UploadImageDialog();
-          uploadImageDialog.show(getSupportFragmentManager(), "whatever");
-        });*/
       } else {
         filmTourApplication.handleErrorMessage(LocationActivity.this, errorMessage);
       }
