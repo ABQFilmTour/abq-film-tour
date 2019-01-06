@@ -30,7 +30,7 @@
   <string name="location_id_tag">locationID</string>
   <string name="log_null_production_type">Production %s has a null type.</string>
   <string name="menu_all_locations">Todas las localizaciones</string>
-  <string name="menu_all_near_me">Cerca De Mí</string>
+  <string name="menu_all_near_me">Cerca de Mí</string>
   <string name="menu_bookmarks">Marcadores</string>
   <string name="menu_film">Pelicula</string>
   <string name="menu_no_bookmarks">No tienes marcadores guardados. Seleccione el botón de marcador en una ubicación existente para crear su propio recorrido.</string>
@@ -59,7 +59,7 @@
   <string name="title_bookmarks">Crear su propio recorrido</string>
   <string name="title_near_me">Cerca De Mí</string>
   <string name="unable_to_signin">Incapaz de iniciar sesión</string>
-  <string name="upload_image">Publicar un imagen</string>
+  <string name="upload_image">Publicar una imagen</string>
   <string name="user_comment_hint">Escriba su comentario aquí.</string>
   <string name="user_name">Nombre de Usuario</string>
 </resources>
