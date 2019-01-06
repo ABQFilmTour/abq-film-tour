@@ -221,7 +221,7 @@ public class LocationActivity extends AppCompatActivity {
   private void setupComments() {
     commentListView = findViewById(R.id.comment_list_view);
     userComments = filterComments(userComments);
-    CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, 0, userComments);
+    CommentAdapter commentAdapter = new CommentAdapter(LocationActivity.this, R.layout.cardview_item_comment, userComments);
     commentListView.setAdapter(commentAdapter);
   }
 
