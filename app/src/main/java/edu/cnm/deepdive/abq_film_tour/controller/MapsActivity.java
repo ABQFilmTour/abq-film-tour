@@ -466,33 +466,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Given the user's last known location, this method animates the map camera and zooms into the
-   * user's location and populates map pins of nearby filming locations.
+   * Given the user's last known location, this method calls the animateCamera method to move
+   * the map camera and zoom into the user's location.
    */
   private void nearMe(LatLng userLatLng) {
     setTitle(getString(R.string.title_near_me));
-    CameraPosition cameraPosition = new CameraPosition.Builder()
-        .target(userLatLng) // Sets the center of the map to user location
-        .zoom(ZOOM_LEVEL_NEAR_ME) // Sets the zoom
-        .bearing(BEARING_LEVEL_NEAR_ME) // Sets the orientation of the camera
-        .tilt(TILT_LEVEL_NEAR_ME) // Sets the tilt of the camera
-        .build(); // Creates a CameraPosition from the builder
     populateMapFromLocation(userLatLng);
-    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+    animateCamera(userLatLng, ZOOM_LEVEL_NEAR_ME, BEARING_LEVEL_NEAR_ME, TILT_LEVEL_NEAR_ME);
   }
+  /**
+   * This method calls the animateCamera method to move the map camera and zooms out to a bird's eye
+   * view of Albuquerque.
+   */
   private void zoomOut() {
     LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
-    CameraPosition cameraPosition = new CameraPosition.Builder()
-        .target(startCoordinates) // Sets the center of the map to center of Albuquerque
-        .zoom(ZOOM_LEVEL_INITIAL) // Sets the zoom
-        .bearing(BEARING_LEVEL_INITIAL) // Sets the orientation of the camera
-        .tilt(TILT_LEVEL_INITIAL) // Sets the tilt of the camera
-        .build(); // Creates a CameraPosition from the builder
-    populateMapFromLocation(startCoordinates);
-    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+    animateCamera(startCoordinates, ZOOM_LEVEL_INITIAL, BEARING_LEVEL_INITIAL, TILT_LEVEL_INITIAL);
   }
+  /**
+   * Given a location, this method animates the map camera and zooms in or out and populates map
+   * pins of nearby filming locations.
+   */
+  private void animateCamera(LatLng targetCoordinates, float zoomLevelInitial, float bearingLevelInitial,
+      float tiltLevelInitial) {
+    CameraPosition cameraPosition = new CameraPosition.Builder()
+        .target(targetCoordinates) // Sets the center of the map to center of Albuquerque
+        .zoom(zoomLevelInitial) // Sets the zoom
+        .bearing(bearingLevelInitial) // Sets the orientation of the camera
+        .tilt(tiltLevelInitial) // Sets the tilt of the camera
+        .build(); // Creates a CameraPosition from the builder
+    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+  }
+
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
