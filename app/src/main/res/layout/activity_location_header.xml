@@ -93,7 +93,7 @@
         android:id="@+id/location_sitename_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
         android:textAlignment="center"
@@ -137,7 +137,8 @@
           android:layout_height="wrap_content"
           android:background="@drawable/round_border_orange"
           android:textColor="@color/dialogTextColor"
-          android:layout_margin="@dimen/padding_medium"
+          android:layout_marginTop="@dimen/padding_small"
+          android:layout_marginBottom="@dimen/padding_medium"
           android:hint="@string/submit_comment"/>
 
         <!-- Image feature to be implemented later
