@@ -285,6 +285,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
+   * Given a location, this method animates the map camera and zooms in or out and populates map
+   * pins of nearby filming locations.
+   */
+  private void animateCamera(LatLng targetCoordinates, float zoomLevelInitial,
+      float bearingLevelInitial,
+      float tiltLevelInitial) {
+    CameraPosition cameraPosition = new CameraPosition.Builder()
+        .target(targetCoordinates) // Sets the center of the map to center of Albuquerque
+        .zoom(zoomLevelInitial) // Sets the zoom
+        .bearing(bearingLevelInitial) // Sets the orientation of the camera
+        .tilt(tiltLevelInitial) // Sets the tilt of the camera
+        .build(); // Creates a CameraPosition from the builder
+    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+  }
+
+  /**
    * Calculates the distance as the crow flies in km between two coordinates given latitude and
    * longitude. This method computes the central angle between the two coordinates using the
    * Haversine formula then multiplies the angle by the average circumference of the Earth to solve
@@ -486,22 +502,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private void zoomOut() {
     LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
     animateCamera(startCoordinates, ZOOM_LEVEL_INITIAL, BEARING_LEVEL_INITIAL, TILT_LEVEL_INITIAL);
-  }
-
-  /**
-   * Given a location, this method animates the map camera and zooms in or out and populates map
-   * pins of nearby filming locations.
-   */
-  private void animateCamera(LatLng targetCoordinates, float zoomLevelInitial,
-      float bearingLevelInitial,
-      float tiltLevelInitial) {
-    CameraPosition cameraPosition = new CameraPosition.Builder()
-        .target(targetCoordinates) // Sets the center of the map to center of Albuquerque
-        .zoom(zoomLevelInitial) // Sets the zoom
-        .bearing(bearingLevelInitial) // Sets the orientation of the camera
-        .tilt(tiltLevelInitial) // Sets the tilt of the camera
-        .build(); // Creates a CameraPosition from the builder
-    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
   }
 
   @Override
