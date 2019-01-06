@@ -4,7 +4,7 @@
   <!--Use this URL for debugging a local host-->
   <!--<string name="base_url">http://10.0.2.2:8080/</string>-->
 
-  <string name="alert_exit">Dejar</string>
+  <string name="alert_exit">Salida</string>
   <string name="alert_signout">Desconectar</string>
   <string name="app_name">abq-film-tour</string>
   <string name="bookmark_added_notification">Marcador añadido.</string>
@@ -20,10 +20,10 @@
   <string name="error_default">Error desconocido.</string>
   <string name="error_forbidden">Tienes prohibido utilizar este servicio.</string>
   <string name="error_http">HTTP código de error %d</string>
-  <string name="error_io">Error al llegar al servidor.</string>
+  <string name="error_io">Error al conectar con el servidor. Revisa tu conexión de red.</string>
   <string name="error_unauthorized">Por favor, vuelva a iniciar sesión.</string>
   <string name="exit_alert_dialog">Dejar</string>
-  <string name="help">Ayuda(solo en inglés)</string>
+  <string name="help">Ayuda(sólo en inglés)</string>
   <string name="imdb_link">Enlace a IMDB</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>
   <string name="loc_settings">Configuración de ubicación</string>
@@ -32,15 +32,15 @@
   <string name="menu_all_locations">Todas las localizaciones</string>
   <string name="menu_all_near_me">Cerca De Mí</string>
   <string name="menu_bookmarks">Marcadores</string>
-  <string name="menu_film">Film</string>
+  <string name="menu_film">Pelicula</string>
   <string name="menu_no_bookmarks">No tienes marcadores guardados. Seleccione el botón de marcador en una ubicación existente para crear su propio recorrido.</string>
   <string name="menu_no_savedtitle">Seleccione un título existente de películas o programas de televisión para enviar su ubicación.</string>
-  <string name="menu_submit">Entregar</string>
+  <string name="menu_submit">Enviar</string>
   <string name="menu_television">Televisión</string>
   <string name="not_in_burque">Estás fuera de los límites de la ciudad de Albuquerque.</string>
-  <string name="null_location">Estamos teniendo problemas para encontrar su ubicación. Camina alrededor y vuelve a intentarlo.</string>
+  <string name="null_location">Estamos teniendo problemas para encontrar su ubicación. Por favor habilítalo en el menú de configuración.</string>
   <string name="oauth2_header">Bearer %s</string>
-  <string name="please_wait">"Por favor, espere a que el contenido se cargue…"</string>
+  <string name="please_wait">Cargando. Por favor espera.</string>
   <string name="poster_url_format">%srest/productions/%s/poster</string>
   <string name="production_poster">cartel de la película</string>
   <string name="selected_options_films_title">FILMS</string>

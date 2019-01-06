@@ -8,14 +8,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
-import org.w3c.dom.Text;
 
 /**
  * Custom adapter for snippets.
  */
 public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
 
-  private final View mSnippet;
+  private final View snippet;
   private Context context;
 
   /**
@@ -24,7 +23,7 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
    * @param context the context
    */
   public CustomSnippetAdapter(Context context) {
-    mSnippet = LayoutInflater.from(context).inflate(R.layout.custom_info_snippet, null);
+    snippet = LayoutInflater.from(context).inflate(R.layout.custom_info_snippet, null);
   }
 
 //TODO Becca make this work
@@ -66,14 +65,14 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
 
   @Override
   public View getInfoContents(Marker marker) {
-    renderSnippetText(marker, mSnippet);
-    return mSnippet;
+    renderSnippetText(marker, snippet);
+    return snippet;
   }
 
   @Override
   public View getInfoWindow(Marker marker) {
-    renderSnippetText(marker, mSnippet);
-    return mSnippet;
+    renderSnippetText(marker, snippet);
+    return snippet;
   }
 
 }
