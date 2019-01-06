@@ -1,0 +1,6 @@
+edu.cnm.deepdive.abq_film_tour
+edu.cnm.deepdive.abq_film_tour.controller
+edu.cnm.deepdive.abq_film_tour.model.dao
+edu.cnm.deepdive.abq_film_tour.model.entity
+edu.cnm.deepdive.abq_film_tour.service
+edu.cnm.deepdive.abq_film_tour.view

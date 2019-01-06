@@ -732,6 +732,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
     animateCamera(startCoordinates, ZOOM_LEVEL_INITIAL, BEARING_LEVEL_INITIAL, TILT_LEVEL_INITIAL);
   }
+
   /**
    * Asynchronous task that retrieves the productions from the server. Returns a boolean if the
    * query was successful, displays an alert dialog and exits the app if not.
