@@ -257,7 +257,7 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   /**
-   * Asynchroynous task that retrieves the location and comments for the location from the database.
+   * Asynchronyous task that retrieves the location and comments for the location from the database.
    * Returns a boolean. If the query was successful populates the location and comments. If not
    * successful handles the error message.
    */

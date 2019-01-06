@@ -40,6 +40,7 @@
   <string name="not_in_burque">You are outside of Albuquerque city limits.</string>
   <string name="null_location">Your location could not be retrieved. Check if you have Location turned on for your device.</string>
   <string name="oauth2_header">Bearer %s</string>
+  <string name="please_wait">Please wait for your content to load…</string>
   <string name="poster_url_format">%srest/productions/%s/poster</string>
   <string name="production_poster">film poster</string>
   <string name="selected_options_films_title">FILMS</string>

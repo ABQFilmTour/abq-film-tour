@@ -499,7 +499,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng location;
     Bundle arguments = new Bundle();
     if (this.progressSpinner.getVisibility() == View.VISIBLE) {
-        Toast.makeText(this, "Hold yer horses!!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.please_wait), Toast.LENGTH_SHORT).show();
         return false;
     }
     switch (item.getItemId()) {

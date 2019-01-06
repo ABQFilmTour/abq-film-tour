@@ -40,6 +40,7 @@
   <string name="not_in_burque">Estás fuera de los límites de la ciudad de Albuquerque.</string>
   <string name="null_location">Estamos teniendo problemas para encontrar su ubicación. Camina alrededor y vuelve a intentarlo.</string>
   <string name="oauth2_header">Bearer %s</string>
+  <string name="please_wait">"Por favor, espere a que el contenido se cargue…"</string>
   <string name="poster_url_format">%srest/productions/%s/poster</string>
   <string name="production_poster">cartel de la película</string>
   <string name="selected_options_films_title">FILMS</string>
