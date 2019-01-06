@@ -165,6 +165,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Width of the custom map markers.
    */
   private static final int MAP_MARKER_WIDTH = 52;
+  /**
+   * URL to the Usage Instructions page on the project homepage.
+   */
+  private static final String HELP_URL = "https://abqfilmtour.github.io/docs/UsageInstructions.html";
 
   //FIELDS
   /**
@@ -331,7 +335,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Context.LAYOUT_INFLATER_SERVICE))).inflate(R.layout.custom_marker_layout, null);
     DisplayMetrics displayMetrics = new DisplayMetrics();
     ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-    marker.setLayoutParams(new ViewGroup.LayoutParams(MAP_MARKER_WIDTH, ViewGroup.LayoutParams.WRAP_CONTENT));
+    marker.setLayoutParams(
+        new ViewGroup.LayoutParams(MAP_MARKER_WIDTH, ViewGroup.LayoutParams.WRAP_CONTENT));
     marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
     marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
     Bitmap bitmap = Bitmap.createBitmap(
@@ -466,14 +471,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   /**
-   * Given the user's last known location, this method calls the animateCamera method to move
-   * the map camera and zoom into the user's location.
+   * Given the user's last known location, this method calls the animateCamera method to move the
+   * map camera and zoom into the user's location.
    */
   private void nearMe(LatLng userLatLng) {
-    setTitle(getString(R.string.title_near_me));
     populateMapFromLocation(userLatLng);
     animateCamera(userLatLng, ZOOM_LEVEL_NEAR_ME, BEARING_LEVEL_NEAR_ME, TILT_LEVEL_NEAR_ME);
   }
+
   /**
    * This method calls the animateCamera method to move the map camera and zooms out to a bird's eye
    * view of Albuquerque.
@@ -482,11 +487,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
     animateCamera(startCoordinates, ZOOM_LEVEL_INITIAL, BEARING_LEVEL_INITIAL, TILT_LEVEL_INITIAL);
   }
+
   /**
    * Given a location, this method animates the map camera and zooms in or out and populates map
    * pins of nearby filming locations.
    */
-  private void animateCamera(LatLng targetCoordinates, float zoomLevelInitial, float bearingLevelInitial,
+  private void animateCamera(LatLng targetCoordinates, float zoomLevelInitial,
+      float bearingLevelInitial,
       float tiltLevelInitial) {
     CameraPosition cameraPosition = new CameraPosition.Builder()
         .target(targetCoordinates) // Sets the center of the map to center of Albuquerque
@@ -523,14 +530,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng location;
     Bundle arguments = new Bundle();
     if (this.progressSpinner.getVisibility() == View.VISIBLE) {
-        Toast.makeText(this, getString(R.string.please_wait), Toast.LENGTH_SHORT).show();
-        return false;
+      Toast.makeText(this, getString(R.string.please_wait), Toast.LENGTH_SHORT).show();
+      return false;
     }
     switch (item.getItemId()) {
       default:
         handled = super.onOptionsItemSelected(item);
         break;
       case R.id.menu_all_locations:
+        this.setTitle(getString(R.string.title_all_locations));
         populateMapFromAll();
         break;
       case R.id.menu_all_near_me:
@@ -539,6 +547,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location.latitude == 0 & location.longitude == 0) {
           // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
         } else {
+          setTitle(getString(R.string.title_near_me));
           nearMe(location);
         }
         progressSpinner.setVisibility(View.GONE);
@@ -564,8 +573,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (bookmarks.isEmpty()) {
           Toast.makeText(this, getString(R.string.menu_no_bookmarks), Toast.LENGTH_LONG).show();
         } else {
+          this.setTitle(getString(R.string.title_bookmarks));
           zoomOut();
-        populateMapFromBookmarks();
+          populateMapFromBookmarks();
         }
         progressSpinner.setVisibility(View.GONE);
         break;
@@ -587,7 +597,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         break;
       case R.id.help:
-        Uri help = Uri.parse("https://abqfilmtour.github.io/docs/UsageInstructions.html");
+        Uri help = Uri.parse(HELP_URL);
         Intent hIntent = new Intent(Intent.ACTION_VIEW, help);
         startActivity(hIntent);
         break;
@@ -628,7 +638,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private void populateMapFromAll() {
     map.clear();
     progressSpinner.setVisibility(View.VISIBLE);
-    this.setTitle(getString(R.string.title_all_locations));
     for (FilmLocation location : locations) {
       createMapMarker(location);
     }
@@ -641,7 +650,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private void populateMapFromBookmarks() {
     map.clear();
-    this.setTitle(getString(R.string.title_bookmarks));
     for (FilmLocation location : locations) {
       if (!location.isApproved()) {
         continue;
@@ -740,7 +748,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected Boolean doInBackground(Void... voids) {
       boolean successfulQuery = false;
-        Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
+      Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
       try {
         Response<List<Production>> response = call.execute();
         if (response.isSuccessful()) {
