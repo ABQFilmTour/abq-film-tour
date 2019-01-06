@@ -133,6 +133,9 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
       newFilmLocation = new FilmLocation();
       newFilmLocation.setProduction(production);
       newFilmLocation.setGoogleId(filmTourApplication.getAccount().getId());
+      newFilmLocation.setUserName(filmTourApplication.getAccount().getDisplayName());
+      newFilmLocation.setUserPictureUrl(
+          Objects.requireNonNull(filmTourApplication.getAccount().getPhotoUrl()).toString());
       newFilmLocation.setSiteName(this.siteName);
       newFilmLocation.setLatCoordinate(String.valueOf(this.location.latitude));
       newFilmLocation.setLongCoordinate(String.valueOf(this.location.longitude));
@@ -144,7 +147,6 @@ public class SubmitLocationDialog extends DialogFragment implements View.OnClick
       boolean successfulQuery = false;
       Call<FilmLocation> locationCall = filmTourApplication.getService()
           .postFilmLocation(token, newFilmLocation);
-      //TODO fix duplicated code
       try {
         Response<FilmLocation> response = locationCall.execute();
         if (response.isSuccessful()) {
