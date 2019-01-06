@@ -59,6 +59,7 @@
   <string name="title_bookmarks">Crear su propio recorrido</string>
   <string name="title_near_me">Cerca De Mí</string>
   <string name="unable_to_signin">Incapaz de iniciar sesión</string>
-  <string name="upload_image">Cargar imagen</string>
+  <string name="upload_image">Publicar un imagen</string>
   <string name="user_comment_hint">Escriba su comentario aquí.</string>
+  <string name="user_name">Nombre de Usuario</string>
 </resources>

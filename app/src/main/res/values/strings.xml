@@ -59,6 +59,7 @@
   <string name="title_bookmarks">Create Your Own Tour</string>
   <string name="title_near_me">Nearby Locations</string>
   <string name="unable_to_signin">Unable to sign in</string>
-  <string name="upload_image">Upload Image</string>
+  <string name="upload_image">Post an Image</string>
   <string name="user_comment_hint">Enter your comment here.</string>
+  <string name="user_name">User Name</string>
 </resources>
