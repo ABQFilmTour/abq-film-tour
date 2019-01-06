@@ -5,6 +5,7 @@
   <!--<string name="base_url">http://10.0.2.2:8080/</string>-->
 
   <string name="alert_exit">Salida</string>
+  <string name="alert_ok">OK</string>
   <string name="alert_signout">Desconectar</string>
   <string name="app_name">abq-film-tour</string>
   <string name="bookmark_added_notification">Marcador añadido.</string>
@@ -24,6 +25,7 @@
   <string name="error_unauthorized">Por favor, vuelva a iniciar sesión.</string>
   <string name="exit_alert_dialog">Dejar</string>
   <string name="help">Ayuda(sólo en inglés)</string>
+  <string name="image_unimplemented">Lo sentimos, esta característica sigue siendo un trabajo en progreso. Visite nuestro sitio web para las actualizaciones!\n abqfilmtour.github.io</string>
   <string name="imdb_link">Enlace a IMDB</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>
   <string name="loc_settings">Configuración de ubicación</string>
@@ -56,7 +58,7 @@
   <string name="title_activity_maps">Film Tour</string>
   <string name="title_all_locations">Todas las localizaciones</string>
   <string name="title_application">Film Tour</string>
-  <string name="title_bookmarks">Crear su propio recorrido</string>
+  <string name="title_bookmarks">Marcadores</string>
   <string name="title_near_me">Cerca De Mí</string>
   <string name="unable_to_signin">Incapaz de iniciar sesión</string>
   <string name="upload_image">Publicar una imagen</string>
