@@ -39,12 +39,6 @@ public class Image {
   private FilmLocation filmLocation;
 
   /**
-   * The user who submitted this image.
-   */
-  @Expose
-  private User user;
-
-  /**
    * A brief description of the contents of this image. (optional)
    */
   @Expose
@@ -57,9 +51,22 @@ public class Image {
   private String url;
 
   /**
-   * The Google ID of the user who submitted this image.
+   * The Google ID of the user who submitted this comment.
    */
+  @Expose
   private String googleId;
+
+  /**
+   * Url to the user's Google profile image.
+   */
+  @Expose
+  private String userPictureUrl;
+
+  /**
+   * The name of the user.
+   */
+  @Expose
+  private String userName;
 
   /**
    * Flag to verify that an image has been approved by an admin and can be displayed if security
@@ -102,24 +109,6 @@ public class Image {
    */
   public void setFilmLocation(FilmLocation filmLocation) {
     this.filmLocation = filmLocation;
-  }
-
-  /**
-   * Returns the user who submitted this image.
-   *
-   * @return the user who submitted this image.
-   */
-  public User getUser() {
-    return user;
-  }
-
-  /**
-   * Sets the user who submitted this image.
-   *
-   * @param user the user who submitted this image.
-   */
-  public void setUser(User user) {
-    this.user = user;
   }
 
   /**
@@ -211,4 +200,21 @@ public class Image {
   public void setGoogleId(String googleId) {
     this.googleId = googleId;
   }
+
+  public String getUserPictureUrl() {
+    return userPictureUrl;
+  }
+
+  public void setUserPictureUrl(String userPictureUrl) {
+    this.userPictureUrl = userPictureUrl;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
+
 }

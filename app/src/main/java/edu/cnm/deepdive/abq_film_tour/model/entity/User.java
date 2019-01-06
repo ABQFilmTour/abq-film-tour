@@ -31,12 +31,6 @@ public class User {
   private String googleId;
 
   /**
-   * The user's Gmail address.
-   */
-  @Expose
-  private String gmailAddress;
-
-  /**
    * Flag to check if a user is banned from using the app.
    */
   @Expose
@@ -100,24 +94,6 @@ public class User {
    */
   public void setGoogleId(String googleId) {
     this.googleId = googleId;
-  }
-
-  /**
-   * Returns the user's Gmail address.
-   *
-   * @return the user's Gmail address
-   */
-  public String getGmailAddress() {
-    return gmailAddress;
-  }
-
-  /**
-   * Sets the user's Gmail address.
-   *
-   * @param gmailAddress the user's Gmail address
-   */
-  public void setGmailAddress(String gmailAddress) {
-    this.gmailAddress = gmailAddress;
   }
 
   /**

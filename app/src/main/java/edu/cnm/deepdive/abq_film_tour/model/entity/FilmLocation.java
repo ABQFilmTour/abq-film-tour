@@ -89,16 +89,22 @@ public class FilmLocation {
   private String originalDetails;
 
   /**
-   * The user who submitted this location.
+   * The Google ID of the user who submitted this comment.
    */
   @Expose
-  @SerializedName("googleUser")
-  private User user;
+  private String googleId;
 
   /**
-   * The Google ID of the user who submitted this location.
+   * Url to the user's Google profile image.
    */
-  private String googleId;
+  @Expose
+  private String userPictureUrl;
+
+  /**
+   * The name of the user.
+   */
+  @Expose
+  private String userName;
 
   /**
    * The production associated with the filming at this location.
@@ -324,24 +330,6 @@ public class FilmLocation {
   }
 
   /**
-   * Gets user.
-   *
-   * @return the user
-   */
-  public User getUser() {
-    return user;
-  }
-
-  /**
-   * Sets user.
-   *
-   * @param user the user
-   */
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  /**
    * Is approved boolean.
    *
    * @return the boolean
@@ -400,5 +388,21 @@ public class FilmLocation {
    */
   public void setGoogleId(String googleId) {
     this.googleId = googleId;
+  }
+
+  public String getUserPictureUrl() {
+    return userPictureUrl;
+  }
+
+  public void setUserPictureUrl(String userPictureUrl) {
+    this.userPictureUrl = userPictureUrl;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 }

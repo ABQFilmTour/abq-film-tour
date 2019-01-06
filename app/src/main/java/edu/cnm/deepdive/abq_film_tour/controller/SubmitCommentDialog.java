@@ -80,6 +80,8 @@ public class SubmitCommentDialog extends DialogFragment {
       newComment = new UserComment();
       newComment.setFilmLocation(location);
       newComment.setGoogleId(filmTourApplication.getAccount().getId());
+      newComment.setUserName(filmTourApplication.getAccount().getDisplayName());
+      newComment.setUserName(Objects.requireNonNull(filmTourApplication.getAccount().getPhotoUrl()).toString());
       newComment.setText(SubmitCommentDialog.this.commentEditText.getText().toString());
       newComment.setApproved(true); // TODO Remove me when security is tighter.
     }
@@ -89,7 +91,6 @@ public class SubmitCommentDialog extends DialogFragment {
       boolean successfulQuery = false;
       Call<UserComment> call = filmTourApplication.getService().postUserComment(token, newComment, location.getId());
       try {
-        //TODO fix duplicated code
         Response<UserComment> response = call.execute();
         if (response.isSuccessful()) {
           successfulQuery = true;

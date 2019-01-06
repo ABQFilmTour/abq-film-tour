@@ -716,7 +716,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected Boolean doInBackground(Void... voids) {
       boolean successfulQuery = false;
         Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
-        //TODO fix duplicate code
       try {
         Response<List<Production>> response = call.execute();
         if (response.isSuccessful()) {

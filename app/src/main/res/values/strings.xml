@@ -2,7 +2,7 @@
   <!--Use this URL for the live server-->
   <string name="base_url">https://jscpeterson.com/</string>
   <!--Use this URL for debugging a local host-->
-  <!--<string name="base_url">http://10.0.2.2:8080/</string>-->
+  <!--<string name="base_url">http://10.0.2.2:5050/</string>-->
 
   <string name="alert_exit">Exit</string>
   <string name="alert_signout">Sign Out</string>
@@ -48,7 +48,7 @@
   <string name="sign_out">Sign Out</string>
   <string name="startup_select_title">Select a title from the drop down menu to get started!</string>
   <string name="submission_failed">We were unable to process your request.</string>
-  <string name="submission_successful">Post submitted! It will display once approved.</string>
+  <string name="submission_successful">Post submitted! It will display once it is approved.</string>
   <string name="submit_comment">Post a Comment</string>
   <string name="submit_location_button_format">Submit for %s</string>
   <string name="submit_new_site_name">Enter the name of this location here.</string>
