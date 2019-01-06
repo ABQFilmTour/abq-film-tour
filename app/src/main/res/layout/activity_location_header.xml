@@ -14,38 +14,37 @@
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:adjustViewBounds="false"
-    app:layout_constraintDimensionRatio="@string/dimension_ratio_image_header"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
     android:background="@drawable/default_image_header"
-    android:importantForAccessibility="no" />
+    android:importantForAccessibility="no"
+    app:layout_constraintDimensionRatio="@string/dimension_ratio_image_header"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
 
   <ImageView
     android:id="@+id/image_view_poster"
     android:layout_width="0dp"
     android:layout_height="@dimen/poster_height"
     android:layout_marginBottom="@dimen/margin_medium"
+    android:contentDescription="@string/production_poster"
     app:layout_constraintBottom_toBottomOf="@+id/image_view_header"
     app:layout_constraintDimensionRatio="@string/dimension_ratio_poster"
     app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    android:contentDescription="@string/production_poster" />
-
+    app:layout_constraintTop_toBottomOf="@+id/image_view_header" />
 
   <TextView
     android:id="@+id/production_title_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_small"
-    android:layout_marginStart="@dimen/margin_medium"
     android:layout_marginEnd="@dimen/margin_small"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_small"
     android:textAppearance="@style/TextAppearance.AppCompat.Title"
+    android:textSize="@dimen/text_size_large"
+    android:textStyle="bold"
+    app:layout_constraintBottom_toTopOf="@id/imdb_link_view"
     app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
     app:layout_constraintStart_toEndOf="@+id/image_view_poster"
-    app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    app:layout_constraintBottom_toTopOf="@id/imdb_link_view"
-    android:textSize="@dimen/text_size_large"
-    android:textStyle="bold" />
+    app:layout_constraintTop_toBottomOf="@+id/image_view_header" />
 
   <ImageButton
     android:id="@+id/bookmark_button"
@@ -53,56 +52,56 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/margin_small"
     android:background="@android:drawable/list_selector_background"
+    android:contentDescription="@string/bookmark"
     app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
     app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    app:srcCompat="@drawable/bookmark_button"
-    android:contentDescription="@string/bookmark" />
+    app:srcCompat="@drawable/bookmark_button" />
 
   <TextView
     android:id="@+id/imdb_link_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_medium"
-    android:layout_marginStart="@dimen/margin_medium"
     android:layout_marginEnd="@dimen/margin_small"
+    android:layout_marginStart="@dimen/margin_medium"
     android:clickable="true"
     android:focusable="true"
     android:textColor="@color/text_color_link"
+    app:layout_constraintBottom_toTopOf="@id/plot_view"
     app:layout_constraintEnd_toStartOf="@id/bookmark_button"
     app:layout_constraintStart_toEndOf="@id/image_view_poster"
-    app:layout_constraintTop_toBottomOf="@id/production_title_view"
-    app:layout_constraintBottom_toTopOf="@id/plot_view" />
+    app:layout_constraintTop_toBottomOf="@id/production_title_view" />
 
   <TextView
     android:id="@+id/plot_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_medium"
     android:layout_marginBottom="@dimen/margin_small"
-    android:layout_marginStart="@dimen/margin_large"
     android:layout_marginEnd="@dimen/margin_large"
+    android:layout_marginStart="@dimen/margin_large"
+    android:layout_marginTop="@dimen/margin_medium"
     android:textAlignment="center"
     android:textColor="@color/colorPrimaryDark"
+    app:layout_constraintBottom_toTopOf="@id/location_sitename_view"
     app:layout_constraintEnd_toStartOf="@id/guidelineRight"
     app:layout_constraintStart_toEndOf="@id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/imdb_link_view"
-    app:layout_constraintBottom_toTopOf="@id/location_sitename_view" />
+    app:layout_constraintTop_toBottomOf="@id/imdb_link_view" />
 
   <TextView
     android:id="@+id/location_sitename_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_small"
-    android:layout_marginStart="@dimen/margin_small"
     android:layout_marginEnd="@dimen/margin_small"
+    android:layout_marginStart="@dimen/margin_small"
+    android:layout_marginTop="@dimen/margin_small"
+    android:background="@drawable/round_border_location"
     android:textAlignment="center"
-    android:textSize="@dimen/text_size_large"
     android:textColor="@color/dialogTextColor"
+    android:textSize="@dimen/text_size_large"
+    app:layout_constraintBottom_toTopOf="@id/user_image_comment_input"
     app:layout_constraintEnd_toStartOf="@id/guidelineRight"
     app:layout_constraintStart_toEndOf="@id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/plot_view"
-    app:layout_constraintBottom_toTopOf="@id/user_image_comment_input"
-    android:background="@drawable/round_border_location" />
+    app:layout_constraintTop_toBottomOf="@id/plot_view" />
 
   <android.support.constraint.Guideline
     android:id="@+id/guidelineLeft"
@@ -118,45 +117,43 @@
     android:orientation="vertical"
     app:layout_constraintGuide_end="@dimen/margin_medium" />
 
-
   <LinearLayout
     android:id="@+id/user_image_comment_input"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_small"
-    android:layout_marginStart="@dimen/margin_medium"
     android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_small"
     android:gravity="center_horizontal"
     android:orientation="horizontal"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="@id/guidelineRight"
     app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-    app:layout_constraintTop_toBottomOf="@id/location_sitename_view"
-    app:layout_constraintBottom_toBottomOf="parent">
+    app:layout_constraintTop_toBottomOf="@id/location_sitename_view">
 
     <Button
       android:id="@+id/submit_comment_button"
       android:layout_width="0dp"
-      android:layout_weight="1"
       android:layout_height="wrap_content"
-      android:background="@drawable/round_border_orange"
-      android:textColor="@color/dialogTextColor"
-      android:layout_marginTop="@dimen/padding_small"
       android:layout_marginBottom="@dimen/padding_medium"
-      android:layout_marginStart="@dimen/margin_medium"
       android:layout_marginEnd="@dimen/margin_small"
-      android:hint="@string/submit_comment" />
-
+      android:layout_marginStart="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/padding_small"
+      android:layout_weight="1"
+      android:background="@drawable/round_border_orange"
+      android:hint="@string/submit_comment"
+      android:textColor="@color/dialogTextColor" />
 
     <Button
       android:id="@+id/submit_image_button"
       android:layout_width="0dp"
-      android:layout_weight="1"
       android:layout_height="wrap_content"
-      android:background="@drawable/round_border_orange"
-      android:layout_marginTop="@dimen/padding_small"
       android:layout_marginBottom="@dimen/padding_medium"
-      android:layout_marginStart="@dimen/margin_small"
       android:layout_marginEnd="@dimen/margin_medium"
+      android:layout_marginStart="@dimen/margin_small"
+      android:layout_marginTop="@dimen/padding_small"
+      android:layout_weight="1"
+      android:background="@drawable/round_border_orange"
       android:hint="@string/upload_image"
       android:textColor="@color/dialogTextColor" />
 

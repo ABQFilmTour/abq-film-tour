@@ -64,4 +64,5 @@
   <string name="upload_image">Post an Image</string>
   <string name="user_comment_hint">Enter your comment here.</string>
   <string name="user_name">User Name</string>
+  <string name="user_profile_picture">user profile picture</string>
 </resources>

@@ -21,6 +21,9 @@ import java.util.Objects;
  */
 public class CommentAdapter extends ArrayAdapter<UserComment> {
 
+  /**
+   * The Film tour application.
+   */
   FilmTourApplication filmTourApplication;
 
   /**

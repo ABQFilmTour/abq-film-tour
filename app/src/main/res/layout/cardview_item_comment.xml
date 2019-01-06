@@ -19,8 +19,8 @@
         android:id="@+id/user_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:contentDescription="@string/user_profile_picture"
         android:padding="@dimen/padding_x_small" />
-
 
       <TextView
         android:id="@+id/user_name"
@@ -32,10 +32,7 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/text_size_medium"
-        android:textStyle="bold"
-         />
-
-
+        android:textStyle="bold" />
 
       <TextView
         android:id="@+id/comment_text_view"
@@ -46,8 +43,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_toEndOf="@id/user_image_view"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/colorPrimaryDark"
-        />
+        android:textColor="@color/colorPrimaryDark" />
 
     </RelativeLayout>
 

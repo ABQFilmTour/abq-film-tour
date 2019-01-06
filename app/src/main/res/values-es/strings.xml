@@ -64,4 +64,5 @@
   <string name="upload_image">Publicar una imagen</string>
   <string name="user_comment_hint">Escriba su comentario aquí.</string>
   <string name="user_name">Nombre de Usuario</string>
+  <string name="user_profile_picture">imagen de perfil de usuario</string>
 </resources>

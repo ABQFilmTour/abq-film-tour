@@ -87,14 +87,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */
   private static final float ZOOM_LEVEL_NEAR_ME = 17;
   /**
-   * Bearing level for the camera when "Near Me" is selected, this skews the map direction so should
-   * be avoided.
+   * Initial bearing level for the map camera, sets the top of the map north
+   */
+  private static final float BEARING_LEVEL_INITIAL = 0;
+  /**
+   * Bearing level for the camera when "Near Me" is selected, changing this skews the map direction
+   * and should be avoided.
    */
   private static final float BEARING_LEVEL_NEAR_ME = 0;
+  /**
+   * Initial tilt level for the map camera.
+   */
+  private static final float TILT_LEVEL_INITIAL = 0;
   /**
    * Tilt level for the camera when "Near Me" is selected.
    */
   private static final float TILT_LEVEL_NEAR_ME = 40;
+
   /**
    * Constant of the average radius of the earth in km, used to find the distance between two
    * coordinates.
@@ -472,7 +481,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
   }
+  private void zoomOut() {
+    LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
+    CameraPosition cameraPosition = new CameraPosition.Builder()
+        .target(startCoordinates) // Sets the center of the map to center of Albuquerque
+        .zoom(ZOOM_LEVEL_INITIAL) // Sets the zoom
+        .bearing(BEARING_LEVEL_INITIAL) // Sets the orientation of the camera
+        .tilt(TILT_LEVEL_INITIAL) // Sets the tilt of the camera
+        .build(); // Creates a CameraPosition from the builder
+    populateMapFromLocation(startCoordinates);
+    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+  }
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
@@ -540,6 +560,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (bookmarks.isEmpty()) {
           Toast.makeText(this, getString(R.string.menu_no_bookmarks), Toast.LENGTH_LONG).show();
         } else {
+          zoomOut();
         populateMapFromBookmarks();
         }
         progressSpinner.setVisibility(View.GONE);

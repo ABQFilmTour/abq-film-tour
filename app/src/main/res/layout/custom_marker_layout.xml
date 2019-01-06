@@ -5,6 +5,7 @@
   android:id="@+id/custom_marker_view"
   android:layout_width="@dimen/custom_marker_view_width"
   android:layout_height="wrap_content">
+
   <de.hdodenhof.circleimageview.CircleImageView
     android:layout_width="@dimen/custom_marker_width"
     android:layout_height="@dimen/custom_marker_height"

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
   android:id="@+id/submit_comment_fragment"
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,16 +19,15 @@
     android:background="@color/edit_text_background"
     android:gravity="center_horizontal">
 
-      <EditText
-        android:id="@+id/user_comment_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/user_comment_hint"
-        android:inputType="text"
-        android:maxEms="100"/>
+    <EditText
+      android:id="@+id/user_comment_edit"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/user_comment_hint"
+      android:inputType="text"
+      android:maxEms="100" />
 
-    </android.support.design.widget.TextInputLayout>
-
+  </android.support.design.widget.TextInputLayout>
 
   <Button
     android:id="@+id/user_comment_button"
@@ -37,6 +37,6 @@
     android:layout_marginTop="@dimen/margin_small"
     android:background="@color/colorAccent"
     android:text="@string/submit"
-    android:textColor="@color/colorPrimaryDark"/>
+    android:textColor="@color/colorPrimaryDark" />
 
 </LinearLayout>
