@@ -189,7 +189,7 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   private void setupBackgroundImage() {
-    if (images.isEmpty()) {
+    if (images.isEmpty() || !images.get(0).isApproved()) {
       // Do nothing, keep the background header image.
     } else {
       String imageUrl = images.get(0).getUrl();
