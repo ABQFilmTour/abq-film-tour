@@ -27,8 +27,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.request.RequestOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
+import edu.cnm.deepdive.abq_film_tour.model.entity.Image;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import edu.cnm.deepdive.abq_film_tour.model.entity.UserComment;
 import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
@@ -64,6 +66,7 @@ public class LocationActivity extends AppCompatActivity {
   private FilmLocation location;
   private Production production;
   private List<UserComment> userComments;
+  private List<Image> images;
   private String token;
   private ImageButton bookmarkButton;
   private Button commentButton;
@@ -185,6 +188,20 @@ public class LocationActivity extends AppCompatActivity {
     this.production = production;
   }
 
+  private void setupBackgroundImage() {
+    if (images.isEmpty() || !images.get(0).isApproved()) {
+      // Do nothing, keep the background header image.
+    } else {
+      String imageUrl = images.get(0).getUrl();
+      RequestOptions options = new RequestOptions();
+      options.centerCrop();
+      Glide.with(LocationActivity.this)
+          .load(imageUrl)
+          .apply(options)
+          .into(locationImage);
+    }
+  }
+
   private void setupButtons() {
     bookmarkButton = findViewById(R.id.bookmark_button);
     if (bookmarks.contains(location.getId().toString())) {
@@ -289,15 +306,20 @@ public class LocationActivity extends AppCompatActivity {
             .getFilmLocation(token, UUIDs[0]);
         Call<List<UserComment>> commentCall = filmTourApplication.getService()
             .getComments(token, UUIDs[0]);
+        Call<List<Image>> imageCall = filmTourApplication.getService()
+            .getImages(token, UUIDs[0]);
         Response<FilmLocation> locationCallResponse = locationCall.execute();
         Response<List<UserComment>> commentCallResponse = commentCall.execute();
-        if (locationCallResponse.isSuccessful() && commentCallResponse.isSuccessful()) {
+        Response<List<Image>> imageCallResponse = imageCall.execute();
+        if (locationCallResponse.isSuccessful() && commentCallResponse.isSuccessful() && imageCallResponse.isSuccessful()) {
           location = locationCallResponse.body();
           userComments = commentCallResponse.body();
+          images = imageCallResponse.body();
           successfulQuery = true;
         } else {
           Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(locationCallResponse.code()));
           Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(commentCallResponse.code()));
+          Log.d(ERROR_LOG_TAG_LOCATION_ACTIVITY, String.valueOf(imageCallResponse.code()));
           errorMessage = filmTourApplication.getErrorMessageFromHttpResponse(locationCallResponse);
           //I can't think of a situation where both of these calls would return different response codes.
         }
@@ -321,6 +343,7 @@ public class LocationActivity extends AppCompatActivity {
         setupCommentButtonListener();
         setupImageButtonListener();
         setupComments();
+        setupBackgroundImage();
       } else {
         filmTourApplication.handleErrorMessage(LocationActivity.this, errorMessage);
       }

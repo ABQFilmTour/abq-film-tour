@@ -61,6 +61,16 @@ public interface Service {
   Call<List<UserComment>> getComments(@Header("Authorization") String authorization, @Path(value = "id") UUID id);
 
   /**
+   * Gets images associated with a film location id.
+   *
+   * @param authorization the authorization token
+   * @param id the id of the film location
+   * @return the images
+   */
+  @GET("rest/film_locations/{id}/images/")
+  Call<List<Image>> getImages(@Header("Authorization") String authorization, @Path(value = "id") UUID id);
+
+  /**
    * Posts a new film location to the server.
    *
    * @param authorization the authorization token
