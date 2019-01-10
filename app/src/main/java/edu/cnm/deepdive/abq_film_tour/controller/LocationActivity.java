@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.request.RequestOptions;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Image;
@@ -192,8 +193,11 @@ public class LocationActivity extends AppCompatActivity {
       // Do nothing, keep the background header image.
     } else {
       String imageUrl = images.get(0).getUrl();
+      RequestOptions options = new RequestOptions();
+      options.centerCrop();
       Glide.with(LocationActivity.this)
           .load(imageUrl)
+          .apply(options)
           .into(locationImage);
     }
   }
