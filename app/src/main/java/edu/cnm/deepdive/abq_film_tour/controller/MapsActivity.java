@@ -581,6 +581,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location.latitude == 0 & location.longitude == 0) {
           // Do nothing. LatLng was invalid and getDeviceLocation should have returned an error message.
         } else {
+          animateCamera(location, ZOOM_LEVEL_NEAR_ME, BEARING_LEVEL_NEAR_ME, TILT_LEVEL_NEAR_ME);
           SubmitLocationDialog submitLocationDialog = new SubmitLocationDialog();
           arguments.putDouble(USER_LOCATION_LAT_KEY, location.latitude);
           arguments.putDouble(USER_LOCATION_LONG_KEY, location.longitude);

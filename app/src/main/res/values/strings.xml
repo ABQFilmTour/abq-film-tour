@@ -37,7 +37,7 @@
   <string name="menu_film">Film</string>
   <string name="menu_no_bookmarks">You have no bookmarks saved. Select the bookmark button on an existing location to create your own tour.</string>
   <string name="menu_no_savedtitle">Select an existing title from Films or TV Shows to submit your location to.</string>
-  <string name="menu_submit">Submit</string>
+  <string name="menu_submit">Submit Your Location</string>
   <string name="menu_television">Television</string>
   <string name="not_in_burque">You are outside of Albuquerque city limits.</string>
   <string name="null_location">Your location could not be retrieved. Check if you have Location turned on for your device.</string>
