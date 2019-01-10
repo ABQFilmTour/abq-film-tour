@@ -37,7 +37,7 @@
   <string name="menu_film">Pelicula</string>
   <string name="menu_no_bookmarks">No tienes marcadores guardados. Seleccione el botón de marcador en una ubicación existente para crear su propio recorrido.</string>
   <string name="menu_no_savedtitle">Seleccione un título existente de películas o programas de televisión para enviar su ubicación.</string>
-  <string name="menu_submit">Enviar</string>
+  <string name="menu_submit">Envíe su ubicación</string>
   <string name="menu_television">Televisión</string>
   <string name="not_in_burque">Estás fuera de los límites de la ciudad de Albuquerque.</string>
   <string name="null_location">Estamos teniendo problemas para encontrar su ubicación. Por favor habilítalo en el menú de configuración.</string>
