@@ -125,6 +125,19 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   /**
+   * Selects a header image to display, assuming there are images available. Currently only selects
+   * the first approved image.
+   * @return a URL to an image.
+   */
+  private String getHeaderImageUrl(List<Image> images) {
+    for (Image image : images) {
+      if (image.isApproved()) return image.getUrl();
+    }
+    //This return statement should never be reached, only a valid image list should be passed in.
+    return "no_url";
+  }
+
+  /**
    * Gets film location.
    *
    * @return the film location
@@ -195,10 +208,10 @@ public class LocationActivity extends AppCompatActivity {
   @SuppressLint("CheckResult")
   private void setupBackgroundImage() {
     //TODO Find a cleaner way to select the header image - at least pick the first approved image.
-    if (images.isEmpty() || !images.get(0).isApproved()) {
+    if (images.isEmpty()) {
       // Do nothing, keep the background header image.
     } else {
-      String imageUrl = images.get(0).getUrl();
+      String imageUrl = getHeaderImageUrl(images);
       RequestOptions options = new RequestOptions();
       options.centerCrop();
       Glide.with(LocationActivity.this)
@@ -246,7 +259,6 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   private void setupImageButtonListener() {
-    //TODO Change when image feature is working.
     imageButton.setOnClickListener(v -> {
       SubmitImageDialog submitImageDialog = new SubmitImageDialog();
       submitImageDialog.show(getSupportFragmentManager(), "");
