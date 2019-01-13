@@ -48,6 +48,7 @@ public class SubmitImageDialog extends DialogFragment implements View.OnClickLis
   FilmLocation location;
   Production production;
 
+  Uri savedUri;
   private String token;
 
   @Nullable
@@ -80,6 +81,7 @@ public class SubmitImageDialog extends DialogFragment implements View.OnClickLis
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
       Uri selectedImage = data.getData();
+      savedUri = selectedImage;
       userUploadImage.setImageURI(selectedImage);
     }
   }
@@ -104,7 +106,7 @@ public class SubmitImageDialog extends DialogFragment implements View.OnClickLis
       case R.id.send_image_button:
         Bitmap image = ((BitmapDrawable) userUploadImage.getDrawable()).getBitmap();
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        new ImageUploadTask().execute(imageUri);
+        new ImageUploadTask().execute(savedUri);
     }
   }
 
@@ -152,8 +154,6 @@ public class SubmitImageDialog extends DialogFragment implements View.OnClickLis
             .unsigned("jgg1ktxp") //Does this need to be hidden?
             .option("tags", new String[] {location.getSiteName(), production.getTitle()})
             .dispatch();
-//            .option("tags", production.getTitle())
-//            .option("tags", newImage.getId()) //Only storing the ID here for easy reference
         //TODO Get image URL
         //TODO set up listener service and callback interface to check for progress of uploads
         Toast.makeText(parentActivity, "image uploaded", Toast.LENGTH_LONG).show();
