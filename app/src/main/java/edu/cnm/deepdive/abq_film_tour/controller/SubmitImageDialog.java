@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import edu.cnm.deepdive.abq_film_tour.FilmTourApplication;
 import edu.cnm.deepdive.abq_film_tour.R;
 import edu.cnm.deepdive.abq_film_tour.controller.LocationActivity;
@@ -30,6 +32,8 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Image;
 import edu.cnm.deepdive.abq_film_tour.model.entity.Production;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -38,17 +42,15 @@ import retrofit2.Response;
 public class SubmitImageDialog extends DialogFragment implements View.OnClickListener {
 
   private static final int RESULT_LOAD_IMAGE = 1;
+  private static final String ERROR_LOG_TAG_IMAGE_DIALOG= "SubmitImageDialog";
 
-  ImageView userUploadImage;
-
-  Button userImageButton, sendImageButton;
-
+  private ImageView userUploadImage;
+  private Button userImageButton, sendImageButton;
   private FilmTourApplication filmTourApplication;
   private LocationActivity parentActivity;
-  FilmLocation location;
-  Production production;
-
-  Uri savedUri;
+  private FilmLocation location;
+  private Production production;
+  private Uri savedUri;
   private String token;
 
   @Nullable
@@ -89,10 +91,9 @@ public class SubmitImageDialog extends DialogFragment implements View.OnClickLis
   @Override
   public void onResume() {
     super.onResume();
-
-    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+    WindowManager.LayoutParams params = Objects.requireNonNull(getDialog().getWindow()).getAttributes();
     params.width = LayoutParams.MATCH_PARENT;
-    getDialog().getWindow().setAttributes((WindowManager.LayoutParams) params);
+    getDialog().getWindow().setAttributes(params);
   }
 
   @Override
@@ -104,44 +105,64 @@ public class SubmitImageDialog extends DialogFragment implements View.OnClickLis
         startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
         break;
       case R.id.send_image_button:
-        Bitmap image = ((BitmapDrawable) userUploadImage.getDrawable()).getBitmap();
-        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        new ImageUploadTask().execute(savedUri);
+        if (savedUri != null) {
+          Image newImage = new Image();
+          newImage.setFilmLocation(location);
+          newImage.setGoogleId(filmTourApplication.getAccount().getId());
+          String requestId = MediaManager.get().upload(savedUri)
+              .unsigned(getString(R.string.cloudinary_unsigned_preset)) //Does this need to be hidden?
+              .option("tags", new String[] {location.getSiteName(), production.getTitle()})
+              .callback(new UploadCallback() {
+                @Override
+                public void onStart(String requestId) {
+                  //Do nothing
+                }
+
+                @Override
+                public void onProgress(String requestId, long bytes, long totalBytes) {
+                  //Do nothing
+                }
+
+                @Override
+                public void onSuccess(String requestId, Map resultData) {
+                  String url = resultData.get("url").toString();
+                  newImage.setUrl(url);
+                  new ImageUploadTask().execute(newImage);
+                }
+
+                @Override
+                public void onError(String requestId, ErrorInfo error) {
+                  Toast.makeText(parentActivity, "Failed to reach cloud service.", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onReschedule(String requestId, ErrorInfo error) {
+                  //Do nothing
+                }
+              })
+              .dispatch();
+          newImage.setApproved(true); //TODO Remove once security is tightened.
+        } else {
+          Toast.makeText(parentActivity, "Please select an image.", Toast.LENGTH_SHORT).show();
+        }
     }
   }
 
-
-
-  private class ImageUploadTask extends AsyncTask<Uri, Void, Boolean> {
-
-    //Note that this is only used to store a reference to an image in the database, it is not an
-    //actual image.
-    Image newImage;
-    String url;
-    String uniqueID;
-    Uri localImage;
+  private class ImageUploadTask extends AsyncTask<Image, Void, Boolean> {
 
     @Override
-    protected void onPreExecute() {
-      newImage = new Image();
-      newImage.setFilmLocation(location);
-      newImage.setGoogleId(filmTourApplication.getAccount().getId());
-    }
-
-    @Override
-    protected Boolean doInBackground(Uri... uris) {
+    protected Boolean doInBackground(Image... images) {
       boolean successfulQuery = false;
-      localImage = uris[0];
-      Call<Image> call = filmTourApplication.getService().postImage(token, newImage, location.getId());
+      Call<Image> call = filmTourApplication.getService().postImage(token, images[0], location.getId());
       try {
         Response<Image> response = call.execute();
         if (response.isSuccessful()) {
           successfulQuery = true;
         } else {
-          System.out.println(response.code());
+          // Do nothing - toast in onPostExecute displays enough information for now.
         }
       } catch (IOException e) {
-        //TODO Improve exception handling
+        // Do nothing - toast in onPostExecute displays enough information for now.
       }
       return successfulQuery;
     }
@@ -149,17 +170,11 @@ public class SubmitImageDialog extends DialogFragment implements View.OnClickLis
     @Override
     protected void onPostExecute(Boolean successfulQuery) {
       if (successfulQuery) {
-        //TODO change to submitted image
-        String requestId = MediaManager.get().upload(localImage)
-            .unsigned("jgg1ktxp") //Does this need to be hidden?
-            .option("tags", new String[] {location.getSiteName(), production.getTitle()})
-            .dispatch();
-        //TODO Get image URL
-        //TODO set up listener service and callback interface to check for progress of uploads
-        Toast.makeText(parentActivity, "image uploaded", Toast.LENGTH_LONG).show();
+        Toast.makeText(parentActivity, R.string.submission_successful, Toast.LENGTH_SHORT).show();
         dismiss();
       } else {
-        Toast.makeText(parentActivity, "Failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(parentActivity, R.string.submission_failed, Toast.LENGTH_SHORT).show();
+        dismiss();
       }
     }
   }
