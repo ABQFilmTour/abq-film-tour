@@ -2,6 +2,7 @@ package edu.cnm.deepdive.abq_film_tour.controller;
 
 import static edu.cnm.deepdive.abq_film_tour.controller.MapsActivity.SHARED_PREF_BOOKMARKS;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
@@ -188,7 +189,12 @@ public class LocationActivity extends AppCompatActivity {
     this.production = production;
   }
 
+  /**
+   * Sets the background image to an approved image associated with the entity if one is available.
+   */
+  @SuppressLint("CheckResult")
   private void setupBackgroundImage() {
+    //TODO Find a cleaner way to select the header image - at least pick the first approved image.
     if (images.isEmpty() || !images.get(0).isApproved()) {
       // Do nothing, keep the background header image.
     } else {
