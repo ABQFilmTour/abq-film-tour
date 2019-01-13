@@ -242,12 +242,14 @@ public class LocationActivity extends AppCompatActivity {
   private void setupImageButtonListener() {
     //TODO Change when image feature is working.
     imageButton.setOnClickListener(v -> {
-      android.app.AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
+      SubmitImageDialog submitImageDialog = new SubmitImageDialog();
+      submitImageDialog.show(getSupportFragmentManager(), "");
+      /*android.app.AlertDialog.Builder alertDialog = new Builder(this, R.style.AlertDialog);
       alertDialog.setMessage(R.string.image_unimplemented)
           .setCancelable(false)
           .setPositiveButton(R.string.alert_ok, null);
       AlertDialog alert = alertDialog.create();
-      alert.show();
+      alert.show();*/
     });
   }
 
