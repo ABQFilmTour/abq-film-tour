@@ -26,7 +26,7 @@
   <string name="exit_alert_dialog">Exit</string>
   <string name="help">Help</string>
   <string name="image_unimplemented">Sorry, this feature is still a work in progress. Check our website for updates!  abqfilmtour.github.io</string>
-  <string name="imdb_link">Link to IMDB Page</string>
+  <string name="imdb_link">Link to IMDb Page</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>
   <string name="loc_settings">Location Settings</string>
   <string name="location_id_tag">locationID</string>
@@ -65,4 +65,7 @@
   <string name="user_comment_hint">Enter your comment here.</string>
   <string name="user_name">User Name</string>
   <string name="user_profile_picture">user profile picture</string>
+  <string name="cloudinary_unsigned_preset">jgg1ktxp</string>
+  <string name="error_cloudinary">Failed to reach cloud service.</string>
+  <string name="submit_image_no_image">Please select an image.</string>
 </resources>

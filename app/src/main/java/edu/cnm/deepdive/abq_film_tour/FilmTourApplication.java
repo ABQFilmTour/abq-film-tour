@@ -8,6 +8,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import com.cloudinary.android.MediaManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -45,6 +46,8 @@ public class FilmTourApplication extends Application {
         .build();
     setupService();
     client = GoogleSignIn.getClient(this, options);
+
+    MediaManager.init(this);
   }
 
   /**

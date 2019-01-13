@@ -14,6 +14,7 @@
   <string name="cancel">Cancelar</string>
   <string name="cannot_enable_location">No se puede habilitar la ubicación.</string>
   <string name="client_id">650840836337-o0r50gnee6g2h5bg9lkq7d4776bfvp9c.apps.googleusercontent.com</string>
+  <string name="cloudinary_unsigned_preset">jgg1ktxp</string>
   <string name="dimension_ratio_image_header">3:2</string>
   <string name="dimension_ratio_poster">w,2:3</string>
   <string name="enable_loc">Habilitar ubicación.</string>
@@ -26,7 +27,7 @@
   <string name="exit_alert_dialog">Dejar</string>
   <string name="help">Ayuda(sólo en inglés)</string>
   <string name="image_unimplemented">Lo sentimos, esta característica sigue siendo un trabajo en progreso. Visite nuestro sitio web para las actualizaciones!\n abqfilmtour.github.io</string>
-  <string name="imdb_link">Enlace a IMDB</string>
+  <string name="imdb_link">Enlace a IMDb</string>
   <string name="imdb_url">https://www.imdb.com/title/</string>
   <string name="loc_settings">Configuración de ubicación</string>
   <string name="location_id_tag">locationID</string>
@@ -65,4 +66,7 @@
   <string name="user_comment_hint">Escriba su comentario aquí.</string>
   <string name="user_name">Nombre de Usuario</string>
   <string name="user_profile_picture">imagen de perfil de usuario</string>
+  <!-- TODO Need to translate -->
+  <string name="error_cloudinary">Failed to reach cloud service.</string>
+  <string name="submit_image_no_image">Please select an image.</string>
 </resources>
