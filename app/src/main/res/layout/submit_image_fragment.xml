@@ -23,8 +23,9 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:background="@color/colorAccent"
-    android:text="Upload Image"
+    android:text="@string/select_image"
     android:textColor="@color/colorPrimaryDark"/>
+
   <Button
     android:id="@+id/send_image_button"
     android:textStyle="bold"
@@ -32,7 +33,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:background="@color/colorAccent"
-    android:text="Register"
+    android:text="@string/submit"
     android:textColor="@color/colorPrimaryDark"/>
 
 </LinearLayout>

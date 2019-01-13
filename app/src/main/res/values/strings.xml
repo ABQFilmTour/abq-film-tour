@@ -68,4 +68,5 @@
   <string name="cloudinary_unsigned_preset">jgg1ktxp</string>
   <string name="error_cloudinary">Failed to reach cloud service.</string>
   <string name="submit_image_no_image">Please select an image.</string>
+  <string name="select_image">Select an Image</string>
 </resources>
