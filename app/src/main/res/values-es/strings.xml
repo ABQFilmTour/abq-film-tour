@@ -17,6 +17,7 @@
   <string name="cloudinary_unsigned_preset">jgg1ktxp</string>
   <string name="dimension_ratio_image_header">3:2</string>
   <string name="dimension_ratio_poster">w,2:3</string>
+  <string name="error_cloudinary">Error al subir.</string>
   <string name="enable_loc">Habilitar ubicación.</string>
   <string name="enable_location_settings">La configuración de su ubicación no está habilitada. Por favor habilítalo en el menú de configuración.</string>
   <string name="error_default">Error desconocido.</string>
@@ -46,6 +47,7 @@
   <string name="please_wait">Cargando. Por favor espera.</string>
   <string name="poster_url_format">%srest/productions/%s/poster</string>
   <string name="production_poster">cartel de la película</string>
+  <string name="select_image">Seleccione una imagen</string>
   <string name="selected_options_films_title">FILMS</string>
   <string name="selected_options_series_title">TELEVISIÓN</string>
   <string name="sign_out">Desconectar</string>
@@ -53,9 +55,10 @@
   <string name="submission_failed">No hemos podido procesar su solicitud.</string>
   <string name="submission_successful">Post enviado! Se mostrará una vez aprobado.</string>
   <string name="submit_comment">Publicar un comentario</string>
+  <string name="submit">Publicar</string>
+  <string name="submit_image_no_image">Por favor seleccione una imagen.</string>
   <string name="submit_location_button_format">Publicar para %s</string>
   <string name="submit_new_site_name">Ingrese el nombre de esta ubicación aquí.</string>
-  <string name="submit">Publicar</string>
   <string name="title_activity_maps">Film Tour</string>
   <string name="title_all_locations">Todas las localizaciones</string>
   <string name="title_application">Film Tour</string>
@@ -66,8 +69,5 @@
   <string name="user_comment_hint">Escriba su comentario aquí.</string>
   <string name="user_name">Nombre de Usuario</string>
   <string name="user_profile_picture">imagen de perfil de usuario</string>
-  <!-- TODO Need to translate -->
-  <string name="error_cloudinary">Failed to reach cloud service.</string>
-  <string name="submit_image_no_image">Please select an image.</string>
-  <string name="select_image">Select an Image</string>
+
 </resources>
