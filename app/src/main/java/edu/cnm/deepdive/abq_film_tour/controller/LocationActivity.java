@@ -72,7 +72,7 @@ public class LocationActivity extends AppCompatActivity {
   private ImageButton bookmarkButton;
   private Button commentButton;
   private Button imageButton;
-  private SharedPreferences sharedPref;
+  private static SharedPreferences sharedPref;
   private Set<String> bookmarks;
   private ListView commentListView;
   private ImageView locationImage;
@@ -176,7 +176,22 @@ public class LocationActivity extends AppCompatActivity {
     saveBookmarksToSharedPref(bookmarks);
   }
 
-  private void saveBookmarksToSharedPref(Set<String> bookmarks) {
+  @Override
+  protected void onPause() {
+    super.onPause();
+    //Saves bookmarks to shared preferences when activity is no longer visible.
+    saveBookmarksToSharedPref(bookmarks);
+
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    //Saves bookmarks to shared preferences when activity is no longer visible.z
+    saveBookmarksToSharedPref(bookmarks);
+  }
+
+  static void saveBookmarksToSharedPref(Set<String> bookmarks) {
     SharedPreferences.Editor editor = sharedPref.edit();
     editor.putStringSet(SHARED_PREF_BOOKMARKS, bookmarks);
     editor.apply();
@@ -246,6 +261,7 @@ public class LocationActivity extends AppCompatActivity {
             Toast.LENGTH_SHORT).show();
         bookmarkButton.setSelected(true);
         bookmarkButton.refreshDrawableState();
+        saveBookmarksToSharedPref(bookmarks);
       }
     });
   }

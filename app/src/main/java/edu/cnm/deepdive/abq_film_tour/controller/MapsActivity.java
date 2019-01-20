@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import retrofit2.Call;
@@ -254,6 +255,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     progressSpinner.setVisibility(View.VISIBLE);
     new GetProductionsTask().execute();
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+    bookmarks = sharedPref.getStringSet(SHARED_PREF_BOOKMARKS, new HashSet<>());
     filmTourApplication.getAccount().getId();
     FilmTourApplication.getInstance().getAccount().getId();
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -275,6 +277,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onPostResume() {
     super.onPostResume();
     isLocationEnabled();
+    bookmarks = sharedPref.getStringSet(SHARED_PREF_BOOKMARKS, new HashSet<>());
   }
 
   @Override
@@ -283,6 +286,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Assigns bookmarks to set stored in SharedPref, creates a new HashSet if not available
     bookmarks = sharedPref.getStringSet(SHARED_PREF_BOOKMARKS, new HashSet<>());
   }
+
 
   /**
    * Given a location, this method animates the map camera and zooms in or out and populates map

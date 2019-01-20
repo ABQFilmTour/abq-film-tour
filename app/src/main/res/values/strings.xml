@@ -14,10 +14,12 @@
   <string name="cancel">Cancel</string>
   <string name="cannot_enable_location">Cannot enable location.</string>
   <string name="client_id">650840836337-o0r50gnee6g2h5bg9lkq7d4776bfvp9c.apps.googleusercontent.com</string>
+  <string name="cloudinary_unsigned_preset">jgg1ktxp</string>
   <string name="dimension_ratio_image_header">3:2</string>
   <string name="dimension_ratio_poster">w,2:3</string>
   <string name="enable_loc">Enable Location</string>
   <string name="enable_location_settings">Your locations setting is not enabled. Please enable it in settings menu.</string>
+  <string name="error_cloudinary">Failed to reach cloud service.</string>
   <string name="error_default">Unknown error</string>
   <string name="error_forbidden">You are forbidden from using this service.</string>
   <string name="error_http">HTTP error code %d</string>
@@ -45,16 +47,18 @@
   <string name="please_wait">Please wait for your content to load…</string>
   <string name="poster_url_format">%srest/productions/%s/poster</string>
   <string name="production_poster">film poster</string>
+  <string name="select_image">Select an Image</string>
   <string name="selected_options_films_title">FILMS</string>
   <string name="selected_options_series_title">TV SHOW</string>
   <string name="sign_out">Sign Out</string>
   <string name="startup_select_title">Select a title from the drop down menu to get started!</string>
   <string name="submission_failed">We were unable to process your request.</string>
   <string name="submission_successful">Post submitted! It will display once it is approved.</string>
+  <string name="submit">Submit</string>
   <string name="submit_comment">Post a Comment</string>
+  <string name="submit_image_no_image">Please select an image.</string>
   <string name="submit_location_button_format">Submit for %s</string>
   <string name="submit_new_site_name">Enter the name of this location here.</string>
-  <string name="submit">Submit</string>
   <string name="title_activity_maps">Film Tour</string>
   <string name="title_all_locations">All Locations</string>
   <string name="title_application">Film Tour</string>
@@ -65,8 +69,5 @@
   <string name="user_comment_hint">Enter your comment here.</string>
   <string name="user_name">User Name</string>
   <string name="user_profile_picture">user profile picture</string>
-  <string name="cloudinary_unsigned_preset">jgg1ktxp</string>
-  <string name="error_cloudinary">Failed to reach cloud service.</string>
-  <string name="submit_image_no_image">Please select an image.</string>
-  <string name="select_image">Select an Image</string>
+
 </resources>
