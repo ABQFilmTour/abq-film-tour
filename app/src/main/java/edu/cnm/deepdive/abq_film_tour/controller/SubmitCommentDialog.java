@@ -83,7 +83,6 @@ public class SubmitCommentDialog extends DialogFragment {
       newComment.setUserName(filmTourApplication.getAccount().getDisplayName());
       newComment.setUserName(Objects.requireNonNull(filmTourApplication.getAccount().getPhotoUrl()).toString());
       newComment.setText(SubmitCommentDialog.this.commentEditText.getText().toString());
-      newComment.setApproved(true); // TODO Remove me when security is tighter.
     }
 
     @Override

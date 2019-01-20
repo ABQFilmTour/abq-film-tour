@@ -149,7 +149,6 @@ public class SubmitImageDialog extends DialogFragment implements View.OnClickLis
           }
         })
         .dispatch();
-    newImage.setApproved(true); //TODO Remove once security is tightened.
   }
 
   /**
