@@ -26,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class FilmTourApplication extends Application {
 
+  public static final String VERSION = "0.1";
   private static final int STATUS_CODE_ERROR = 1;
   private static FilmTourApplication instance = null;
   private GoogleSignInClient client;

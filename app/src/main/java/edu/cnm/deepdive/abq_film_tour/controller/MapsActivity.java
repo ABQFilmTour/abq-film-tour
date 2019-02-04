@@ -50,7 +50,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import retrofit2.Call;
@@ -256,8 +255,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     new GetProductionsTask().execute();
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     bookmarks = sharedPref.getStringSet(SHARED_PREF_BOOKMARKS, new HashSet<>());
-    filmTourApplication.getAccount().getId();
-    FilmTourApplication.getInstance().getAccount().getId();
+    filmTourApplication.getAccount().getId(); //Pointless code?
+    FilmTourApplication.getInstance().getAccount().getId(); //Pointless code?
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
     assert mapFragment != null;
@@ -741,6 +740,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Asynchronous task that retrieves the productions from the server. Returns a boolean if the
    * query was successful, displays an alert dialog and exits the app if not.
+   *
+   * Checks the version as well. If the application version does not match the version on the server
+   * it is handled as an error.
    */
   private class GetProductionsTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -754,10 +756,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected Boolean doInBackground(Void... voids) {
       boolean successfulQuery = false;
+      Call<String> versionCheckCall = filmTourApplication.getService().getVersion(); //sets up a version call in addition to the production call
       Call<List<Production>> call = filmTourApplication.getService().getProductions(token);
       try {
         Response<List<Production>> response = call.execute();
-        if (response.isSuccessful()) {
+        Response<String> versionCheckResponse = versionCheckCall.execute();
+        //TODO Move this code to application class with generic predicate
+        if (response.isSuccessful() && versionCheckResponse.isSuccessful()) { //checks both response calls (only evaluates first call)
+          String serverVersion = versionCheckResponse.body(); //body of jscpeterson.com/server
+          String localVersion = filmTourApplication.VERSION; //version constant in application class
+          if (!localVersion.equals(serverVersion)) { //the big check!!
+            //TODO Create window with link to site.
+            errorMessage = getString(R.string.error_message_version); //updates the error message
+            return successfulQuery; //return to break out of method with successfulQuery = false
+          }
           productions = response.body();
           successfulQuery = true;
         } else {

@@ -23,6 +23,13 @@ import retrofit2.http.Query;
 public interface Service {
 
   /**
+   * Gets a String from the server that should contain the most up to date version of the application.
+   * @return String version information
+   */
+  @GET("version")
+  Call<String> getVersion();
+
+  /**
    * Gets film location associated with a film location id.
    *
    * @param authorization the authorization token
