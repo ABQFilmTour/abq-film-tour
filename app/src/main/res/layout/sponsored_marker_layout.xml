@@ -14,7 +14,7 @@
     android:layout_gravity="center_horizontal"
     android:layout_marginStart="@dimen/margin_x_small"
     android:contentDescription="@null"
-    android:src="@drawable/advertisment_pin_b" />
+    android:src="@drawable/advertisement_pin" />
 </RelativeLayout>
 
 

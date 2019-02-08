@@ -714,8 +714,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         .position(coordinates)
         .icon(BitmapDescriptorFactory.fromBitmap(
             createCustomMarker(MapsActivity.this, R.layout.sponsored_marker_layout)))
-        .title("Sponsored")
-        .snippet("The Candy Lady\nBlue meth rock candy actually used in Breaking Bad!"));
+        .title("The Candy Lady")
+        .snippet("Blue meth rock candy actually used in Breaking Bad!\n(Sponsored)"));
     marker.setTag(candyLady);
     map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
     map.setOnInfoWindowClickListener(marker1 -> {

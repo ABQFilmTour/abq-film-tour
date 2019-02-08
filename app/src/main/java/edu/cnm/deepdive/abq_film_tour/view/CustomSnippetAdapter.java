@@ -48,13 +48,9 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
 //    double delta = MapsActivity.calculateDistanceInKilometer(userLatLng.latitude,
 //        userLatLng.longitude,
 //        venueLat, venueLng);
-
-
-
     if (!title.equals("")){
       snippetTitle.setText(title);
     }
-    String snippet = marker.getTitle();
     TextView snippetDescription = view.findViewById(R.id.snippet_description);
     snippetDescription.setText(marker.getSnippet());
   }
