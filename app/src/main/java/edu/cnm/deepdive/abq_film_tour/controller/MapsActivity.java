@@ -386,15 +386,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         .title(location.getSiteName())
         .snippet(
             location.getProduction().getTitle()));
-    map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
     marker.setTag(location);
-    map.setOnInfoWindowClickListener(marker1 -> {
-      FilmLocation taggedLocation = (FilmLocation) marker1.getTag();
-      Intent intent = new Intent(MapsActivity.this, LocationActivity.class);
-      assert taggedLocation != null;
-      intent.putExtra(LOCATION_ID_KEY, taggedLocation.getId().toString());
-      startActivity(intent);
-    });
   }
 
   /**
@@ -516,6 +508,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng startCoordinates = new LatLng(BURQUE_LAT, BURQUE_LONG);
     map.moveCamera(CameraUpdateFactory.newLatLng(startCoordinates));
     map.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL_INITIAL));
+    map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
+    map.setOnInfoWindowClickListener(marker1 -> {
+      Uri locationImdb = Uri
+          .parse("https://www.thecandylady.com/product/original-breaking-bad-candy/");
+      Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
+      startActivity(intent);
+    });
   }
 
   @Override
@@ -717,13 +716,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         .title("The Candy Lady")
         .snippet("Blue meth rock candy actually used in Breaking Bad!\n(Sponsored)"));
     marker.setTag(candyLady);
-    map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
-    map.setOnInfoWindowClickListener(marker1 -> {
-      Uri locationImdb = Uri
-          .parse("https://www.thecandylady.com/product/original-breaking-bad-candy/");
-      Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
-      startActivity(intent);
-    });
+
   }
 
   /**
