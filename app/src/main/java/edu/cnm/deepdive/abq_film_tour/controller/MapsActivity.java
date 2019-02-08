@@ -349,9 +349,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Takes a custom drawable file and converts it to Bitmap. The BitmapDescriptorFactory.fromBitmap()
    * method will use converted bitmap to create the custom marker for us.
    */
-  private static Bitmap createCustomMarker(Context context) {
+  private static Bitmap createCustomMarker(Context context, int layout) {
     View marker = ((LayoutInflater) Objects.requireNonNull(context.getSystemService(
-        Context.LAYOUT_INFLATER_SERVICE))).inflate(R.layout.custom_marker_layout, null);
+        Context.LAYOUT_INFLATER_SERVICE))).inflate(layout, null);
     DisplayMetrics displayMetrics = new DisplayMetrics();
     ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     marker.setLayoutParams(
@@ -382,7 +382,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Marker marker = map.addMarker(new MarkerOptions()
         .position(coordinates)
         .icon(BitmapDescriptorFactory.fromBitmap(
-            createCustomMarker(MapsActivity.this)))
+            createCustomMarker(MapsActivity.this, R.layout.custom_marker_layout)))
         .title(location.getSiteName())
         .snippet(
             location.getProduction().getTitle()));
@@ -690,11 +690,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       if (!location.isApproved()) {
         continue;
       }
+      if (location.getProduction().getTitle() != null && location.getProduction().getTitle().equals("Breaking Bad")) {
+        createSponsoredLocation();
+      }
       if (location.getProduction().getTitle() != null && location.getProduction().getTitle()
           .equals(title)) {
         createMapMarker(location);
       }
     }
+  }
+
+  /**
+   * An example of a sponsored location, information in this case is specifically tailored for
+   * the Candy Lady business. Created hastily for demonstration purposes, final code should not
+   * be like this.
+   */
+  void createSponsoredLocation() {
+    FilmLocation candyLady = new FilmLocation();
+    candyLady.setLatCoordinate(String.valueOf(35.0980793));
+    candyLady.setLongCoordinate(String.valueOf(-106.6713235));
+    LatLng coordinates = new LatLng(35.0980793, -106.6713235);
+    Marker marker = map.addMarker(new MarkerOptions()
+        .position(coordinates)
+        .icon(BitmapDescriptorFactory.fromBitmap(
+            createCustomMarker(MapsActivity.this, R.layout.sponsored_marker_layout)))
+        .title("Sponsored")
+        .snippet("The Candy Lady\nBlue meth rock candy actually used in Breaking Bad!"));
+    marker.setTag(candyLady);
+    map.setInfoWindowAdapter(new CustomSnippetAdapter(MapsActivity.this));
+    map.setOnInfoWindowClickListener(marker1 -> {
+      Uri locationImdb = Uri
+          .parse("https://www.thecandylady.com/product/original-breaking-bad-candy/");
+      Intent intent = new Intent(Intent.ACTION_VIEW, locationImdb);
+      startActivity(intent);
+    });
   }
 
   /**

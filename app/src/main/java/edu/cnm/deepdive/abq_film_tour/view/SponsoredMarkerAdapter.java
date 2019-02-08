@@ -12,7 +12,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 /**
  * Custom adapter for snippets.
  */
-public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
+public class SponsoredMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
   private final View snippet;
   private Context context;
@@ -22,8 +22,8 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
    *
    * @param context the context
    */
-  public CustomSnippetAdapter(Context context) {
-    snippet = LayoutInflater.from(context).inflate(R.layout.custom_info_snippet, null);
+  public SponsoredMarkerAdapter(Context context) {
+    snippet = LayoutInflater.from(context).inflate(R.layout.sponsored_marker_layout, null);
   }
 
 //TODO Becca make this work
@@ -40,23 +40,18 @@ public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
 
 
   private void renderSnippetText(Marker marker, View view){
-    String title = marker.getTitle();
+    String title = "";
     TextView snippetTitle = view.findViewById(R.id.snippet_title);
     FilmLocation location = (FilmLocation) marker.getTag();
-    double venueLat = Double.valueOf(location.getLatCoordinate());
-    double venueLng = Double.valueOf(location.getLongCoordinate());
-//    double delta = MapsActivity.calculateDistanceInKilometer(userLatLng.latitude,
-//        userLatLng.longitude,
-//        venueLat, venueLng);
-
-
-
     if (!title.equals("")){
       snippetTitle.setText(title);
     }
     String snippet = marker.getTitle();
     TextView snippetDescription = view.findViewById(R.id.snippet_description);
-    snippetDescription.setText(marker.getSnippet());
+
+    if (!snippet.equals("")) {
+      snippetDescription.setText(location.getProduction().getTitle());
+    }
   }
 
 
