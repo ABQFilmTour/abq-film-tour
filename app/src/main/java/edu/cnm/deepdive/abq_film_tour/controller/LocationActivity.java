@@ -47,6 +47,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 /**
+ * test
  * This activity displays more information about a selected location and loads when the user selects
  * the location from the map pin. The activity retrieves the information from the database on
  * loading and the user can navigate to a dialog fragment to submit new content.
