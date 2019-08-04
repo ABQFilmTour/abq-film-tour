@@ -11,6 +11,7 @@ import edu.cnm.deepdive.abq_film_tour.model.entity.FilmLocation;
 
 /**
  * Custom adapter for snippets.
+ *
  */
 public class CustomSnippetAdapter implements GoogleMap.InfoWindowAdapter {
 
