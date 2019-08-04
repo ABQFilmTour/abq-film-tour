@@ -14,7 +14,7 @@
     android:layout_gravity="center_horizontal"
     android:layout_marginStart="@dimen/margin_x_small"
     android:contentDescription="@null"
-    android:src="@drawable/custom_marker" />
+    android:src="@drawable/film_roll_pin" />
 </RelativeLayout>
 
 
