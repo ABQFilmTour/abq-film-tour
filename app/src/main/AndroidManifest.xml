@@ -52,6 +52,7 @@
       android:name=".controller.MapsActivity"
       android:screenOrientation="portrait">
     </activity>
+
     <activity
       android:name=".controller.LoginActivity"
       android:screenOrientation="portrait">
@@ -61,10 +62,17 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+
     <activity
       android:name=".controller.LocationActivity"
       android:screenOrientation="portrait">
     </activity>
+
+    <activity
+        android:name=".controller.ImageGalleryActivity"
+        android:screenOrientation="portrait">
+    </activity>
+
   </application>
 
 </manifest>
