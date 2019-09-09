@@ -132,7 +132,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   /**
    * Extras tag to pass a location UUID String into a LocationActivity.
    */
-  private static final String LOCATION_ID_KEY = "location_id_key";
+  static final String LOCATION_ID_KEY = "location_id_key";
   /**
    * Extras key to pass in a selection menu item.
    */
