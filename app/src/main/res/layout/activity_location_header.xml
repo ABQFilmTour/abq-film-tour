@@ -46,6 +46,20 @@
     app:layout_constraintStart_toEndOf="@+id/image_view_poster"
     app:layout_constraintTop_toBottomOf="@+id/image_view_header" />
 
+  <!--TODO Use string res for contentDescription-->
+  <!--TODO Make a better button icon-->
+  <!--TODO Position more cleanly-->
+  <ImageButton
+      android:id="@+id/image_gallery_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_small"
+      android:background="@android:drawable/list_selector_background"
+      android:contentDescription="Image Gallery"
+      app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
+      app:layout_constraintTop_toBottomOf="@+id/image_view_header"
+      app:srcCompat="@drawable/bookmark_button" />
+
   <ImageButton
     android:id="@+id/bookmark_button"
     android:layout_width="wrap_content"
@@ -55,7 +69,7 @@
     android:contentDescription="@string/bookmark"
     app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
     app:layout_constraintTop_toBottomOf="@+id/image_view_header"
-    app:srcCompat="@drawable/bookmark_button" />
+    app:srcCompat="@drawable/image_gallery_button" />
 
   <TextView
     android:id="@+id/imdb_link_view"

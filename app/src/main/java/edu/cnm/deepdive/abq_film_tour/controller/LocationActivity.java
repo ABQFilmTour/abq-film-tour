@@ -55,7 +55,7 @@ public class LocationActivity extends AppCompatActivity {
 
   //CONSTANTS
   private final String LOCATION_ID_KEY = "location_id_key";
-  private static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
+  static final String ERROR_LOG_TAG_LOCATION_ACTIVITY = "LocationActivity";
 
   //FIELDS
   private FilmTourApplication filmTourApplication;
@@ -70,6 +70,7 @@ public class LocationActivity extends AppCompatActivity {
   private List<Image> images;
   private String token;
   private ImageButton bookmarkButton;
+  private ImageButton imageGalleryButton;
   private Button commentButton;
   private Button imageButton;
   private static SharedPreferences sharedPref;
@@ -237,10 +238,12 @@ public class LocationActivity extends AppCompatActivity {
   }
 
   private void setupButtons() {
+    imageGalleryButton = findViewById(R.id.image_gallery_button);
     bookmarkButton = findViewById(R.id.bookmark_button);
     if (bookmarks.contains(location.getId().toString())) {
       bookmarkButton.setSelected(true);
     }
+    imageGalleryButton = findViewById(R.id.image_gallery_button);
     commentButton = findViewById(R.id.submit_comment_button);
     imageButton = findViewById(R.id.submit_image_button);
   }
@@ -284,6 +287,14 @@ public class LocationActivity extends AppCompatActivity {
           .setPositiveButton(R.string.alert_ok, null);
       AlertDialog alert = alertDialog.create();
       alert.show();*/
+    });
+  }
+
+  private void setupImageGalleryButtonListener() {
+    imageGalleryButton.setOnClickListener(v -> {
+      Intent intent = new Intent(LocationActivity.this, ImageGalleryActivity.class);
+      intent.putExtra(LOCATION_ID_KEY, location.getId().toString());
+      startActivity(intent);
     });
   }
 
@@ -378,6 +389,7 @@ public class LocationActivity extends AppCompatActivity {
         setupBookmarkListener();
         setupCommentButtonListener();
         setupImageButtonListener();
+        setupImageGalleryButtonListener();
         setupComments();
         setupBackgroundImage();
       } else {
